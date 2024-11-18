@@ -1,0 +1,164 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2C2E33; /* Couleur de fond principale */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square {
+    width: 800px; /* Largeur du carré */
+    height: auto; /* Hauteur automatique en fonction du contenu */
+    background-color: #373A41; /* Couleur du carré */
+    border-radius: 10px; /* Coins arrondis pour le carré */
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Aligner les éléments en colonne */
+    justify-content: flex-start;
+    padding-top: 20px; /* Espacement depuis le haut */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px; /* Ajouter un peu d'espace au bas */
+}
+
+.inscription-box {
+    width: 100%; /* Prend toute la largeur de .square */
+    height: 50px;
+    background-color: #43464E; /* Couleur mise à jour pour la box Inscription */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Agrandi le texte de "Inscription" */
+    font-weight: bold; /* Gras pour le texte */
+    border-radius: 10px;
+    margin-bottom: 20px; /* Espacement entre le carré d'inscription et les nouvelles boxes */
+}
+
+.boxes-row {
+    display: flex;
+    justify-content: space-between; /* Assure un espacement égal entre les boxes */
+    width: 100%;
+}
+
+.box {
+    width: 42%; /* Réduit la largeur à 48% pour laisser un petit espace entre les deux boxes */
+    height: auto; /* Hauteur ajustée selon le contenu */
+    background-color: #43464E; /* Couleur mise à jour pour les deux boxes */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+.box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #CCCCCC;
+    text-align: center; /* Centrer le texte des titres */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 1rem;
+    color: #CCCCCC;
+}
+
+input {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #555555;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    margin-top: 5px;
+    width: 80%; /* Réduit la largeur des champs de texte à 80% */
+    margin-right: auto; /* Centre le champ dans la box */
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid #AC6CFF; /* Bordure colorée au focus */
+}
+
+/* Styles pour la box Adresse */
+.box {
+    width: 45%; /* Réduit la largeur à 48% pour laisser un petit espace entre les deux boxes */
+    height: auto; /* Hauteur ajustée selon le contenu */
+    background-color: #43464E; /* Couleur mise à jour pour la box Adresse */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+.box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #CCCCCC;
+    text-align: center; /* Centrer le texte des titres */
+}
+
+/* Style des labels dans les boxes */
+label {
+    font-size: 1rem;
+    color: #CCCCCC;
+}
+
+/* Style des champs de texte */
+input {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #555555;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    margin-top: 5px;
+    width: 80%; /* Réduit la largeur des champs de texte à 80% */
+    margin-right: auto; /* Centre le champ dans la box */
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid #AC6CFF; /* Bordure colorée au focus */
+}
+
+/* Style du bouton d'inscription */
+.submit-btn {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #AC6CFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    width: 80%; /* Taille similaire aux champs de texte */
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #8A4BFF; /* Changement de couleur au survol */
+}

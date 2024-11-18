@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2C2E33; /* Couleur de fond principale */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square {
+    width: 400px; /* Réduite à 400px pour une taille plus petite */
+    max-width: 90%; /* Permet à la box de s'ajuster si la fenêtre est plus petite */
+    height: auto; /* Hauteur automatique en fonction du contenu */
+    background-color: #373A41; /* Couleur du carré */
+    border-radius: 10px; /* Coins arrondis pour le carré */
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Aligner les éléments en colonne */
+    justify-content: flex-start;
+    padding-top: 20px; /* Espacement depuis le haut */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px; /* Ajouter un peu d'espace au bas */
+    box-sizing: border-box; /* Pour inclure le padding dans la largeur et hauteur */
+}
+
+.inscription-box {
+    width: 100%; /* Prend toute la largeur de .square */
+    height: 50px;
+    background-color: #43464E; /* Couleur mise à jour pour la box Inscription */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Agrandi le texte de "Inscription" */
+    font-weight: bold; /* Gras pour le texte */
+    border-radius: 10px;
+    margin-bottom: 20px; /* Espacement entre le carré d'inscription et les nouvelles boxes */
+}
+
+.box {
+    width: 95%; /* La box occupe maintenant 100% de la largeur de .square */
+    height: auto;
+    background-color: #43464E; /* Couleur mise à jour pour la box */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+.box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #CCCCCC;
+    text-align: center; /* Centrer le texte des titres */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 1rem;
+    color: #CCCCCC;
+}
+
+input {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #555555;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    margin-top: 5px;
+    width: 90%; /* Les champs de saisie prennent toute la largeur disponible */
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid #AC6CFF; /* Bordure colorée au focus */
+}
+
+/* Style du bouton d'inscription */
+.submit-btn {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #AC6CFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    width: 100%; /* Le bouton prend toute la largeur du formulaire */
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #8A4BFF; /* Changement de couleur au survol */
+}

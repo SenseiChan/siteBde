@@ -1,0 +1,154 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2D2D2D;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.top-bar {
+    width: 100%;
+    height: 150px;
+    background-color: #AC6CFF;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.center-box {
+    width: 80%;
+    max-width: 1200px;
+    background-color: #333333;
+    position: relative;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.profile-info {
+    font-family: Arial, sans-serif;
+}
+
+.profile-info h1 {
+    font-size: 2rem;
+    color: white;
+    margin: 0;
+}
+
+.profile-info p {
+    font-size: 1rem;
+    color: #CCCCCC;
+    margin: 5px 0 0 0;
+}
+
+.profile-picture img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFFFFF;
+}
+
+.profile-info::after {
+    content: "";
+    display: block;
+    width: 450%;
+    height: 1px;
+    background-color: #CCCCCC;
+    margin-top: 10px;
+}
+
+.content-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.agenda {
+    width: 65%;
+    background-color: #2D2D2D;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    box-sizing: border-box;
+}
+
+.agenda h2 {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    font-weight: normal;
+    color: #CCCCCC;
+}
+
+.agenda iframe {
+    width: 100%;
+    height: 700px;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.right-box {
+    width: 402px;
+    height: 286px;
+    background-color: #2F1C48;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #AC6CFF;
+    color: white;
+    box-sizing: border-box;
+}
+
+.right-box h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #CCCCCC;
+}
+
+.right-box p {
+    font-size: 1rem;
+    color: #DDDDDD;
+}
+
+.informations {
+    background-color: #3A2B4E;
+}
+
+.historique {
+    background-color: #3A2B4E;
+}
+
+.badges {
+    background-color: #3A2B4E;
+}
