@@ -18,3 +18,26 @@ body{
     left: 0;
     z-index: 1;
 }
+
+.center-box{
+    width: 100%;
+    max-width: 500px;
+    background-color: #333333;
+    position: relative;
+    top: 75px;
+    left: 40%;
+    transform: translateX(-100%);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#equipe{
+    color: white;
+}
+
+#presEquipe{
+    color: white;
+}
