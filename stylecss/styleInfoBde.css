@@ -41,3 +41,13 @@ body{
 #presEquipe{
     color: white;
 }
+
+.moderation_img {
+    position: absolute;
+    top: 10px; /* Déplace l'image au-dessus de la barre bleue */
+    right: 39%; /* Positionne l'image légèrement à droite de la page */
+    width: 150px; /* Ajuster la largeur de l'image */
+    height: auto;
+    object-fit: cover;
+    z-index: 3; /* Assure que l'image soit au-dessus de la barre bleue */
+}
