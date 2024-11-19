@@ -60,14 +60,22 @@ foreach ($events as $event) {
             </nav>
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <!-- Icône utilisateur -->
                 <img src="image/icon_user.png" alt="Icône utilisateur" class="user-icon">
-
-                <!-- Icône Panier -->
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
         </div>
     </header>
+
+    <!-- Onglets -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <a href="events.php" class="tab <?php if($currentPage === 'events') echo 'active'; ?>">Événements</a>
+            <a href="calendrier.php" class="tab <?php if($currentPage === 'calendrier') echo 'active'; ?>">Calendrier</a>
+        </div>
+        <div class="icontri">
+            <img src="image/icon_tri.png" alt="Menu">
+        </div>
+      </div>
 
     <!-- Calendrier -->
     <main>
