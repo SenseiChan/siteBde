@@ -54,7 +54,7 @@ foreach ($events as $event) {
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.php">Accueil</a></li>
-                    <li><a href="events.php">Événements</a></li>
+                    <li><a href="events.php" class="active">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
                     <li><a href="faq.php">FAQ</a></li>
@@ -127,5 +127,22 @@ foreach ($events as $event) {
             </table>
         </div>
     </main>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-content">
+          <p>
+              Copyright ©. Tous droits réservés.
+              <a href="#">Mentions légales et CGU</a> | <a href="#">Politique de confidentialité</a>
+          </p>
+          <div class="footer-icons">
+              <a href="#" aria-label="Discord">
+                  <img src="images/discordIconFooter.png" alt="Discord">
+              </a>
+              <a href="#" aria-label="Instagram">
+                  <img src="images/instIconFooter.png" alt="Instagram">
+              </a>
+          </div>
+      </div>
+    </footer>
 </body>
 </html>

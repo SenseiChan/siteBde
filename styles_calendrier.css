@@ -1,4 +1,9 @@
+/* --------------------------------------------- */
+/*
 /* Général */
+/* 
+/* --------------------------------------------- */
+
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -7,7 +12,12 @@ body {
     line-height: 1.6;
   }
   
-  /* Header */
+/* --------------------------------------------- */
+/*
+/* Header */
+/* 
+/* --------------------------------------------- */
+
   header {
     background-color: #2D2D2D;
     border-bottom: 2px solid #808080;
@@ -29,13 +39,11 @@ body {
     justify-content: space-between;
   }
   
-  /* Logo */
   .logo img {
     height: 40px;
     width: auto;
   }
   
-  /* Navigation */
   .nav-links {
     list-style: none;
     display: flex;
@@ -66,14 +74,12 @@ body {
     text-decoration: underline;
   }
   
-  /* Boutons et Panier */
   .header-buttons {
     display: flex;
     align-items: center;
     gap: 15px;
   }
   
-  /* Icône utilisateur */
   .user-icon {
     height: 38px;
     width: 38px;
@@ -82,27 +88,38 @@ body {
     background-color: #444;
   }
   
-  /* Icône panier */
   .cartIcon {
     height: 24px;
     width: 24px;
     cursor: pointer;
   }
 
+/* --------------------------------------------- */
+/*
 /* Contenu principal */
+/* 
+/* --------------------------------------------- */
+
 main {
+    margin-top: 100px; /* Hauteur du header */
+    padding: 20px;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
   }
   
+/* --------------------------------------------- */
+/*
 /* Onglets */
+/* 
+/* --------------------------------------------- */
+
 .tabs-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
-    margin: 120px auto 20px;
+    margin: 120px auto -200px;
     padding: 0 20px;
     border-bottom: 1px solid #444;
 }
@@ -123,7 +140,12 @@ main {
     font-weight: bold;
 }
 
+/* --------------------------------------------- */
+/*
 /* Calendrier */
+/* 
+/* --------------------------------------------- */
+
 .calendar-container {
     max-width: 1200px;
     margin: 120px auto 50px;
@@ -177,7 +199,12 @@ main {
     cursor: pointer;
 }
 
+/* --------------------------------------------- */
+/*
 /* Formulaire de sélection du mois */
+/* 
+/* --------------------------------------------- */
+
 .month-selector {
     text-align: center;
     margin-bottom: 20px;
@@ -210,4 +237,51 @@ main {
 
 .month-selector button:hover {
     background-color: #9B5FEF;
+}
+
+/* --------------------------------------------- */
+/*
+/* Footer */
+/* 
+/* --------------------------------------------- */
+
+.site-footer {
+    background-color: #2D2D2D;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px 15px;
+    border-top: 1px solid #444444;
+}
+
+.footer-content p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #CCCCCC;
+}
+
+.footer-content a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
+.footer-icons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-icons a img {
+    width: 40px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.footer-icons a img:hover {
+    transform: scale(1.2);
 }
