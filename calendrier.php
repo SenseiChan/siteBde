@@ -58,9 +58,12 @@ foreach ($events as $event) {
                     <li><a href="faq.php">FAQ</a></li>
                 </ul>
             </nav>
+            <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <button class="connectButtonHeader">Se connecter</button>
-                <button class="registerButtonHeader">S'inscrire</button>
+                <!-- Icône utilisateur -->
+                <img src="image/icon_user.png" alt="Icône utilisateur" class="user-icon">
+
+                <!-- Icône Panier -->
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
         </div>
