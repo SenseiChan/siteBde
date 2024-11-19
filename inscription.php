@@ -1,19 +1,15 @@
 <?php
 $host = "localhost";
-$dbname = "sae";
 $username = "root";
 $password = "";
+$dbname = "sae";
 
-$message = ''; // Variable pour stocker les messages de succès ou d'erreur
+$conn = mysqli_connect($host, $username, $password, $dbname);
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur de connexion à la base de données : " . $e->getMessage());
+if (!$conn) {
+    die("Erreur de connexion : " . mysqli_connect_error());
 }
 
-// Vérification si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $prenom = $_POST['prenom'] ?? '';
     $nom = $_POST['nom'] ?? '';
@@ -25,23 +21,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $codePostal = $_POST['codePostal'] ?? '';
     $telephone = $_POST['telephone'] ?? '';
 
-    $mdp_hache = password_hash($mdp, PASSWORD_DEFAULT);
+    if (!empty($prenom) && !empty($nom) && !empty($email) && !empty($promo) && !empty($mdp) && !empty($rue) && !empty($ville) && !empty($codePostal) && !empty($telephone)) {
+        
+        $mdp_hache = password_hash($mdp, PASSWORD_DEFAULT);
 
-    try {
-        // Insérer l'adresse dans la table Adresse
-        $stmt_adr = $pdo->prepare("INSERT INTO Adresse (NomNumero_rue, Code_postal, Ville) VALUES (?, ?, ?)");
-        $stmt_adr->execute([$rue, $codePostal, $ville]);
-        $id_adr = $pdo->lastInsertId(); // Récupérer l'ID de l'adresse insérée
+        // Démarrage d'une transaction
+        mysqli_begin_transaction($conn);
 
-        // Insérer l'utilisateur dans la table Utilisateur
-        $stmt_user = $pdo->prepare("INSERT INTO Utilisateur 
-            (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr, Annee_promo) 
-            VALUES (?, ?, ?, NOW(), NOW(), ?, ?, 'default.jpg', 1, ?, ?)");
-        $stmt_user->execute([$nom, $prenom, $mdp_hache, $telephone, $email, $id_adr, $promo]);
+        try {
+            $sql_adr = "INSERT INTO Adresse (NomNumero_rue, Code_postal, Ville) 
+                        VALUES ('$rue', '$codePostal', '$ville')";
+            
+            if (!mysqli_query($conn, $sql_adr)) {
+                throw new Exception("Erreur lors de l'insertion dans Adresse : " . mysqli_error($conn));
+            }
+            $id_adr = mysqli_insert_id($conn);
+            $sql_user = "INSERT INTO Utilisateur 
+                        (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr, Annee_promo) 
+                        VALUES ('$nom', '$prenom', '$mdp_hache', NOW(), NOW(), '$telephone', '$email', 'default.jpg', 1, $id_adr, '$promo')";
+            
+            if (!mysqli_query($conn, $sql_user)) {
+                throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));
+            }
 
-        $message = "Inscription réussie !";  // Message de succès
-    } catch (PDOException $e) {
-        $message = "Erreur lors de l'inscription : " . $e->getMessage();  // Message d'erreur
+            mysqli_commit($conn);
+            echo "Inscription réussie !";
+
+        } catch (Exception $e) {
+            mysqli_rollback($conn);
+            echo $e->getMessage();
+        }
+
+    } else {
+        echo "Veuillez remplir tous les champs.";
     }
 }
+
+mysqli_close($conn);
 ?>
