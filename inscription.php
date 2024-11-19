@@ -1,5 +1,4 @@
 <?php
-// Connexion à la base de données
 $host = "localhost";
 $dbname = "sae3";
 $username = "root";
@@ -12,17 +11,8 @@ try {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
-$conn->set_charset("utf8mb4"); // Facultatif, pour gérer les caractères spéciaux
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connection successful<br>";
-}
-
-
 // Vérification si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Récupération des données du formulaire
     $prenom = $_POST['prenom'] ?? '';
     $nom = $_POST['nom'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -33,7 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $codePostal = $_POST['codePostal'] ?? '';
     $telephone = $_POST['telephone'] ?? '';
 
-    // Hachage du mot de passe
     $mdp_hache = password_hash($mdp, PASSWORD_DEFAULT);
 
     try {
@@ -44,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Insérer l'utilisateur dans la table Utilisateur
         $stmt_user = $pdo->prepare("INSERT INTO Utilisateur 
-            (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr) 
-            VALUES (?, ?, ?, NOW(), NOW(), ?, ?, 'default.jpg', 1, ?)");
-        $stmt_user->execute([$nom, $prenom, $mdp_hache, $telephone, $email, $id_adr]);
+            (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr, Annee_promo) 
+            VALUES (?, ?, ?, NOW(), NOW(), ?, ?, 'default.jpg', 1, ?, ?)");
+        $stmt_user->execute([$nom, $prenom, $mdp_hache, $telephone, $email, $id_adr, $promo]);
 
         echo "Inscription réussie !";
     } catch (PDOException $e) {
