@@ -6,57 +6,6 @@ body {
     color: #FFFFFF;
     line-height: 1.6;
   }
-
-/* Onglets */
-
-.tabs-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #444;
-    margin-top: 20px; /* Ajustez pour qu'il corresponde à la position exacte */
-    margin-bottom: 20px; /* Ajoute de l'espacement avec le contenu suivant */
-}
-
-.tabs {
-    display: flex;
-    gap: 20px;
-}
-
-.tab {
-    font-size: 1rem;
-    color: #ccc;
-    text-decoration: none;
-    position: relative;
-    padding: 5px 0;
-    cursor: pointer;
-}
-
-.tab.active {
-    color: #AC6CFF;
-    font-weight: bold;
-}
-
-.tab.active::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #AC6CFF;
-}
-
-.tab:hover {
-    color: #fff;
-}
-
-.icontri img {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
   
   /* Header */
   header {
@@ -140,56 +89,39 @@ body {
     cursor: pointer;
   }
 
-/* Conteneur des onglets */
+/* Contenu principal */
+main {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+/* Onglets */
 .tabs-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    max-width: 1200px;
+    margin: 120px auto 20px;
+    padding: 0 20px;
     border-bottom: 1px solid #444;
-    margin-top: 0;
-  }
-  
-  /* Onglets */
-  .tabs {
+}
+
+.tabs {
     display: flex;
     gap: 20px;
-  }
-  
-  .tab {
-    font-size: 1rem;
+}
+
+.tab {
     color: #ccc;
     text-decoration: none;
-    position: relative;
-    padding: 5px 0;
-    cursor: pointer;
-  }
-  
-  .tab.active {
+    padding: 5px;
+}
+
+.tab.active {
     color: #AC6CFF;
     font-weight: bold;
-  }
-  
-  .tab.active::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #AC6CFF;
-  }
-  
-  .tab:hover {
-    color: #fff;
-  }
-  
-  /* Icône */
-  .icontri img {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
+}
 
 /* Calendrier */
 .calendar-container {

@@ -1,4 +1,6 @@
 <?php
+$currentPage = 'calendrier';
+
 // Connexion à la base de données
 $dsn = 'mysql:host=localhost;dbname=sae;charset=utf8';
 $username = 'root';
@@ -52,13 +54,12 @@ foreach ($events as $event) {
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.php">Accueil</a></li>
-                    <li><a href="events.php" class="active">Événements</a></li>
+                    <li><a href="events.php">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
                     <li><a href="faq.php">FAQ</a></li>
                 </ul>
             </nav>
-            <!-- Boutons et Panier -->
             <div class="header-buttons">
                 <img src="image/icon_user.png" alt="Icône utilisateur" class="user-icon">
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
@@ -75,20 +76,17 @@ foreach ($events as $event) {
         <div class="icontri">
             <img src="image/icon_tri.png" alt="Menu">
         </div>
-      </div>
+    </div>
 
     <!-- Calendrier -->
     <main>
         <div class="calendar-container">
             <h2>Calendrier des événements</h2>
-
-            <!-- Formulaire pour choisir le mois -->
             <form action="" method="GET" class="month-selector">
                 <label for="month">Choisir un mois :</label>
                 <input type="month" id="month" name="month" value="<?= date('Y-m', $startDate); ?>">
                 <button type="submit">Afficher</button>
             </form>
-
             <table class="calendar">
                 <thead>
                     <tr>
@@ -103,24 +101,12 @@ foreach ($events as $event) {
                 </thead>
                 <tbody>
                     <?php
-                    // Génération des jours du mois
                     $currentDay = $startDate;
-
-                    // Ajustement pour démarrer la semaine au bon jour
                     echo '<tr>';
-                    for ($i = 1; $i < date('N', $currentDay); $i++) {
-                        echo '<td></td>';
-                    }
-
+                    for ($i = 1; $i < date('N', $currentDay); $i++) echo '<td></td>';
                     while ($currentDay <= $endDate) {
                         $day = date('Y-m-d', $currentDay);
-
-                        // Nouvelle ligne pour une nouvelle semaine
-                        if (date('N', $currentDay) == 1 && $currentDay != $startDate) {
-                            echo '</tr><tr>';
-                        }
-
-                        // Ajout des événements du jour
+                        if (date('N', $currentDay) == 1 && $currentDay != $startDate) echo '</tr><tr>';
                         echo '<td>';
                         echo date('j', $currentDay);
                         if (isset($eventByDay[$day])) {
@@ -132,14 +118,9 @@ foreach ($events as $event) {
                             }
                         }
                         echo '</td>';
-
                         $currentDay = strtotime('+1 day', $currentDay);
                     }
-
-                    // Remplissage des cases vides à la fin du mois
-                    for ($i = date('N', $currentDay); $i <= 7 && $i != 1; $i++) {
-                        echo '<td></td>';
-                    }
+                    for ($i = date('N', $currentDay); $i <= 7 && $i != 1; $i++) echo '<td></td>';
                     echo '</tr>';
                     ?>
                 </tbody>

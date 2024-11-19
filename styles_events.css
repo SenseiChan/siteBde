@@ -118,55 +118,31 @@ main {
   margin-right: auto;
 }
 
-/* Conteneur des onglets */
+/* Onglets */
 .tabs-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  max-width: 1200px;
+  margin: 120px auto 20px;
+  padding: 0 20px;
   border-bottom: 1px solid #444;
-  margin-top: 0;
 }
 
-/* Onglets */
 .tabs {
   display: flex;
   gap: 20px;
 }
 
 .tab {
-  font-size: 1rem;
   color: #ccc;
   text-decoration: none;
-  position: relative;
-  padding: 5px 0;
-  cursor: pointer;
+  padding: 5px;
 }
 
 .tab.active {
   color: #AC6CFF;
   font-weight: bold;
-}
-
-.tab.active::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #AC6CFF;
-}
-
-.tab:hover {
-  color: #fff;
-}
-
-/* Icône */
-.icontri img {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
 }
 
 /* Conteneur des mois */
