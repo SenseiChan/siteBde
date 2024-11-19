@@ -95,7 +95,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
         <div class="header-container">
             <!-- Logo -->
             <a href="index.php" class="logo">
-                <img src="images/logoAdiil.png" alt="Logo ADIIL">
+                <img src="image/logoAdiil.png" alt="Logo ADIIL">
             </a>
 
             <!-- Navigation -->
@@ -113,7 +113,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
             <div class="header-buttons">
                 <button class="connectButtonHeader">Se connecter</button>
                 <button class="registerButtonHeader">S'inscrire</button>
-                <img src="images/logoPanier.png" alt="Panier" class="cartIcon">
+                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
         </div>
     </header>     
@@ -126,7 +126,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
             <a href="calendrier.php" class="tab <?php if($currentPage === 'calendrier') echo 'active'; ?>">Calendrier</a>
         </div>
         <div class="icontri">
-            <img src="images/icon_tri.png" alt="Menu">
+            <img src="image/icon_tri.png" alt="Menu">
         </div>
       </div>
 
@@ -176,15 +176,15 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                   <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
                   <div class="event-details-grid">
                       <div class="event-date">
-                          <img src="images/Calendar.png" alt="Calendrier" class="icon">
+                          <img src="image/Calendar.png" alt="Calendrier" class="icon">
                           <span><?= formatDate($event['Date_deb_event']) ?></span>
                       </div>
                       <div class="event-time">
-                          <img src="images/Clock.png" alt="Horloge" class="icon">
+                          <img src="image/Clock.png" alt="Horloge" class="icon">
                           <span><?= date('H\hi', strtotime($event['Heure_deb_event'])) ?></span>
                       </div>
                       <div class="event-location">
-                          <img src="images/Localisation.png" alt="Localisation" class="icon">
+                          <img src="image/Localisation.png" alt="Localisation" class="icon">
                           <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
                       </div>
                   </div>

@@ -47,7 +47,7 @@ foreach ($events as $event) {
     <header>
         <div class="header-container">
             <a href="index.php" class="logo">
-                <img src="images/logoAdiil.png" alt="Logo ADIIL">
+                <img src="image/logoAdiil.png" alt="Logo ADIIL">
             </a>
             <nav>
                 <ul class="nav-links">
@@ -61,7 +61,7 @@ foreach ($events as $event) {
             <div class="header-buttons">
                 <button class="connectButtonHeader">Se connecter</button>
                 <button class="registerButtonHeader">S'inscrire</button>
-                <img src="images/logoPanier.png" alt="Panier" class="cartIcon">
+                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
         </div>
     </header>
