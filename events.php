@@ -142,15 +142,15 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
               <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
               <div class="event-details-grid">
                   <div class="event-date">
-                      <img src="images/Calendar.png" alt="Calendrier" class="icon">
+                      <img src="image/Calendar.png" alt="Calendrier" class="icon">
                       <span><?= formatDate($event['Date_deb_event']) ?></span>
                   </div>
                   <div class="event-time">
-                      <img src="images/Clock.png" alt="Horloge" class="icon">
+                      <img src="image/Clock.png" alt="Horloge" class="icon">
                       <span><?= date('H\hi', strtotime($event['Heure_deb_event'])) ?></span>
                   </div>
                   <div class="event-location">
-                      <img src="images/Localisation.png" alt="Localisation" class="icon">
+                      <img src="image/Localisation.png" alt="Localisation" class="icon">
                       <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
                   </div>
               </div>
