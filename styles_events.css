@@ -118,34 +118,19 @@ main {
   margin-right: auto;
 }
 
+/* --------------------------------------------- */
+/*
 /* Onglets */
-.tabs-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 120px auto 20px;
-  padding: 0 20px;
-  border-bottom: 1px solid #444;
-}
+/* 
+/* --------------------------------------------- */
 
-.tabs {
-  display: flex;
-  gap: 20px;
-}
 
-.tab {
-  color: #ccc;
-  text-decoration: none;
-  padding: 5px;
-}
-
-.tab.active {
-  color: #AC6CFF;
-  font-weight: bold;
-}
-
+/* --------------------------------------------- */
+/*
 /* Conteneur des mois */
+/* 
+/* --------------------------------------------- */
+
 .month-section {
   margin-bottom: 3rem;
 }
