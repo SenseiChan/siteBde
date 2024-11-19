@@ -1,0 +1,773 @@
+/* Général */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+}
+
+/* Header */
+header {
+    background-color: #2D2D2D;
+    border-bottom: 2px solid #808080;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo */
+.logo img {
+    height: 40px; /* Taille réduite du logo */
+    width: auto; /* Préserve les proportions de l'image */
+}
+
+
+/* Navigation */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 16px;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.nav-links li a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #AC6CFF;
+}
+
+.nav-links li a:hover {
+    text-decoration: underline;
+}
+
+/* Boutons et Panier */
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.connectButtonHeader {
+    background-color: #2D2D2D;
+    color: #AC6CFF;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.connectButtonHeader:hover {
+    background-color: #1F1F1F;
+}
+
+.registerButtonHeader {
+    background-color: #AC6CFF;
+    color: #F8F9FF;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.registerButtonHeader:hover {
+    background-color: #9B5FEF;
+}
+
+.cartIcon {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+}
+
+
+/* Section Hero */
+.hero {
+    display: flex;
+    align-items: flex-start; /* Aligne en haut pour avoir plus de contrôle sur les espacements */
+    justify-content: space-between;
+    padding: 60px 80px; /* Augmente le padding pour donner plus d'espace */
+    background-color: #2D2D2D;
+    color: #FFFFFF;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 50%;
+}
+
+.hero h1 {
+    font-size: 58px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 75px; /* Augmente l'espace sous le titre */
+}
+
+.hero .highlight {
+    color: #AC6CFF; /* Couleur violette */
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 40px; /* Augmente l'espace sous le sous-texte */
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 30px; /* Augmente l'écart entre les boutons */
+    margin-top: 100px; /* Ajoute de l'espace entre le texte et les boutons */
+    justify-content: flex-start; /* Aligne les boutons sur la gauche */
+    margin-left: 100px;
+}
+
+.hero-buttons .btn-discord,
+.hero-buttons .btn-instagram {
+    text-decoration: none;
+    color: #F8F9FF; /* Texte blanc */
+    font-size: 25px;
+    font-weight: bold;
+    padding: 15px 25px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espace entre l'icône et le texte */
+    transition: background-color 0.3s ease;
+}
+
+.hero-buttons .btn-discord {
+    background-color: #EADAFF; /* Couleur Discord */
+    color:#AC6CFF
+}
+
+.hero-buttons .btn-instagram {
+    background-color: #AC6CFF; /* Couleur Instagram */
+}
+
+.button-icon {
+    height: 20px; /* Taille des icônes */
+    width: 20px;
+}
+
+/* Mascotte et rectangle violet */
+.hero-image {
+    max-width: 40%;
+    position: relative;
+    margin-top: 100px; /* Descend la mascotte */
+    background-image: url('image/planet.png'); /* Ajout de l'image de la lune */
+    background-size: 150px; /* Taille de la lune */
+    background-repeat: no-repeat;
+    background-position: top left; /* Positionnement en haut à gauche */
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px; /* Arrondi des coins */
+    position: relative; /* Pour être au-dessus du rectangle */
+    z-index: 2; /* Assure que l'image est au-dessus */
+}
+
+.background-rectangle {
+    background-color: #AC6CFF;
+    width: 65%;
+    height: 85%; /* Hauteur ajustée */
+    border-radius: 20px; /* Arrondi pour le rectangle */
+    position: absolute;
+    top: 25px; /* Descend le rectangle */
+    left: 150px;
+    z-index: 1; /* Placé devant la lune */
+}
+
+
+/* Lune */
+.hero-image .moon {
+    position: absolute; /* Permet le positionnement */
+    top: -50px; /* Ajuste la position verticale */
+    left: 100px; /* Ajuste la position horizontale */
+    width: 150px; /* Taille de la lune */
+    z-index: 0; /* Placé derrière le rectangle violet */
+}
+
+
+
+/* Section Stats */
+.stats-section {
+    background-color: #2F1C48; /* Couleur de fond */
+    text-align: center;
+    padding: 50px 20px;
+    color: #FFFFFF; /* Texte blanc */
+}
+
+.stats-section h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #F8F9FF;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: column; /* Empile les éléments principaux : grille + bouton */
+    align-items: center; /* Centre horizontalement les éléments */
+    gap: 20px; /* Espace entre la grille et le bouton "+" */
+    width: 100%; /* Prend toute la largeur disponible */
+}
+
+.stats-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Les blocs passent à la ligne suivante si nécessaire */
+    gap: 20px; /* Espace entre les blocs */
+    width: 100%; /* S'adapte à la largeur de la section */
+}
+
+.stat-item {
+    background-color: #AC6CFF; /* Fond violet */
+    border-radius: 15px; /* Coins arrondis */
+    padding: 20px;
+    text-align: center;
+    width: 250px; /* Largeur fixe des blocs */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF; /* Texte blanc */
+    display: flex;
+    flex-direction: column; /* Pour empiler contenu + image */
+    align-items: center;
+    gap: 15px;
+    position: relative; /* Pour le positionnement des éléments internes comme les icônes */
+}
+
+.stat-icon {
+    width: 90px;
+    height: auto;
+    margin-bottom: 15px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.stat-item p {
+    font-size: 24px;
+    margin: 0;
+}
+/* En-tête de la section "Quelques chiffres" */
+.stats-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centre horizontalement */
+    position: relative; /* Pour positionner le bouton en absolu */
+    margin-bottom: 20px;
+}
+
+.stats-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #F8F9FF;
+    text-align: center;
+}
+
+/* Bouton Admin */
+.admin-button-chiffre {
+    background-color:#2F1C48;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute; /* Positionné dans le conteneur relatif */
+    right: 0; /* Aligne le bouton à droite */
+    top: 50%; /* Centre verticalement */
+    transform: translateY(-50%);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button-chiffre img {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* Section Mes projets */
+.projets-section {
+    background-color: #2C2E33;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.project-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+}
+
+.project-item {
+    display: flex;
+    align-items: stretch; /* Aligne toutes les colonnes verticalement */
+    justify-content: space-between;
+    gap: 75px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.project-item.reverse {
+    flex-direction: row-reverse;
+}
+
+.project-image {
+    width: 300px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.project-details {
+    text-align: left;
+    max-width: 600px;
+    min-height: 150px; /* Hauteur minimale pour uniformiser les éléments */
+}
+
+.project-details h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFFFFF;
+}
+
+.project-details p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.project-button {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+
+/* Section Dernières Nouvelles */
+.latest-news-section {
+    background-color: #AC6CFF; /* Couleur de fond violet */
+    text-align: center;
+    padding: 50px 20px;
+    color: #FFFFFF; /* Texte blanc */
+}
+
+.latest-news-section h2 {
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #F8F9FF;
+}
+
+.latest-news-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Grille responsive */
+    gap: 20px; /* Espacement entre les cartes */
+}
+
+.latest-news-item {
+    background-color: #2F1C48; /* Fond sombre des cartes */
+    border-radius: 30px; /* Coins arrondis */
+    padding: 20px;
+    text-align: left; /* Texte aligné à gauche */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Ombre légère */
+}
+
+.latest-news-item h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #F8F9FF;
+    text-align: center; /* Centre le texte horizontalement */
+}
+
+.latest-news-item p {
+    font-size: 14px;
+    color: #CCCCCC;
+    line-height: 1.5; /* Améliore la lisibilité */
+}
+
+/* Header de la section Actualité */
+.news-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centre le titre horizontalement */
+    position: relative; /* Nécessaire pour positionner le bouton */
+    margin-bottom: 20px;
+}
+
+.news-title {
+    font-size: 38px;
+    font-weight: bold;
+    color: #F8F9FF;
+    text-align: center;
+}
+
+/* Bouton Admin */
+.admin-button-actua {
+    background-color:#AC6CFF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute; /* Positionné dans le conteneur relatif */
+    right: 0; /* Aligne le bouton à droite */
+    top: 50%; /* Centre verticalement */
+    transform: translateY(-50%);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button-actua img {
+    width: 40px;
+    height: 40px;
+}
+
+
+
+
+/* Section Témoignages */
+.testimonial-section {
+    background-color: #2D2D2D; /* Fond sombre */
+    text-align: center;
+    padding: 50px 20px;
+    color: #FFFFFF; /* Texte blanc */
+}
+
+.testimonial-section h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #F8F9FF;
+}
+
+.testimonial-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.testimonial-card {
+    background-color: #AC6CFF; /* Fond violet */
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    position: relative;
+}
+
+.testimonial-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.testimonial-card h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #FFFFFF;
+}
+
+.testimonial-role {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #DDDDDD;
+}
+
+.testimonial-text {
+    font-size: 16px;
+    color: #FFFFFF;
+    margin-bottom: 30px;
+}
+
+.testimonial-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-arrow {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-arrow:hover {
+    color: #DDDDDD;
+}
+
+.testimonial-index {
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+/* Footer */
+.site-footer {
+    background-color: #2D2D2D; /* Fond sombre */
+    color: #FFFFFF; /* Texte blanc */
+    text-align: center;
+    padding: 20px 15px;
+    border-top: 1px solid #444444; /* Ligne de séparation en haut */
+}
+
+.footer-content p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #CCCCCC;
+}
+
+.footer-content a {
+    color: #FFFFFF; /* Lien en blanc */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-content a:hover {
+    text-decoration: underline; /* Soulignement au survol */
+}
+
+.footer-icons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacement entre les icônes */
+}
+
+.footer-icons a img {
+    width: 40px; /* Taille des icônes */
+    height: auto;
+    transition: transform 0.3s ease; /* Animation au survol */
+}
+
+.footer-icons a img:hover {
+    transform: scale(1.2); /* Agrandit l'icône au survol */
+}
+
+/*Delete*/
+.delete-icon {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20; /* Place les icônes de suppression encore plus haut */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.delete-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.delete-icon:hover {
+    transform: scale(1.2); /* Agrandit légèrement au survol */
+}
+
+
+
+/* Style pour rendre tout flou */
+.blur-effect {
+    filter: blur(5px);
+    pointer-events: none;
+}
+
+/* Style pour mettre en avant la section */
+#stats-section.highlight {
+    filter: none;
+    pointer-events: auto;
+}
+
+
+#back-to-normal {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    right: 60px; /* Ajuste la position si nécessaire */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#back-to-normal:hover {
+    background-color: #9B5FEF;
+}
+
+
+
+
+
+
+/* Bouton "+" */
+
+.add-button {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-top: 20px; /* Espace entre le dernier bloc et le bouton "+" */
+}
+
+.add-button.hidden {
+    display: none; /* Masquer le bouton "+" par défaut */
+}
+
+
+/* Styles généraux pour la modale */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none; /* Masquer la modale par défaut */
+}
+
+.modal-content {
+    background-color: #AC6CFF; /* Couleur violette */
+    border-radius: 20px;
+    padding: 20px;
+    width: 400px;
+    position: relative; /* Pour positionner les boutons */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre */
+    animation: fadeIn 0.3s ease; /* Animation à l'apparition */
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Bouton de suppression (poubelle) */
+.modal-delete-button {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.modal-delete-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.modal-icon img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    cursor: pointer; /* Affiche que l'image est clickable */
+    border: 2px solid #FFFFFF;
+    border-radius: 10px;
+    object-fit: cover; /* Adapte l'image sans la déformer */
+}
+
+/* Input caché */
+.hidden {
+    display: none;
+}
+
+
+/* Champ de description */
+textarea#modal-description {
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px -10px;
+    resize: none;
+    font-size: 14px;
+}
+
+/* Bouton d'enregistrement (tick) */
+.modal-save-button {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.modal-save-button img {
+    width: 20px;
+    height: 20px;
+}
+
