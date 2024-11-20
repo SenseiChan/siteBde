@@ -137,7 +137,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
             <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="accueil.php">Accueil</a></li>
                     <li><a href="events.php" class="active">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
@@ -147,8 +147,8 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <button class="connectButtonHeader">Se connecter</button>
-                <button class="registerButtonHeader">S'inscrire</button>
+                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
         </div>

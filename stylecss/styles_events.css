@@ -115,6 +115,10 @@ header {
   cursor: pointer;
 }
 
+.connectButtonHeader, .registerButtonHeader {
+  text-decoration: none;
+}
+
 /* --------------------------------------------- */
 /*
 /* Contenu principal */
