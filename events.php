@@ -3,8 +3,7 @@ $currentPage = 'events';
 
 session_start(); // Démarrage de la session
 
-// Vérifiez si l'utilisateur est connecté
-$isConnected = isset($_SESSION['user_id']);
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Connexion à la base de données
 try {
@@ -150,16 +149,23 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                 </ul>
             </nav>
 
-            <!-- Boutons et Panier -->
+            <!-- Boutons / Profil -->
             <div class="header-buttons">
-                <?php if (!$isConnected): ?>
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                    <form action="logout.php" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Se déconnecter</button>
+                    </form>
+                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <?php else: ?>
+                    <!-- Boutons si non connecté -->
                     <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
                     <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
-                <?php else: ?>
-                    <span class="welcome-message">Bienvenue, <?= htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur') ?> !</span>
-                    <a href="logout.php" class="logoutButtonHeader">Se déconnecter</a>
                 <?php endif; ?>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
 
         </div>
