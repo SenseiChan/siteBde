@@ -13,21 +13,6 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-function convertDriveLink($link) {
-    // Vérifie si le lien contient "drive.google.com"
-    if (strpos($link, 'drive.google.com') !== false) {
-        // Extrais l'ID du fichier à partir du lien Google Drive
-        preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $link, $matches);
-        if (isset($matches[1])) {
-            $fileId = $matches[1];
-            // Retourne le lien au format "thumbnail"
-            return "https://drive.google.com/thumbnail?id=" . $fileId;
-        }
-    }
-    // Si le lien ne correspond pas au format attendu, retourne le lien d'origine
-    return $link;
-}
-
 // Récupération des contenus de type "chiffres"
 $query = $pdo->prepare("
     SELECT contenu.Id_contenu,contenu.Desc_contenu, contenu.Photo_contenu, contenu.Date_contenu 
@@ -145,7 +130,7 @@ if ($role && $role['Id_role'] == 2) {
                 <?php if (!empty($chiffres)): ?>
                     <?php foreach ($chiffres as $chiffre): ?>
                         <div class="stat-item" id="stat-<?php echo $chiffre['Id_contenu']; ?>">
-                            <img src="<?php echo convertDriveLink($chiffre['Photo_contenu']); ?>" 
+                            <img src="<?php echo($chiffre['Photo_contenu']); ?>" 
                                 alt="Image de <?php echo htmlspecialchars($chiffre['Desc_contenu']); ?>" 
                                 class="stat-icon">
                             <p><?php echo htmlspecialchars($chiffre['Desc_contenu']); ?></p>
