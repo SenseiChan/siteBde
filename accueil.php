@@ -38,6 +38,7 @@ $actualites = $query->fetchAll(PDO::FETCH_ASSOC);
 /*
 // Exemple de requête pour récupérer le rôle
 session_start();
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; // Si non connecté, $userId sera null
 
 $query = $pdo->prepare("
     SELECT role.Id_role, role.Nom_role
@@ -66,6 +67,10 @@ if ($role && $role['Id_role'] == 2) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page avec Header</title>
     <link rel="stylesheet" href="stylecss/stylesAcceuil.css"> <!-- Lien vers le fichier CSS -->
+    <script>
+        // Transmettre l'ID utilisateur à JavaScript
+        const userId = <?php echo json_encode($userId); ?>;
+    </script>
 </head>
 <body>
     <header>

@@ -103,8 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ajout de l'image si elle a été modifiée
         if (imageInput.files.length > 0) {
-            formData.append('image', imageInput.files[0]);
+            formData.append('new-image', imageInput.files[0]);
         }
+
+        // Ajout de l'ID utilisateur
+        formData.append('user-id', userId);
 
         // Requête AJAX pour sauvegarder les données
         fetch('add_stat.php', {
