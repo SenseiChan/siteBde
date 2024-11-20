@@ -402,12 +402,14 @@ header {
 }
 
 .latest-news-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Grille responsive */
-    gap: 20px; /* Espacement entre les cartes */
+    display: flex;
+    flex-direction: column; /* Empile les éléments principaux : grille + bouton */
+    align-items: center; /* Centre horizontalement les éléments */
+    gap: 20px; /* Espace entre la grille et le bouton "+" */
+    width: 100%; /* Prend toute la largeur disponible */
 }
 
-.latest-news-item {
+.latest-news-items {
     display: flex;
     justify-content: center;
     flex-wrap: wrap; /* Les blocs passent à la ligne suivante si nécessaire */
@@ -856,7 +858,7 @@ textarea#modal-description {
 }
 
 .news-modal-content {
-    background-color: #AC6CFF; /* Couleur violette */
+    background-color: #2F1C48; /* Couleur violette */
     border-radius: 20px;
     padding: 20px;
     width: 400px;
@@ -893,16 +895,6 @@ textarea#modal-description {
     height: 20px;
 }
 
-.news-modal-icon img {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 10px;
-    cursor: pointer; /* Affiche que l'image est clickable */
-    border: 2px solid #FFFFFF;
-    border-radius: 10px;
-    object-fit: cover; /* Adapte l'image sans la déformer */
-}
-
 /* Input caché */
 .news-hidden {
     display: none;
@@ -919,6 +911,17 @@ textarea#news-modal-description {
     margin: 10px -10px;
     resize: none;
     font-size: 14px;
+}
+
+textarea#news-modal-titre {
+    width: 50%;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px -10px;
+    resize: none;
+    font-size: 16px;
 }
 
 /* Bouton d'enregistrement (tick) */

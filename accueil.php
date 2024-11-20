@@ -208,15 +208,17 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
             <?php endif; ?>
         </div>
         <div class="latest-news-container">
-            <?php foreach ($actualites as $newsItem): ?>
-                <div class="latest-news-item" id="news-<?php echo $newsItem['Id_contenu']; ?>">
-                    <h3><?php echo htmlspecialchars($newsItem['Titre_contenu']); ?></h3>
-                    <p><?php echo htmlspecialchars($newsItem['Desc_contenu']); ?></p>
-                </div>
-            <?php endforeach; ?>
-            <?php if ($is_admin): ?>
-                <button id="add-news" class="add-button-actu hidden">+</button>
-            <?php endif; ?>
+            <div class="latest-news-items">
+                <?php foreach ($actualites as $newsItem): ?>
+                    <div class="latest-news-item" id="news-<?php echo $newsItem['Id_contenu']; ?>">
+                        <h3><?php echo htmlspecialchars($newsItem['Titre_contenu']); ?></h3>
+                        <p><?php echo htmlspecialchars($newsItem['Desc_contenu']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+                <?php if ($is_admin): ?>
+                    <button id="add-news" class="add-button-actu hidden">+</button>
+                <?php endif; ?>
         </div>
         <!-- Fenêtre modale pour ajouter ou modifier une actualité -->
         <div id="news-modal" class="modal hidden">
@@ -224,11 +226,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
                 <button id="news-delete-modal" class="news-modal-delete-button">
                     <img src="image/bin.png" alt="Supprimer">
                 </button>
-                <div class="news-modal-icon">
-                    <img id="news-modal-image" src="image/partyIconStat.png" alt="Image de base" />
-                </div>
-                <!-- Input caché pour le téléchargement -->
-                <input type="file" id="news-image-input" accept="image/*" class="news-hidden">
+                <textarea id="news-modal-titre" placeholder="Titre"></textarea>
                 <textarea id="news-modal-description" placeholder="Description"></textarea>
                 <button id="news-save-modal" class="news-modal-save-button">
                     <img src="image/tick.png" alt="Enregistrer">
