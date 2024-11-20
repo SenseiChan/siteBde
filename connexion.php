@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "Veuillez remplir tous les champs.";
     } else {
         // Préparer la requête pour trouver l'utilisateur
-        $sql = "SELECT Mdp_user, Prenom_user, Nom_user, Id_user FROM utilisateur WHERE Email_user = ?";
+        $sql = "SELECT Mdp_user, Prenom_user, Nom_user, Id_user FROM utilisateur WHERE Email_user = $email";
         $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
@@ -40,22 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Vérifiez si un utilisateur a été trouvé
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            $storedMdp = $user['Mdp_user']; // Récupérer le mot de passe stocké dans la base de données
+            $storedMdp = $user['Mdp_user']; 
 
-            // Afficher le mot de passe haché
-            echo "Mot de passe haché trouvé dans la base de données : " . htmlspecialchars($storedMdp) . "<br>";
-
-            // Vérifiez le mot de passe
             if (password_verify($mdp, $storedMdp)) {
                 echo "Connexion réussie. Bienvenue, " . htmlspecialchars($user['Prenom_user']) . " " . htmlspecialchars($user['Nom_user']) . " !";
 
-                // Démarrer une session et rediriger vers une page protégée (par exemple, un tableau de bord)
                 session_start();
                 $_SESSION['user_id'] = $user['Id_user'];
                 $_SESSION['user_name'] = $user['Prenom_user'] . " " . $user['Nom_user'];
 
-                // Redirige l'utilisateur vers une page sécurisée après la connexion réussie
-                header("Location: dashboard.php"); // Remplacez par la page de votre choix
                 exit();
             } else {
                 echo "Mot de passe incorrect.";
