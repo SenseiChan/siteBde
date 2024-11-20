@@ -35,25 +35,13 @@ $query = $pdo->prepare("
 $query->execute();
 $actualites = $query->fetchAll(PDO::FETCH_ASSOC);
 
-// Exemple de requête pour récupérer le rôle
-session_start();
-$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; // Si non connecté, $userId sera null
 
-$query = $pdo->prepare("
-    SELECT role.Id_role, role.Nom_role
-    FROM utilisateur
-    JOIN role ON utilisateur.Id_role = role.Id_role
-    WHERE utilisateur.Id_user = :id
-");
-$query->execute(['id' => $_SESSION['Id_user']]);
-$role = $query->fetch(PDO::FETCH_ASSOC);
+session_start(); // Démarrer la session
 
-// Stocke dans la session si l'utilisateur est admin
-if ($role && $role['Id_role'] == 2) {
-    $_SESSION['is_admin'] = true;
-} else {
-    $_SESSION['is_admin'] = false;
-}
+// Vérifie si l'utilisateur est connecté et admin
+$is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+?>
+
 ?>
 
 
@@ -126,9 +114,12 @@ if ($role && $role['Id_role'] == 2) {
     <section id="stats-section" class="stats-section">
         <div class="stats-header">
             <h2 class="stats-title">Quelques chiffres</h2>
-            <button id="edit-stats" class="admin-button-chiffre">
-                <img src="image/pensilIconModifChiffre.png" alt="Modifier">
-            </button>
+            <?php if ($is_admin): ?>
+                <!-- Bouton Modifier visible uniquement pour les admins -->
+                <button id="edit-stats" class="admin-button-chiffre">
+                    <img src="image/pensilIconModifChiffre.png" alt="Modifier">
+                </button>
+            <?php endif; ?>
         </div>
         <div class="stats-container">
             <div class="stats-items">
@@ -206,11 +197,11 @@ if ($role && $role['Id_role'] == 2) {
     <section class="latest-news-section">
         <div class="news-header">
             <h2 class="news-title">Actualité</h2>
-            <?//php if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']): ?>
+            <?php if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']): ?>
                 <button class="admin-button-actua">
                     <img src="image/pensilIconModifActua.png" alt="Modifier" />
                 </button>
-            <?//php endif; ?>
+            <?php endif; ?>
         </div>
         <div class="latest-news-container">
             <?php if (!empty($actualites)): ?>

@@ -1,51 +1,50 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = ""; 
-$dbname = "sae"; 
+session_start();
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Configuration de la base de données
+$host = 'localhost';
+$dbname = 'sae';
+$username = 'root';
+$password = '';
 
-if ($conn->connect_error) {
-    die("Connexion échouée : " . $conn->connect_error);
-}
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = htmlspecialchars($_POST['email']);
-    $mdp = htmlspecialchars($_POST['mdp']);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_POST['mdp'])) {
+        $email = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['mdp']);
 
-    if (empty($email) || empty($mdp)) {
-        echo "Veuillez remplir tous les champs.";
-    } else {
-        $email = $conn->real_escape_string($email);
+        // Requête pour récupérer l'utilisateur
+        $stmt = $pdo->prepare("SELECT * FROM utilisateur WHERE Email_user = :email");
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT Mdp_user, Prenom_user, Nom_user, Id_user FROM utilisateur WHERE Email_user = '$email'";
-        $result = $conn->query($sql);
+        if ($user && password_verify($password, $user['Mdp_user'])) {
+            // Définir les informations de l'utilisateur dans la session
+            $_SESSION['user_id'] = $user['Id_user'];
+            $_SESSION['role_id'] = $user['Id_role']; // Utilisé pour vérifier si admin
+            $_SESSION['email'] = $user['Email_user'];
+            $_SESSION['nom_user'] = $user['Nom_user'];
+            $_SESSION['prenom_user'] = $user['Prenom_user'];
 
-        if ($result === false) {
-            die("Erreur lors de l'exécution de la requête : " . $conn->error);
-        }
+            // Déterminer si l'utilisateur est admin
+            $_SESSION['is_admin'] = ($user['Id_role'] == 2);
 
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            $storedMdp = $user['Mdp_user'];
+            // Mettre à jour la dernière connexion
+            $updateStmt = $pdo->prepare("UPDATE utilisateur SET Dern_connexion = NOW() WHERE Id_user = :id");
+            $updateStmt->execute(['id' => $user['Id_user']]);
 
-            if (password_verify($mdp, $storedMdp)) {
-                echo "Connexion réussie. Bienvenue, " . htmlspecialchars($user['Prenom_user']) . " " . htmlspecialchars($user['Nom_user']) . " !";
-
-                session_start();
-                $_SESSION['user_id'] = $user['Id_user'];
-                $_SESSION['user_name'] = $user['Prenom_user'] . " " . $user['Nom_user'];
-                header("Location: profil.html");
-                exit();
-            } else {
-                echo "Mot de passe incorrect.";
-            }
+            // Rediriger vers la page d'accueil
+            header("Location: accueil.php");
+            exit();
         } else {
-            echo "Aucun utilisateur trouvé avec cet email.";
+            // Erreur d'authentification
+            $error = "Adresse e-mail ou mot de passe incorrect.";
+            header("Location: connexion.html?error=" . urlencode($error));
+            exit();
         }
     }
+} catch (PDOException $e) {
+    die("Erreur : " . $e->getMessage());
 }
-
-$conn->close();
-?>

@@ -103,6 +103,10 @@ header {
     background-color: #9B5FEF;
 }
 
+.connectButtonHeader, .registerButtonHeader {
+    text-decoration: none;
+  }
+
 .cartIcon {
     height: 24px;
     width: 24px;
