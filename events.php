@@ -88,7 +88,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Événements - BDE ADIIL</title>
-  <link rel="stylesheet" href="styles_events.css">
+  <link rel="stylesheet" href="stylecss/styles_events.css">
 </head>
 <body>
     <header>
