@@ -1,6 +1,11 @@
 <?php
 $currentPage = 'events';
 
+session_start(); // Démarrage de la session
+
+// Vérifiez si l'utilisateur est connecté
+$isConnected = isset($_SESSION['user_id']);
+
 // Connexion à la base de données
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
@@ -147,10 +152,16 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
-                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php if (!$isConnected): ?>
+                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php else: ?>
+                    <span class="welcome-message">Bienvenue, <?= htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur') ?> !</span>
+                    <a href="logout.php" class="logoutButtonHeader">Se déconnecter</a>
+                <?php endif; ?>
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
+
         </div>
     </header>     
 

@@ -1,6 +1,13 @@
 <?php
 $currentPage = 'calendrier';
 
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: connexion.html");
+    exit();
+}
+
 // Connexion à la base de données
 $dsn = 'mysql:host=localhost;dbname=sae;charset=utf8';
 $username = 'root';
