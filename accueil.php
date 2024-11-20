@@ -35,7 +35,6 @@ $query = $pdo->prepare("
 $query->execute();
 $actualites = $query->fetchAll(PDO::FETCH_ASSOC);
 
-/*
 // Exemple de requête pour récupérer le rôle
 session_start();
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; // Si non connecté, $userId sera null
@@ -55,7 +54,6 @@ if ($role && $role['Id_role'] == 2) {
 } else {
     $_SESSION['is_admin'] = false;
 }
-    */
 ?>
 
 
@@ -93,9 +91,11 @@ if ($role && $role['Id_role'] == 2) {
 
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <button class="connectButtonHeader">Se connecter</button>
-                <button class="registerButtonHeader">S'inscrire</button>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <a href="cart.html">
+                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                </a>
             </div>
         </div>
     </header>
