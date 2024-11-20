@@ -25,6 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
         $mdp_hache = password_hash($mdp, PASSWORD_DEFAULT);
 
+        if ($promo === 'NULL') {
+            $promo = NULL; // NULL sera inséré dans la base de données
+        }
+
         // Démarrage d'une transaction
         mysqli_begin_transaction($conn);
 
