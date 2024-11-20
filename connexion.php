@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "Veuillez remplir tous les champs.";
     } else {
         // Préparer la requête pour trouver l'utilisateur
-        $sql = "SELECT Mdp_user, Prenom_user, Nom_user, Id_user FROM utilisateur WHERE Email_user = $email";
+        $sql = "SELECT Mdp_user, Prenom_user, Nom_user, Id_user FROM utilisateur WHERE Email_user = ?";
         $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
@@ -31,7 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Lier les paramètres
-        $stmt->bind_param("s", $email);
+        $stmt->bind_param("s", $email); // Le paramètre est une chaîne (s pour string)
+
+        // Exécuter la requête
         $stmt->execute();
 
         // Obtenir le résultat
@@ -40,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Vérifiez si un utilisateur a été trouvé
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            $storedMdp = $user['Mdp_user']; 
+            $storedMdp = $user['Mdp_user'];
 
             if (password_verify($mdp, $storedMdp)) {
                 echo "Connexion réussie. Bienvenue, " . htmlspecialchars($user['Prenom_user']) . " " . htmlspecialchars($user['Nom_user']) . " !";

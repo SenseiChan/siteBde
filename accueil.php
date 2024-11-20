@@ -65,7 +65,7 @@ if ($role && $role['Id_role'] == 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page avec Header</title>
-    <link rel="stylesheet" href="style/styles.css"> <!-- Lien vers le fichier CSS -->
+    <link rel="stylesheet" href="stylecss/stylesAcceuil.css"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
     <header>
