@@ -163,6 +163,7 @@ header {
     display: flex;
   }
 
+
 /* Profil utilisateur */
 .profile-icon {
     width: 40px;
@@ -192,6 +193,7 @@ header {
 .logout-form {
     margin-left: 10px;
 }
+/*FIN PROFIL UILISATEUR*/
 
 
 
