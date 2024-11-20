@@ -1,6 +1,11 @@
 <?php
 $currentPage = 'events';
 
+session_start(); // Démarrage de la session
+
+// Vérifiez si l'utilisateur est connecté
+$isConnected = isset($_SESSION['user_id']);
+
 // Connexion à la base de données
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
@@ -44,17 +49,53 @@ foreach ($events as $event) {
 
 // Fonction pour formater les mois en français
 function formatMonthYear($date) {
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-    $formatter->setPattern('MMMM yyyy');
-    return ucfirst($formatter->format(new DateTime($date)));
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+    
+    $dateTime = new DateTime($date);
+    $monthYear = $dateTime->format('F Y'); // Par exemple : "December 2024"
+    
+    // Traduire en français
+    return str_replace(array_keys($months), array_values($months), $monthYear);
 }
+
 
 // Fonction pour formater les dates en français
 function formatDate($date) {
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-    $formatter->setPattern('dd MMMM yyyy');
-    return $formatter->format(new DateTime($date));
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+    
+    $dateTime = new DateTime($date);
+    $dayMonthYear = $dateTime->format('d F Y'); // Par exemple : "18 December 2024"
+    
+    // Traduire en français
+    return str_replace(array_keys($months), array_values($months), $dayMonthYear);
 }
+
 
 // Fonction pour convertir un lien Google Drive
 function convertDriveLink($link) {
@@ -88,7 +129,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Événements - BDE ADIIL</title>
-  <link rel="stylesheet" href="styles_events.css">
+  <link rel="stylesheet" href="stylecss/styles_events.css">
 </head>
 <body>
     <header>
@@ -101,7 +142,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
             <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="accueil.php">Accueil</a></li>
                     <li><a href="events.php" class="active">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
@@ -111,10 +152,16 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <button class="connectButtonHeader">Se connecter</button>
-                <button class="registerButtonHeader">S'inscrire</button>
+                <?php if (!$isConnected): ?>
+                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php else: ?>
+                    <span class="welcome-message">Bienvenue, <?= htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur') ?> !</span>
+                    <a href="logout.php" class="logoutButtonHeader">Se déconnecter</a>
+                <?php endif; ?>
                 <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
             </div>
+
         </div>
     </header>     
 

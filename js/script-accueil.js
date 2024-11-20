@@ -103,8 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ajout de l'image si elle a été modifiée
         if (imageInput.files.length > 0) {
-            formData.append('image', imageInput.files[0]);
+            formData.append('new-image', imageInput.files[0]);
         }
+
+        // Ajout de l'ID utilisateur
+        formData.append('user-id', userId);
 
         // Requête AJAX pour sauvegarder les données
         fetch('add_stat.php', {
@@ -139,4 +142,130 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file); // Charge l'image pour affichage
         }
     });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editButton = document.getElementById('edit-news');
+    const statsSection = document.getElementById('latest-news-section');
+    const pageElements = document.querySelectorAll('body > *:not(#latest-news-section)');
+    const addButton = document.getElementById('add-news');
+
+    // Créer le bouton "Revenir"
+    const newsSection = document.getElementById('latest-news-section');
+
+    const backButton = document.createElement('button');
+    backButton.id = 'back-to-normal';
+    backButton.textContent = 'Enregistrer';
+    backButton.style.display = 'none'; // Masquer par défaut
+    backButton.classList.add('admin-button-actua'); // Utiliser les styles du bouton admin
+    newsSection.querySelector('.news-header').appendChild(backButton);
+
+    editButton.addEventListener('click', () => {
+        // Ajouter l'effet de flou sur tout sauf la section
+        addButton.classList.remove('hidden');
+        pageElements.forEach(element => element.classList.add('blur-effect'));
+        newsSection.classList.add('highlight');
+
+        // Ajouter les boutons de suppression
+        document.querySelectorAll('.latest-news-item').forEach(item => {
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-icon');
+            deleteButton.setAttribute('data-id', item.id.replace('news-', ''));
+            deleteButton.innerHTML = '<img src="image/bin.png" alt="Supprimer">';
+            item.appendChild(deleteButton);
+
+            // Ajouter l'événement de suppression
+            deleteButton.addEventListener('click', function () {
+                const statId = this.getAttribute('data-id');
+                const statElement = document.getElementById(`news-${statId}`);
+                statElement.remove(); // Suppression visuelle
+
+                // Suppression dans la base de données
+                fetch('delete_stat.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: statId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert('Erreur lors de la suppression !');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+            });
+        });
+
+        // Masquer le bouton "Modifier" et afficher "Enregistrer"
+        editButton.style.display = 'none';
+        backButton.style.display = 'inline-block';
+    });
+
+    backButton.addEventListener('click', () => {
+        // Retirer l'effet de flou
+        pageElements.forEach(element => element.classList.remove('blur-effect'));
+        newsSection.classList.remove('highlight');
+
+        // Supprimer les boutons de suppression
+        document.querySelectorAll('.delete-icon').forEach(button => {
+            button.remove();
+        });
+
+        // Réafficher le bouton "Modifier" et masquer "Enregistrer"
+        editButton.style.display = 'inline-block';
+        backButton.style.display = 'none';
+        addButton.classList.add('hidden'); // Affiche le bouton "+"
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addButton = document.getElementById('add-news');
+    const modal = document.getElementById('news-modal');
+    const closeModal = document.getElementById('news-delete-modal');
+    const saveModal = document.getElementById('news-save-modal');
+
+    // Ouvrir la modale
+    addButton.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        document.body.classList.add('blur');
+    });
+
+    // Fermer la modale
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('blur');
+    });
+
+    // Sauvegarde des données via le bouton "tick"
+    saveModal.addEventListener('click', () => {
+        const titre = document.getElementById('news-modal-titre')?.value;
+        const description = document.getElementById('news-modal-description')?.value;
+    
+        if (!titre || !description) {
+            alert('Veuillez remplir tous les champs.');
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append('description', description);
+        formData.append('titre', titre);
+    
+        fetch('add_news.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Ajouté avec succès !');
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur :', error));
+    });    
+    
 });

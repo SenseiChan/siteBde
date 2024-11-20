@@ -13,21 +13,6 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-function convertDriveLink($link) {
-    // Vérifie si le lien contient "drive.google.com"
-    if (strpos($link, 'drive.google.com') !== false) {
-        // Extrais l'ID du fichier à partir du lien Google Drive
-        preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $link, $matches);
-        if (isset($matches[1])) {
-            $fileId = $matches[1];
-            // Retourne le lien au format "thumbnail"
-            return "https://drive.google.com/thumbnail?id=" . $fileId;
-        }
-    }
-    // Si le lien ne correspond pas au format attendu, retourne le lien d'origine
-    return $link;
-}
-
 // Récupération des contenus de type "chiffres"
 $query = $pdo->prepare("
     SELECT contenu.Id_contenu,contenu.Desc_contenu, contenu.Photo_contenu, contenu.Date_contenu 
@@ -50,28 +35,18 @@ $query = $pdo->prepare("
 $query->execute();
 $actualites = $query->fetchAll(PDO::FETCH_ASSOC);
 
-/*
-// Exemple de requête pour récupérer le rôle
-session_start();
 
-$query = $pdo->prepare("
-    SELECT role.Id_role, role.Nom_role
-    FROM utilisateur
-    JOIN role ON utilisateur.Id_role = role.Id_role
-    WHERE utilisateur.Id_user = :id
-");
-$query->execute(['id' => $_SESSION['Id_user']]);
-$role = $query->fetch(PDO::FETCH_ASSOC);
+session_start(); // Démarrer la session
 
-// Stocke dans la session si l'utilisateur est admin
-if ($role && $role['Id_role'] == 2) {
-    $_SESSION['is_admin'] = true;
+if (isset($_SESSION['Id_user'])) {
+    $userId = $_SESSION['Id_user'];
 } else {
-    $_SESSION['is_admin'] = false;
+    $userId = null; // Ou une valeur par défaut si non connecté
 }
-    */
-?>
 
+// Vérifie si l'utilisateur est connecté et admin
+$is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+?>
 
 
 <!DOCTYPE html>
@@ -80,7 +55,11 @@ if ($role && $role['Id_role'] == 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page avec Header</title>
-    <link rel="stylesheet" href="style/styles.css"> <!-- Lien vers le fichier CSS -->
+    <link rel="stylesheet" href="stylecss/stylesAcceuil.css"> <!-- Lien vers le fichier CSS -->
+    <script>
+        // Transmettre l'ID utilisateur à JavaScript
+        const userId = <?php echo json_encode($userId); ?>;
+    </script>
 </head>
 <body>
     <header>
@@ -103,9 +82,11 @@ if ($role && $role['Id_role'] == 2) {
 
             <!-- Boutons et Panier -->
             <div class="header-buttons">
-                <button class="connectButtonHeader">Se connecter</button>
-                <button class="registerButtonHeader">S'inscrire</button>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <a href="cart.html">
+                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                </a>
             </div>
         </div>
     </header>
@@ -136,16 +117,19 @@ if ($role && $role['Id_role'] == 2) {
     <section id="stats-section" class="stats-section">
         <div class="stats-header">
             <h2 class="stats-title">Quelques chiffres</h2>
-            <button id="edit-stats" class="admin-button-chiffre">
-                <img src="image/pensilIconModifChiffre.png" alt="Modifier">
-            </button>
+            <?php if ($is_admin): ?>
+                <!-- Bouton Modifier visible uniquement pour les admins -->
+                <button id="edit-stats" class="admin-button-chiffre">
+                    <img src="image/pensilIconModifChiffre.png" alt="Modifier">
+                </button>
+            <?php endif; ?>
         </div>
         <div class="stats-container">
             <div class="stats-items">
                 <?php if (!empty($chiffres)): ?>
                     <?php foreach ($chiffres as $chiffre): ?>
                         <div class="stat-item" id="stat-<?php echo $chiffre['Id_contenu']; ?>">
-                            <img src="<?php echo convertDriveLink($chiffre['Photo_contenu']); ?>" 
+                            <img src="<?php echo($chiffre['Photo_contenu']); ?>" 
                                 alt="Image de <?php echo htmlspecialchars($chiffre['Desc_contenu']); ?>" 
                                 class="stat-icon">
                             <p><?php echo htmlspecialchars($chiffre['Desc_contenu']); ?></p>
@@ -213,28 +197,44 @@ if ($role && $role['Id_role'] == 2) {
         </div>
     </section>
 
-    <section class="latest-news-section">
+    <section id="latest-news-section" class="latest-news-section">
         <div class="news-header">
-            <h2 class="news-title">Actualité</h2>
-            <?//php if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']): ?>
-                <button class="admin-button-actua">
-                    <img src="image/pensilIconModifActua.png" alt="Modifier" />
+            <h2 class="news-title">Actualités</h2>
+            <?php if ($is_admin): ?>
+                <!-- Bouton Modifier visible uniquement pour les admins -->
+                <button id="edit-news" class="admin-button-actua">
+                    <img src="image/pensilIconModifActua.png" alt="Modifier">
                 </button>
-            <?//php endif; ?>
-        </div>
-        <div class="latest-news-container">
-            <?php if (!empty($actualites)): ?>
-                <?php foreach ($actualites as $actualite): ?>
-                    <div class="latest-news-item">
-                        <h3><?php echo htmlspecialchars($actualite['Titre_contenu']); ?></h3>
-                        <p><?php echo nl2br(htmlspecialchars($actualite['Desc_contenu'])); ?></p>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Aucune actualité disponible pour le moment.</p>
             <?php endif; ?>
         </div>
+        <div class="latest-news-container">
+            <div class="latest-news-items">
+                <?php foreach ($actualites as $newsItem): ?>
+                    <div class="latest-news-item" id="news-<?php echo $newsItem['Id_contenu']; ?>">
+                        <h3><?php echo htmlspecialchars($newsItem['Titre_contenu']); ?></h3>
+                        <p><?php echo htmlspecialchars($newsItem['Desc_contenu']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+                <?php if ($is_admin): ?>
+                    <button id="add-news" class="add-button-actu hidden">+</button>
+                <?php endif; ?>
+        </div>
+        <!-- Fenêtre modale pour ajouter ou modifier une actualité -->
+        <div id="news-modal" class="modal hidden">
+            <div class="news-modal-content">
+                <button id="news-delete-modal" class="news-modal-delete-button">
+                    <img src="image/bin.png" alt="Supprimer">
+                </button>
+                <textarea id="news-modal-titre" placeholder="Titre"></textarea>
+                <textarea id="news-modal-description" placeholder="Description"></textarea>
+                <button id="news-save-modal" class="news-modal-save-button">
+                    <img src="image/tick.png" alt="Enregistrer">
+                </button>
+            </div>
+        </div>
     </section>
+
 
 
     <section class="testimonial-section">

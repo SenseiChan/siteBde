@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Header avec Menu Déroulant</title>
-  <link rel="stylesheet" href="styles_headeradmin.css">
+  <link rel="stylesheet" href="stylecss/styles_headeradmin.css">
 </head>
 <body>
   <header>
     <div class="header-container">
       <!-- Logo -->
       <a href="index.php" class="logo">
-        <img src="images/logoAdiil.png" alt="Logo ADIIL">
+        <img src="image/logoAdiil.png" alt="Logo ADIIL">
       </a>
 
       <!-- Menu Admin -->
@@ -40,10 +40,10 @@
       <!-- Boutons et Panier -->
       <div class="header-buttons">
         <!-- Icône utilisateur -->
-        <img src="images/icon_user.png" alt="Icône utilisateur" class="user-icon">
+        <img src="image/icon_user.png" alt="Icône utilisateur" class="user-icon">
 
         <!-- Icône Panier -->
-        <img src="images/logoPanier.png" alt="Panier" class="cartIcon">
+        <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
       </div>
     </div>
   </header>
