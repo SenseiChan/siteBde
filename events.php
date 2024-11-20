@@ -44,17 +44,18 @@ foreach ($events as $event) {
 
 // Fonction pour formater les mois en français
 function formatMonthYear($date) {
+    $dateTime = new DateTime($date);
     $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
     $formatter->setPattern('MMMM yyyy');
-    return ucfirst($formatter->format(new DateTime($date)));
+    return ucfirst($formatter->format($dateTime));
 }
 
 // Fonction pour formater les dates en français
 function formatDate($date) {
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-    $formatter->setPattern('dd MMMM yyyy');
-    return $formatter->format(new DateTime($date));
+    $dateTime = new DateTime($date);
+    return $dateTime->format('d F Y'); // Format moderne
 }
+
 
 // Fonction pour convertir un lien Google Drive
 function convertDriveLink($link) {
