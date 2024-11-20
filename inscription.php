@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             mysqli_commit($conn);
+            header("Location: connexion.html");
             echo "Inscription réussie !";
 
         } catch (Exception $e) {
