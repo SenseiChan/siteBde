@@ -197,7 +197,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
     <section class="latest-news-section">
         <div class="news-header">
             <h2 class="news-title">Actualité</h2>
-            <?php if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']): ?>
+            <?php if ($is_admin): ?>
                 <button class="admin-button-actua">
                     <img src="image/pensilIconModifActua.png" alt="Modifier" />
                 </button>
