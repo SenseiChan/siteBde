@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statElement.remove(); // Suppression visuelle
 
                 // Suppression dans la base de données
-                fetch('delete_news.php', {
+                fetch('delete_stat.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
