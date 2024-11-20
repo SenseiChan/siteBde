@@ -7,16 +7,23 @@
   <link rel="stylesheet" href="stylecss/styleProf.css">
 </head>
 <body>
+  <?php
+    // Variables dynamiques pour le profil
+    $nom = "Erwan";
+    $role = "Membre (LE ROLE)";
+    $photoProfil = "image/ppBaptProf.jpg";
+    $calendarURL = "https://calendar.google.com/calendar/embed?src=tomyflach%40gmail.com&ctz=UTC";
+  ?>
   <div class="background">
     <div class="top-bar"></div>
     <div class="center-box">
       <div class="profile-header">
         <div class="profile-info">
-          <h1>Erwan</h1>
-          <p>Membre (LE ROLE)</p>
+          <h1><?php echo $nom; ?></h1>
+          <p><?php echo $role; ?></p>
         </div>
         <div class="profile-picture">
-          <img src="image/ppBaptProf.jpg" alt="Photo de profil">
+          <img src="<?php echo $photoProfil; ?>" alt="Photo de profil">
         </div>
       </div>
 
@@ -25,7 +32,7 @@
         <!-- Section Agenda (calendrier) -->
         <div class="agenda">
           <h2>Agenda</h2>
-          <iframe src="https://calendar.google.com/calendar/embed?src=tomyflach%40gmail.com&ctz=UTC" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+          <iframe src="<?php echo $calendarURL; ?>" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
         </div>
 
         <!-- Conteneur des 3 boxes à droite -->
