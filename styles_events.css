@@ -1,0 +1,301 @@
+/* Général */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #2C2E33;
+  color: #FFFFFF;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: #2D2D2D;
+  border-bottom: 2px solid #808080;
+  height: 80px; /* Hauteur fixe pour uniformiser */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo img {
+  height: 40px;
+  width: auto;
+}
+
+/* Navigation */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.nav-links li a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #AC6CFF;
+}
+
+.nav-links li a:hover {
+  text-decoration: underline;
+}
+
+/* Boutons et Panier */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.connectButtonHeader {
+  background-color: #2D2D2D;
+  color: #AC6CFF;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.connectButtonHeader:hover {
+  background-color: #1F1F1F;
+}
+
+.registerButtonHeader {
+  background-color: #AC6CFF;
+  color: #F8F9FF;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.registerButtonHeader:hover {
+  background-color: #9B5FEF;
+}
+
+.cartIcon {
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+}
+
+/* Contenu principal */
+main {
+  margin-top: 100px; /* Hauteur du header */
+  padding: 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Conteneur des onglets */
+.tabs-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #444;
+  margin-top: 0;
+}
+
+/* Onglets */
+.tabs {
+  display: flex;
+  gap: 20px;
+}
+
+.tab {
+  font-size: 1rem;
+  color: #ccc;
+  text-decoration: none;
+  position: relative;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #AC6CFF;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #AC6CFF;
+}
+
+.tab:hover {
+  color: #fff;
+}
+
+/* Icône */
+.icontri img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Conteneur des mois */
+.month-section {
+  margin-bottom: 3rem;
+}
+
+.month-section h3 {
+  font-size: 1.75rem;
+  color: #FFFFFF;
+  margin: 2rem 0 1rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+/* Carte d'événement */
+.event-card {
+  display: flex;
+  background-color: #3A3B40;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+.event-card img {
+  width: 40%; /* Ajuste la largeur de l'image */
+  object-fit: cover;
+}
+
+.event-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-info h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Grille des détails */
+.event-details-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+  align-items: center; /* Alignement vertical des éléments */
+}
+
+.event-details-grid img.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.event-details-grid span {
+  font-size: 1rem;
+  color: #FFFFFF;
+  align-self: center; /* Alignement vertical du texte */
+  line-height: 1; /* Supprime les espaces inutiles autour du texte */
+  margin-left: 5px; /* Ajout d'espace entre l'icône et le texte */
+}
+
+.event-info p {
+  font-size: 1rem;
+  color: #CCCCCC;
+  margin-bottom: 1rem;
+}
+
+/* Bouton d'inscription */
+.register-btn {
+  background-color: #AC6CFF;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.register-btn:hover {
+  background-color: #9B5FEF;
+}
+
+/* Footer */
+.site-footer {
+    background-color: #2D2D2D; /* Fond sombre */
+    color: #FFFFFF; /* Texte blanc */
+    text-align: center;
+    padding: 20px 15px;
+    border-top: 1px solid #444444; /* Ligne de séparation en haut */
+}
+
+.footer-content p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #CCCCCC;
+}
+
+.footer-content a {
+    color: #FFFFFF; /* Lien en blanc */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-content a:hover {
+    text-decoration: underline; /* Soulignement au survol */
+}
+
+.footer-icons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacement entre les icônes */
+}
+
+.footer-icons a img {
+    width: 40px; /* Taille des icônes */
+    height: auto;
+    transition: transform 0.3s ease; /* Animation au survol */
+}
+
+.footer-icons a img:hover {
+    transform: scale(1.2); /* Agrandit l'icône au survol */
+}

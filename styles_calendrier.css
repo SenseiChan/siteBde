@@ -1,0 +1,199 @@
+/* Général */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+    line-height: 1.6;
+  }
+  
+  /* Header */
+  header {
+    background-color: #2D2D2D;
+    border-bottom: 2px solid #808080;
+    height: 80px; /* Hauteur fixe pour uniformiser */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .header-container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Logo */
+  .logo img {
+    height: 40px;
+    width: auto;
+  }
+  
+  /* Navigation */
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-links li a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 16px;
+    padding: 5px 10px;
+    position: relative;
+  }
+  
+  .nav-links li a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #AC6CFF;
+  }
+  
+  .nav-links li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Boutons et Panier */
+  .header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .connectButtonHeader {
+    background-color: #2D2D2D;
+    color: #AC6CFF;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .connectButtonHeader:hover {
+    background-color: #1F1F1F;
+  }
+  
+  .registerButtonHeader {
+    background-color: #AC6CFF;
+    color: #F8F9FF;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .registerButtonHeader:hover {
+    background-color: #9B5FEF;
+  }
+  
+  .cartIcon {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+  }
+
+/* Calendrier */
+.calendar-container {
+    max-width: 1200px;
+    margin: 120px auto 50px;
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.calendar-container h2 {
+    text-align: center;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.calendar th,
+.calendar td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.calendar th {
+    background-color: #444;
+    color: #FFF;
+}
+
+.calendar td {
+    background-color: #2D2D2D;
+    color: #FFFFFF;
+}
+
+.event {
+    background-color: #AC6CFF;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+.event:hover {
+    background-color: #9B5FEF;
+    cursor: pointer;
+}
+
+/* Formulaire de sélection du mois */
+.month-selector {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.month-selector label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.month-selector input {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #2D2D2D;
+    color: #FFF;
+}
+
+.month-selector button {
+    padding: 5px 15px;
+    font-size: 16px;
+    background-color: #AC6CFF;
+    color: #FFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.month-selector button:hover {
+    background-color: #9B5FEF;
+}
