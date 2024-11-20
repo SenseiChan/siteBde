@@ -1,7 +1,5 @@
 <?php
-header('Content-Type: application/json');
-session_start();
-
+// Connexion à la base de données
 $host = 'localhost';
 $dbname = 'sae';
 $username = 'root';
@@ -10,19 +8,38 @@ $password = '';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
 
+header('Content-Type: application/json');
+
+// Vérification de la méthode HTTP
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupération des données JSON envoyées
     $input = json_decode(file_get_contents('php://input'), true);
 
-    if (isset($input['id'])) {
-        $id = intval($input['id']);
-        $stmt = $pdo->prepare("DELETE FROM news WHERE id = :id");
-        $stmt->execute(['id' => $id]);
+    // Vérification que l'ID est présent dans les données envoyées
+    if (isset($input['id']) && !empty($input['id'])) {
+        $id = intval($input['id']); // Conversion en entier sécurisé
 
-        echo json_encode(['success' => $stmt->rowCount() > 0]);
+        try {
+            // Suppression dans la base de données
+            $stmt = $pdo->prepare('DELETE FROM contenu WHERE Id_contenu = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                echo json_encode(['success' => true]); // Suppression réussie
+            } else {
+                echo json_encode(['success' => false, 'message' => 'ID introuvable dans la base de données']);
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Erreur SQL : ' . $e->getMessage()]);
+        }
     } else {
-        echo json_encode(['success' => false, 'message' => 'ID manquant']);
+        echo json_encode(['success' => false, 'message' => 'ID manquant ou invalide']);
     }
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
 }
-?>

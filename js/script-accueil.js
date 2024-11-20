@@ -152,10 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Créer le bouton "Revenir"
     const newsSection = document.getElementById('latest-news-section');
-    if (!newsSection) {
-        console.error('Section des actualités introuvable !');
-        return;
-    }
 
     const backButton = document.createElement('button');
     backButton.id = 'back-to-normal';
@@ -229,8 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('news-modal');
     const closeModal = document.getElementById('news-delete-modal');
     const saveModal = document.getElementById('news-save-modal');
-    const modalImage = document.getElementById('news-modal-image');
-    const imageInput = document.getElementById('news-image-input');
 
     // Ouvrir la modale
     addButton.addEventListener('click', () => {
@@ -246,21 +240,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sauvegarde des données via le bouton "tick"
     saveModal.addEventListener('click', () => {
-        const description = document.getElementById('news-modal-description').value;
-
-        // Préparation des données à envoyer
+        const titre = document.getElementById('news-modal-titre')?.value;
+        const description = document.getElementById('news-modal-description')?.value;
+    
+        if (!titre || !description) {
+            alert('Veuillez remplir tous les champs.');
+            return;
+        }
+    
         const formData = new FormData();
         formData.append('description', description);
-
-        // Ajout de l'image si elle a été modifiée
-        if (imageInput.files.length > 0) {
-            formData.append('new-image', imageInput.files[0]);
-        }
-
-        // Ajout de l'ID utilisateur
-        formData.append('user-id', userId);
-
-        // Requête AJAX pour sauvegarder les données
+        formData.append('titre', titre);
+    
         fetch('add_news.php', {
             method: 'POST',
             body: formData,
@@ -269,28 +260,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 alert('Ajouté avec succès !');
-                location.reload(); // Recharge la page pour afficher le nouveau bloc
+                location.reload();
             } else {
                 alert('Erreur : ' + data.message);
             }
         })
         .catch(error => console.error('Erreur :', error));
-    });
-
-    // Ouvrir le sélecteur de fichiers en cliquant sur l'image
-    modalImage.addEventListener('click', () => {
-        imageInput.click(); // Déclenche le sélecteur de fichiers
-    });
-
-    // Met à jour l'image affichée lorsque l'utilisateur sélectionne un fichier
-    imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                modalImage.src = e.target.result; // Affiche l'image sélectionnée dans la modale
-            };
-            reader.readAsDataURL(file); // Charge l'image pour affichage
-        }
-    });
+    });    
+    
 });

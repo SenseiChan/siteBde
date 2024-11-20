@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+session_start();
 
 // Configuration de la base de données
 $host = 'localhost';
@@ -12,9 +13,9 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Vérifier si la requête est POST
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['new-image']) && isset($_POST['description']) && isset($_POST['user-id'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['new-image']) && isset($_POST['description'])) {
         $desc = htmlspecialchars($_POST['description']); // Échapper la description
-        $userId = intval($_POST['user-id']); // ID de l'utilisateur
+        $userId = $_SESSION['user_id']; // ID de l'utilisateur connecté
         $typeId = 2; // ID du type de contenu
         $date = date('Y-m-d H:i:s'); // Date du jour au format SQL
 
