@@ -44,16 +44,51 @@ foreach ($events as $event) {
 
 // Fonction pour formater les mois en français
 function formatMonthYear($date) {
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+    
     $dateTime = new DateTime($date);
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-    $formatter->setPattern('MMMM yyyy');
-    return ucfirst($formatter->format($dateTime));
+    $monthYear = $dateTime->format('F Y'); // Par exemple : "December 2024"
+    
+    // Traduire en français
+    return str_replace(array_keys($months), array_values($months), $monthYear);
 }
+
 
 // Fonction pour formater les dates en français
 function formatDate($date) {
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+    
     $dateTime = new DateTime($date);
-    return $dateTime->format('d F Y'); // Format moderne
+    $dayMonthYear = $dateTime->format('d F Y'); // Par exemple : "18 December 2024"
+    
+    // Traduire en français
+    return str_replace(array_keys($months), array_values($months), $dayMonthYear);
 }
 
 
