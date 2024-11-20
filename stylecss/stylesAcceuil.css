@@ -408,11 +408,26 @@ header {
 }
 
 .latest-news-item {
-    background-color: #2F1C48; /* Fond sombre des cartes */
-    border-radius: 30px; /* Coins arrondis */
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Les blocs passent à la ligne suivante si nécessaire */
+    gap: 20px; /* Espace entre les blocs */
+    width: 100%; /* S'adapte à la largeur de la section */
+}
+
+.latest-news-item {
+    background-color: #2F1C48; /* Fond violet */
+    border-radius: 15px; /* Coins arrondis */
     padding: 20px;
-    text-align: left; /* Texte aligné à gauche */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    text-align: center;
+    width: 250px; /* Largeur fixe des blocs */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF; /* Texte blanc */
+    display: flex;
+    flex-direction: column; /* Pour empiler contenu + image */
+    align-items: center;
+    gap: 15px;
+    position: relative; /* Pour le positionnement des éléments internes comme les icônes */
 }
 
 .latest-news-item h3 {
@@ -675,6 +690,27 @@ header {
     display: none; /* Masquer le bouton "+" par défaut */
 }
 
+.add-button-actu{
+    background-color:#2F1C48;
+    color: #FFFFFF;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-top: 20px; /* Espace entre le dernier bloc et le bouton "+" */
+}
+
+.add-button-actu.hidden {
+    display: none; /* Masquer le bouton "+" par défaut */
+}
+
+
 
 /* Styles généraux pour la modale */
 .modal {
@@ -775,3 +811,127 @@ textarea#modal-description {
     height: 20px;
 }
 
+
+
+
+/* Bouton "+" */
+
+.add-news {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-top: 20px; /* Espace entre le dernier bloc et le bouton "+" */
+}
+
+.add-news.hidden {
+    display: none; /* Masquer le bouton "+" par défaut */
+}
+
+
+/* Styles généraux pour la modale */
+.news-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.news-modal.hidden {
+    display: none; /* Masquer la modale par défaut */
+}
+
+.news-modal-content {
+    background-color: #AC6CFF; /* Couleur violette */
+    border-radius: 20px;
+    padding: 20px;
+    width: 400px;
+    position: relative; /* Pour positionner les boutons */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre */
+    animation: fadeIn 0.3s ease; /* Animation à l'apparition */
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Bouton de suppression (poubelle) */
+.news-modal-delete-button {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.news-modal-delete-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.news-modal-icon img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    cursor: pointer; /* Affiche que l'image est clickable */
+    border: 2px solid #FFFFFF;
+    border-radius: 10px;
+    object-fit: cover; /* Adapte l'image sans la déformer */
+}
+
+/* Input caché */
+.news-hidden {
+    display: none;
+}
+
+
+/* Champ de description */
+textarea#news-modal-description {
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px -10px;
+    resize: none;
+    font-size: 14px;
+}
+
+/* Bouton d'enregistrement (tick) */
+.news-modal-save-button {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.news-modal-save-button img {
+    width: 20px;
+    height: 20px;
+}
