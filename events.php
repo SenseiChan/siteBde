@@ -5,6 +5,9 @@ session_start(); // Démarrage de la session
 
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
+// Vérifie si l'utilisateur est connecté et admin
+$is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+
 // Connexion à la base de données
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
@@ -141,6 +144,21 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
             <a href="index.php" class="logo">
                 <img src="image/logoAdiil.png" alt="Logo ADIIL">
             </a>
+
+            <!-- Menu Admin -->
+            <?php if ($is_admin): ?>
+            <div class="dropdown">
+                <button class="dropdown-toggle">Admin</button>
+                <div class="dropdown-menu">
+                <a href="#">Espace partagé</a>
+                <a href="gestionMembre.php">Gestion membre</a>
+                <a href="#">Statistique</a>
+                <a href="#">Banque</a>
+                <a href="#">Gestion site</a>
+                </div>
+            </div>
+            <?php endif; ?>
+            
             <nav>
                 <ul class="nav-links">
                     <li><a href="accueil.php">Accueil</a></li>
