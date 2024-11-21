@@ -314,7 +314,6 @@ main {
     font-weight: bold;
     padding: 10px;
     border-radius: 15px;
-    border: 1px solid #AC6CFF; /* Bordure violette autour des produits */
 }
 
 .product-container .product img {
