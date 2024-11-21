@@ -13,23 +13,9 @@ try {
     die('Erreur de connexion : ' . $e->getMessage());
 }
 
-// Vérifier si l'utilisateur est administrateur
-$isAdmin = false;
-
-if ($userId) {
-    $roleQuery = $pdo->prepare('SELECT Id_role FROM Utilisateur WHERE Id_user = :userId');
-    $roleQuery->execute(['userId' => $userId]);
-    $userRole = $roleQuery->fetch(PDO::FETCH_ASSOC);
-
-    if ($userRole && $userRole['Id_role'] == 2) {
-        $isAdmin = true;
-    }
-}
-
 // Requête pour récupérer tous les événements
 $query = "
     SELECT 
-        e.Id_event,
         e.Nom_event, 
         e.Desc_event, 
         e.Date_deb_event, 
@@ -84,6 +70,44 @@ function formatMonthYear($date) {
     return str_replace(array_keys($months), array_values($months), $monthYear);
 }
 
+
+// Fonction pour formater les dates en français
+function formatDate($date) {
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+    
+    $dateTime = new DateTime($date);
+    $dayMonthYear = $dateTime->format('d F Y'); // Par exemple : "18 December 2024"
+    
+    // Traduire en français
+    return str_replace(array_keys($months), array_values($months), $dayMonthYear);
+}
+
+
+// Fonction pour convertir un lien Google Drive
+function convertDriveLink($link) {
+    if (strpos($link, 'drive.google.com') !== false) {
+        preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $link, $matches);
+        if (isset($matches[1])) {
+            $fileId = $matches[1];
+            return "https://drive.google.com/thumbnail?id=" . $fileId;
+        }
+    }
+    return $link;
+}
+
 // Regrouper les événements par mois
 function groupEventsByMonth($events) {
     $grouped = [];
@@ -127,9 +151,12 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
             <!-- Boutons / Profil -->
             <div class="header-buttons">
-                <?php if ($userId): ?>
-                    <!-- Utilisateur connecté -->
-                    <img src="<?= htmlspecialchars(!empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg') ?>" alt="Profil" class="profile-icon">
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
                     <form action="logout.php" method="post" class="logout-form">
                         <button type="submit" class="logout-button">Se déconnecter</button>
                     </form>
@@ -140,6 +167,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                     <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
                 <?php endif; ?>
             </div>
+
         </div>
     </header>     
 
@@ -147,17 +175,13 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
     <section class="events">
       <div class="tabs-container">
         <div class="tabs">
-            <a href="events.php" class="tab active">Événements</a>
-            <a href="calendrier.php" class="tab">Calendrier</a>
+            <a href="events.php" class="tab <?php if($currentPage === 'events') echo 'active'; ?>">Événements</a>
+            <a href="calendrier.php" class="tab <?php if($currentPage === 'calendrier') echo 'active'; ?>">Calendrier</a>
+        </div>
+        <div class="icontri">
+            <img src="image/icon_tri.png" alt="Menu">
         </div>
       </div>
-
-      <!-- Boutons administrateurs -->
-      <?php if ($isAdmin): ?>
-          <div class="admin-buttons">
-              <a href="add_event.php" class="add-event-btn">+ Ajouter un événement</a>
-          </div>
-      <?php endif; ?>
 
       <!-- Événements à venir -->
       <?php foreach ($upcomingEventsGrouped as $month => $events): ?>
@@ -165,26 +189,18 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
           <h3><?= htmlspecialchars($month) ?></h3>
           <?php foreach ($events as $event): ?>
           <div class="event-card">
-            <!-- Bouton Modifier -->
-            <div class="edit-btn-container">
-              <?php if ($isAdmin): ?>
-                <a href="edit_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="edit-event-btn">
-                  <img src="image/icon_modify.png" alt="Modifier">
-                  Modifier
-                </a>
-              <?php endif; ?>
-            </div>
-            <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
+            <img src="<?= htmlspecialchars(convertDriveLink($event['Photo_event'])) ?>" alt="Photo de l'événement">
+            
             <div class="event-info">
               <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
               <div class="event-details-grid">
                   <div class="event-date">
                       <img src="image/Calendar.png" alt="Calendrier" class="icon">
-                      <span><?= htmlspecialchars(formatMonthYear($event['Date_deb_event'])) ?></span>
+                      <span><?= formatDate($event['Date_deb_event']) ?></span>
                   </div>
                   <div class="event-time">
                       <img src="image/Clock.png" alt="Horloge" class="icon">
-                      <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
+                      <span><?= date('H\hi', strtotime($event['Heure_deb_event'])) ?></span>
                   </div>
                   <div class="event-location">
                       <img src="image/Localisation.png" alt="Localisation" class="icon">
@@ -192,7 +208,6 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                   </div>
               </div>
               <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-
               <button class="register-btn">S'inscrire</button>
             </div>
           </div>
@@ -200,42 +215,59 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
         </div>
       <?php endforeach; ?>
 
-      <!-- Evenements passes -->
+      <!-- Événements passés -->
       <?php if (!empty($pastEventsGrouped)): ?>
-        <div class="past-events">
-            <h2>Événements passés</h2>
-            <?php foreach ($pastEventsGrouped as $month => $events): ?>
-                <div class="month-section">
-                    <h3><?= htmlspecialchars($month) ?></h3>
-                    <?php foreach ($events as $event): ?>
-                        <div class="event-card past-event-card">
-                            <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
-                            <div class="event-info">
-                                <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
-                                <div class="event-details-grid">
-                                    <div class="event-date">
-                                        <img src="image/Calendar.png" alt="Calendrier" class="icon">
-                                        <span><?= htmlspecialchars(formatMonthYear($event['Date_deb_event'])) ?></span>
-                                    </div>
-                                    <div class="event-time">
-                                        <img src="image/Clock.png" alt="Horloge" class="icon">
-                                        <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
-                                    </div>
-                                    <div class="event-location">
-                                        <img src="image/Localisation.png" alt="Localisation" class="icon">
-                                        <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
-                                    </div>
-                                </div>
-                                <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+        <div class="month-section">
+          <h3>Événements passés</h3>
+          <?php foreach ($pastEventsGrouped as $month => $events): ?>
+            <div class="past-month">
+              <h4><?= htmlspecialchars($month) ?></h4>
+              <?php foreach ($events as $event): ?>
+              <div class="event-card">
+                <img src="<?= htmlspecialchars(convertDriveLink($event['Photo_event'])) ?>" alt="Photo de l'événement">
+                <div class="event-info">
+                  <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
+                  <div class="event-details-grid">
+                      <div class="event-date">
+                          <img src="image/Calendar.png" alt="Calendrier" class="icon">
+                          <span><?= formatDate($event['Date_deb_event']) ?></span>
+                      </div>
+                      <div class="event-time">
+                          <img src="image/Clock.png" alt="Horloge" class="icon">
+                          <span><?= date('H\hi', strtotime($event['Heure_deb_event'])) ?></span>
+                      </div>
+                      <div class="event-location">
+                          <img src="image/Localisation.png" alt="Localisation" class="icon">
+                          <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
+                      </div>
+                  </div>
+                  <p><?= htmlspecialchars($event['Desc_event']) ?></p>
                 </div>
-            <?php endforeach; ?>
+              </div>
+              <?php endforeach; ?>
+            </div>
+          <?php endforeach; ?>
         </div>
-    <?php endif; ?>
-
+      <?php endif; ?>
     </section>
   </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+      <div class="footer-content">
+          <p>
+              Copyright ©. Tous droits réservés.
+              <a href="#">Mentions légales et CGU</a> | <a href="#">Politique de confidentialité</a>
+          </p>
+          <div class="footer-icons">
+              <a href="#" aria-label="Discord">
+                  <img src="images/discordIconFooter.png" alt="Discord">
+              </a>
+              <a href="#" aria-label="Instagram">
+                  <img src="images/instIconFooter.png" alt="Instagram">
+              </a>
+          </div>
+      </div>
+  </footer>
 </body>
 </html>
