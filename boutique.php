@@ -58,7 +58,7 @@
     
     <section class="consommables">
         <h2>Consommables</h2>
-        <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
 
         <!-- Section Boissons -->
         <div class="sub-section" style="padding: 30px 0px;">
@@ -130,7 +130,7 @@
         <!-- Section Autres -->
         <div class="sub-section">
             <h3>Autres :</h3>
-            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div style="width: 10%; height: 100%; border: 25px #AC6CFF solid; border-radius: 15px;"></div>
             <div class="product-container">
                 <?php
                 try {
