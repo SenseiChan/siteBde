@@ -83,7 +83,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
             <nav>
                 <ul class="nav-links">
                     <li><a href="accueil.php" class="active">Accueil</a></li>
-                    <li><a href="evenements.php">Événements</a></li>
+                    <li><a href="events.php">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
                     <li><a href="faq.php">FAQ</a></li>
