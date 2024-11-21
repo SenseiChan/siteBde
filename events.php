@@ -60,7 +60,7 @@ foreach ($events as $event) {
     }
 }
 
-// Fonction pour formater les mois en français
+// Fonction pour formater les mois en français (pour les sections)
 function formatMonthYear($date) {
     $months = [
         'January' => 'Janvier',
@@ -76,12 +76,41 @@ function formatMonthYear($date) {
         'November' => 'Novembre',
         'December' => 'Décembre'
     ];
-    
+
     $dateTime = new DateTime($date);
-    $monthYear = $dateTime->format('F Y'); // Par exemple : "December 2024"
-    
-    // Traduire en français
-    return str_replace(array_keys($months), array_values($months), $monthYear);
+    $month = $dateTime->format('F');
+    $year = $dateTime->format('Y');
+
+    $month = str_replace(array_keys($months), array_values($months), $month);
+
+    return "$month $year";
+}
+
+// Fonction pour formater une date complète en français (pour les containers)
+function formatFullDate($date) {
+    $months = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ];
+
+    $dateTime = new DateTime($date);
+    $day = $dateTime->format('d');
+    $month = $dateTime->format('F');
+    $year = $dateTime->format('Y');
+
+    $month = str_replace(array_keys($months), array_values($months), $month);
+
+    return "$day $month $year";
 }
 
 // Regrouper les événements par mois
@@ -109,12 +138,9 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 <body>
     <header>
         <div class="header-container">
-            <!-- Logo -->
             <a href="index.php" class="logo">
                 <img src="image/logoAdiil.png" alt="Logo ADIIL">
             </a>
-
-            <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
                     <li><a href="accueil.php">Accueil</a></li>
@@ -124,18 +150,14 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                     <li><a href="faq.php">FAQ</a></li>
                 </ul>
             </nav>
-
-            <!-- Boutons / Profil -->
             <div class="header-buttons">
                 <?php if ($userId): ?>
-                    <!-- Utilisateur connecté -->
                     <img src="<?= htmlspecialchars(!empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg') ?>" alt="Profil" class="profile-icon">
                     <form action="logout.php" method="post" class="logout-form">
                         <button type="submit" class="logout-button">Se déconnecter</button>
                     </form>
                     <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
                 <?php else: ?>
-                    <!-- Boutons si non connecté -->
                     <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
                     <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
                 <?php endif; ?>
@@ -152,7 +174,6 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
         </div>
       </div>
 
-      <!-- Boutons administrateurs -->
       <?php if ($isAdmin): ?>
           <div class="admin-buttons">
               <a href="add_event.php" class="add-event-btn">+ Ajouter un événement</a>
@@ -165,12 +186,10 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
           <h3><?= htmlspecialchars($month) ?></h3>
           <?php foreach ($events as $event): ?>
           <div class="event-card">
-            <!-- Bouton Modifier -->
             <div class="edit-btn-container">
               <?php if ($isAdmin): ?>
                 <a href="edit_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="edit-event-btn">
-                  <img src="image/icon_modify.png" alt="Modifier">
-                  Modifier
+                  <img src="image/icon_modify.png" alt="Modifier"> Modifier
                 </a>
               <?php endif; ?>
             </div>
@@ -179,20 +198,19 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
               <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
               <div class="event-details-grid">
                   <div class="event-date">
-                      <img src="image/Calendar.png" alt="Calendrier" class="icon">
-                      <span><?= htmlspecialchars(formatMonthYear($event['Date_deb_event'])) ?></span>
+                      <img src="image/Calendar.png" alt="Calendrier">
+                      <span><?= htmlspecialchars(formatFullDate($event['Date_deb_event'])) ?></span>
                   </div>
                   <div class="event-time">
-                      <img src="image/Clock.png" alt="Horloge" class="icon">
+                      <img src="image/Clock.png" alt="Horloge">
                       <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
                   </div>
                   <div class="event-location">
-                      <img src="image/Localisation.png" alt="Localisation" class="icon">
+                      <img src="image/Localisation.png" alt="Localisation">
                       <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
                   </div>
               </div>
               <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-
               <button class="register-btn">S'inscrire</button>
             </div>
           </div>
@@ -200,41 +218,40 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
         </div>
       <?php endforeach; ?>
 
-      <!-- Evenements passes -->
+      <!-- Événements passés -->
       <?php if (!empty($pastEventsGrouped)): ?>
         <div class="past-events">
-            <h2>Événements passés</h2>
-            <?php foreach ($pastEventsGrouped as $month => $events): ?>
-                <div class="month-section">
-                    <h3><?= htmlspecialchars($month) ?></h3>
-                    <?php foreach ($events as $event): ?>
-                        <div class="event-card past-event-card">
-                            <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
-                            <div class="event-info">
-                                <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
-                                <div class="event-details-grid">
-                                    <div class="event-date">
-                                        <img src="image/Calendar.png" alt="Calendrier" class="icon">
-                                        <span><?= htmlspecialchars(formatMonthYear($event['Date_deb_event'])) ?></span>
-                                    </div>
-                                    <div class="event-time">
-                                        <img src="image/Clock.png" alt="Horloge" class="icon">
-                                        <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
-                                    </div>
-                                    <div class="event-location">
-                                        <img src="image/Localisation.png" alt="Localisation" class="icon">
-                                        <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
-                                    </div>
-                                </div>
-                                <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+          <h2>Événements passés</h2>
+          <?php foreach ($pastEventsGrouped as $month => $events): ?>
+            <div class="month-section">
+              <h3><?= htmlspecialchars($month) ?></h3>
+              <?php foreach ($events as $event): ?>
+              <div class="event-card past-event-card">
+                <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
+                <div class="event-info">
+                  <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
+                  <div class="event-details-grid">
+                      <div class="event-date">
+                          <img src="image/Calendar.png" alt="Calendrier">
+                          <span><?= htmlspecialchars(formatFullDate($event['Date_deb_event'])) ?></span>
+                      </div>
+                      <div class="event-time">
+                          <img src="image/Clock.png" alt="Horloge">
+                          <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
+                      </div>
+                      <div class="event-location">
+                          <img src="image/Localisation.png" alt="Localisation">
+                          <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
+                      </div>
+                  </div>
+                  <p><?= htmlspecialchars($event['Desc_event']) ?></p>
                 </div>
-            <?php endforeach; ?>
+              </div>
+              <?php endforeach; ?>
+            </div>
+          <?php endforeach; ?>
         </div>
-    <?php endif; ?>
-
+      <?php endif; ?>
     </section>
   </main>
 </body>
