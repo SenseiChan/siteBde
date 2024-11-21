@@ -71,7 +71,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
                 <button class="dropdown-toggle">Admin</button>
                 <div class="dropdown-menu">
                 <a href="#">Espace partagé</a>
-                <a href="#">Gestion membre</a>
+                <a href="gestionMembre.php">Gestion membre</a>
                 <a href="#">Statistique</a>
                 <a href="#">Banque</a>
                 <a href="#">Gestion site</a>
