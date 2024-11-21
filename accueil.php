@@ -38,11 +38,7 @@ $actualites = $query->fetchAll(PDO::FETCH_ASSOC);
 
 session_start(); // Démarrer la session
 
-if (isset($_SESSION['Id_user'])) {
-    $userId = $_SESSION['Id_user'];
-} else {
-    $userId = null; // Ou une valeur par défaut si non connecté
-}
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Vérifie si l'utilisateur est connecté et admin
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
@@ -65,14 +61,28 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
     <header>
         <div class="header-container">
             <!-- Logo -->
-            <a href="index.php" class="logo">
-                <img src="image/logoAdiil.png" alt="Logo ADIIL">
-            </a>
+            <div class="logo">
+                <img src="image/logoAdiil.png" alt="Logo BDE">
+            </div>
+
+            <!-- Menu Admin -->
+            <?php if ($is_admin): ?>
+            <div class="dropdown">
+                <button class="dropdown-toggle">Admin</button>
+                <div class="dropdown-menu">
+                <a href="#">Espace partagé</a>
+                <a href="gestionMembre.php">Gestion membre</a>
+                <a href="#">Statistique</a>
+                <a href="#">Banque</a>
+                <a href="#">Gestion site</a>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php" class="active">Accueil</a></li>
+                    <li><a href="accueil.php" class="active">Accueil</a></li>
                     <li><a href="events.php">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
@@ -80,16 +90,27 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
                 </ul>
             </nav>
 
-            <!-- Boutons et Panier -->
+            <!-- Boutons / Profil -->
             <div class="header-buttons">
-                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
-                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
-                <a href="cart.html">
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                    <form action="logout.php" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Se déconnecter</button>
+                    </form>
                     <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
-                </a>
+                <?php else: ?>
+                    <!-- Boutons si non connecté -->
+                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
+
 
     <section class="hero">
         <div class="hero-content">
@@ -98,10 +119,10 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
             </h1>
             <p>Découvrez une communauté dynamique et engagée au service des étudiants.</p>
             <div class="hero-buttons">
-                <a href="#" class="btn-discord">
+                <a href="https://discord.gg/uGCKejSKQX" class="btn-discord" target="_blank">
                     <img src="image/discord-icon.png" alt="Discord" class="button-icon"> Discord
                 </a>
-                <a href="#" class="btn-instagram">
+                <a href="https://www.instagram.com/bdeinfolaval?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="btn-instagram" target="_blank">
                     <img src="image/insta-icon.png" alt="Instagram" class="button-icon"> Instagram
                 </a>
             </div>

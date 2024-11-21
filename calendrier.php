@@ -3,10 +3,7 @@ $currentPage = 'calendrier';
 
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: connexion.html");
-    exit();
-}
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Connexion à la base de données
 $dsn = 'mysql:host=localhost;dbname=sae;charset=utf8';
@@ -22,27 +19,98 @@ try {
     die('Erreur de connexion : ' . $e->getMessage());
 }
 
-// Gestion du mois sélectionné
-$currentMonth = isset($_GET['month']) ? $_GET['month'] : date('Y-m');
-$startDate = strtotime($currentMonth . '-01');
-$endDate = strtotime(date('Y-m-t', $startDate));
+// Gestion du mois et de l'année sélectionnés
+if (isset($_GET['month']) && preg_match('/^\d{4}-\d{2}$/', $_GET['month'])) {
+    $selectedYear = substr($_GET['month'], 0, 4); // Année
+    $selectedMonth = substr($_GET['month'], 5, 2); // Mois
+} else {
+    $selectedYear = date('Y');
+    $selectedMonth = date('m');
+}
 
-// Récupération des événements
-$query = $pdo->prepare("SELECT * FROM Calendrier WHERE DateHeure_calend BETWEEN :start AND :end ORDER BY DateHeure_calend");
+// Définir les limites de début et de fin pour le mois sélectionné
+$startDate = "$selectedYear-$selectedMonth-01";
+$endDate = date('Y-m-t', strtotime($startDate));
+
+// Récupérer les événements pour le mois sélectionné
+$query = $pdo->prepare("
+    SELECT e.Nom_event, e.Date_deb_event, e.Heure_deb_event, a.NomNumero_rue, a.Ville
+    FROM Evenement e
+    JOIN Adresse a ON e.Id_adr = a.Id_adr
+    WHERE e.Date_deb_event BETWEEN :startDate AND :endDate
+    ORDER BY e.Date_deb_event
+");
 $query->execute([
-    ':start' => date('Y-m-d H:i:s', $startDate),
-    ':end' => date('Y-m-d H:i:s', $endDate),
+    ':startDate' => $startDate,
+    ':endDate' => $endDate
 ]);
 $events = $query->fetchAll();
 
-// Organisation des événements par jour
-$eventByDay = [];
+// Organiser les événements par jour
+$eventsByDay = [];
 foreach ($events as $event) {
-    $date = date('Y-m-d', strtotime($event['DateHeure_calend']));
-    $eventByDay[$date][] = $event;
+    $day = date('j', strtotime($event['Date_deb_event'])); // Jour du mois
+    $eventsByDay[$day][] = $event;
+}
+
+// Fonction pour générer le calendrier
+function generateCalendar($year, $month, $eventsByDay) {
+    $daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    $firstDayOfMonth = strtotime("$year-$month-01");
+    $totalDays = date('t', $firstDayOfMonth); // Nombre total de jours dans le mois
+    $startDayOfWeek = date('N', $firstDayOfMonth); // Jour de la semaine du 1er jour (1 = Lundi)
+
+    // Affichage du calendrier
+    echo '<table class="calendar">';
+    echo '<thead><tr>';
+    foreach ($daysOfWeek as $day) {
+        echo "<th>$day</th>";
+    }
+    echo '</tr></thead>';
+    echo '<tbody><tr>';
+
+    // Remplir les cellules vides avant le premier jour du mois
+    for ($i = 1; $i < $startDayOfWeek; $i++) {
+        echo '<td class="empty"></td>';
+    }
+
+    // Remplir les jours du mois
+    for ($day = 1; $day <= $totalDays; $day++) {
+        $currentDay = str_pad($day, 2, '0', STR_PAD_LEFT);
+        echo '<td>';
+        echo "<div class='day-number'>$day</div>";
+
+        // Afficher les événements pour ce jour
+        if (isset($eventsByDay[$day])) {
+            foreach ($eventsByDay[$day] as $event) {
+                echo "<div class='event'>";
+                echo "<span class='event-time'>" . date('H:i', strtotime($event['Heure_deb_event'])) . "</span> ";
+                echo "<span class='event-name'>" . htmlspecialchars($event['Nom_event']) . "</span>";
+                echo "</div>";
+            }
+        }
+
+        echo '</td>';
+
+        // Nouvelle ligne après Dimanche
+        if (date('N', strtotime("$year-$month-$currentDay")) == 7) {
+            echo '</tr>';
+            if ($day < $totalDays) {
+                echo '<tr>';
+            }
+        }
+    }
+
+    // Remplir les cellules vides après le dernier jour du mois
+    $lastDayOfWeek = date('N', strtotime("$year-$month-$totalDays"));
+    for ($i = $lastDayOfWeek; $i < 7; $i++) {
+        echo '<td class="empty"></td>';
+    }
+
+    echo '</tr></tbody>';
+    echo '</table>';
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -55,101 +123,63 @@ foreach ($events as $event) {
     <!-- Header -->
     <header>
         <div class="header-container">
+            <!-- Logo -->
             <a href="index.php" class="logo">
                 <img src="image/logoAdiil.png" alt="Logo ADIIL">
             </a>
+
+            <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="accueil.php">Accueil</a></li>
                     <li><a href="events.php" class="active">Événements</a></li>
                     <li><a href="boutique.php">Boutique</a></li>
                     <li><a href="bde.php">BDE</a></li>
                     <li><a href="faq.php">FAQ</a></li>
                 </ul>
             </nav>
+
+            <!-- Boutons / Profil -->
             <div class="header-buttons">
-                <img src="image/icon_user.png" alt="Icône utilisateur" class="user-icon">
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                    <form action="logout.php" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Se déconnecter</button>
+                    </form>
+                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <?php else: ?>
+                    <!-- Boutons si non connecté -->
+                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php endif; ?>
             </div>
+
         </div>
-    </header>
+    </header>   
 
     <!-- Onglets -->
     <div class="tabs-container">
         <div class="tabs">
-            <a href="events.php" class="tab <?php if($currentPage === 'events') echo 'active'; ?>">Événements</a>
-            <a href="calendrier.php" class="tab <?php if($currentPage === 'calendrier') echo 'active'; ?>">Calendrier</a>
-        </div>
-        <div class="icontri">
-            <img src="image/icon_tri.png" alt="Menu">
+            <a href="events.php" class="tab">Événements</a>
+            <a href="calendrier.php" class="tab active">Calendrier</a>
         </div>
     </div>
 
-    <!-- Calendrier -->
+    <!-- Sélecteur de mois -->
     <main>
         <div class="calendar-container">
             <h2>Calendrier des événements</h2>
             <form action="" method="GET" class="month-selector">
                 <label for="month">Choisir un mois :</label>
-                <input type="month" id="month" name="month" value="<?= date('Y-m', $startDate); ?>">
-                <button type="submit">Afficher</button>
+                <input type="month" id="month" name="month" value="<?= htmlspecialchars($selectedYear . '-' . $selectedMonth) ?>" class="styled-month">
+                <button type="submit" class="styled-button">Afficher</button>
             </form>
-            <table class="calendar">
-                <thead>
-                    <tr>
-                        <th>Lun</th>
-                        <th>Mar</th>
-                        <th>Mer</th>
-                        <th>Jeu</th>
-                        <th>Ven</th>
-                        <th>Sam</th>
-                        <th>Dim</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $currentDay = $startDate;
-                    echo '<tr>';
-                    for ($i = 1; $i < date('N', $currentDay); $i++) echo '<td></td>';
-                    while ($currentDay <= $endDate) {
-                        $day = date('Y-m-d', $currentDay);
-                        if (date('N', $currentDay) == 1 && $currentDay != $startDate) echo '</tr><tr>';
-                        echo '<td>';
-                        echo date('j', $currentDay);
-                        if (isset($eventByDay[$day])) {
-                            foreach ($eventByDay[$day] as $event) {
-                                echo '<div class="event">';
-                                echo '<span>' . date('H:i', strtotime($event['DateHeure_calend'])) . '</span> - ';
-                                echo htmlspecialchars($event['Nom_calend']);
-                                echo '</div>';
-                            }
-                        }
-                        echo '</td>';
-                        $currentDay = strtotime('+1 day', $currentDay);
-                    }
-                    for ($i = date('N', $currentDay); $i <= 7 && $i != 1; $i++) echo '<td></td>';
-                    echo '</tr>';
-                    ?>
-                </tbody>
-            </table>
+            <?php generateCalendar($selectedYear, $selectedMonth, $eventsByDay); ?>
         </div>
     </main>
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="footer-content">
-          <p>
-              Copyright ©. Tous droits réservés.
-              <a href="#">Mentions légales et CGU</a> | <a href="#">Politique de confidentialité</a>
-          </p>
-          <div class="footer-icons">
-              <a href="#" aria-label="Discord">
-                  <img src="images/discordIconFooter.png" alt="Discord">
-              </a>
-              <a href="#" aria-label="Instagram">
-                  <img src="images/instIconFooter.png" alt="Instagram">
-              </a>
-          </div>
-      </div>
-    </footer>
 </body>
 </html>
