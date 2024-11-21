@@ -1,21 +1,3 @@
-<?php
-// Fonction pour convertir les liens Google Drive en liens affichables
-function convertDriveLink($link) {
-    // Vérifie si le lien contient "drive.google.com"
-    if (strpos($link, 'drive.google.com') !== false) {
-        // Extrais l'ID du fichier à partir du lien Google Drive
-        preg_match('/(?:id=|\/d\/|file\/d\/)([a-zA-Z0-9_-]+)/', $link, $matches);
-        if (isset($matches[1])) {
-            $fileId = $matches[1];
-            // Retourne le lien au format d'image affichable
-            return "https://drive.google.com/uc?export=view&id=" . $fileId;
-        }
-    }
-    // Si le lien ne correspond pas au format attendu, retourne le lien d'origine
-    return $link;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,105 +62,100 @@ function convertDriveLink($link) {
 
         <!-- Section Boissons -->
         <div class="sub-section" style="padding: 30px 0px;">
-    <h3>Boissons :</h3>
-    <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-    <div class="product-container">
-        <?php
-        // Connexion à la base de données
-        $host = 'localhost';
-        $dbname = 'Sae';
-        $username = 'root';
-        $password = '';
+            <h3>Boissons :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                // Connexion à la base de données
+                $host = 'localhost';
+                $dbname = 'Sae';
+                $username = 'root';
+                $password = '';
 
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                try {
+                    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Récupération des boissons
-            $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $imageUrl = convertDriveLink($row['Photo_prod']);
+                    // Récupération des boissons
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
 
-
-                echo "
-                <div class='product'>
-                    <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                    <p>
-                        <span class='name'>{$row['Nom_prod']}</span><br><br>
-                        Prix : {$row['Prix_prod']}€<br><br>
-                        En stock : {$row['Stock_prod']}
-                    </p>
-                </div>";
-            }
-        } catch (PDOException $e) {
-            echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-        }
-        ?>
-    </div>
-</div>
-
-        
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
 
         <!-- Section Snacks -->
         <div class="sub-section">
-    <h3>Snacks :</h3>
-    <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-    <div class="product-container">
-        <?php
-        try {
-            // Récupération des snacks
-            $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $imageUrl = convertDriveLink($row['Photo_prod']);
+            <h3>Snacks :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                try {
+                    // Récupération des snacks
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
 
-                echo "
-                <div class='product'>
-                    <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                    <p>
-                        <span class='name'>{$row['Nom_prod']}</span><br><br>
-                        Prix : {$row['Prix_prod']}€<br><br>
-                        En stock : {$row['Stock_prod']}
-                    </p>
-                </div>";
-            }
-        } catch (PDOException $e) {
-            echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-        }
-        ?>
-    </div>
-</div>
-<!-- Section Autres -->
-<div class="sub-section">
-    <h3>Autres :</h3>
-    <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-    <div class="product-container">
-        <?php
-        try {
-            // Récupération des produits "Autres"
-            $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $imageUrl = convertDriveLink($row['Photo_prod']);
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
 
-                echo "
-                <div class='product'>
-                    <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                    <p>
-                        <span class='name'>{$row['Nom_prod']}</span><br><br>
-                        Prix : {$row['Prix_prod']}€<br><br>
-                        En stock : {$row['Stock_prod']}
-                    </p>
-                </div>";
-            }
-        } catch (PDOException $e) {
-            echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-        }
-        ?>
-    </div>
-</div>
+        <!-- Section Autres -->
+        <div class="sub-section">
+            <h3>Autres :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                try {
+                    // Récupération des produits "Autres"
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
 
-
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
     </section>
-
 </main>
 </body>
 </html>
