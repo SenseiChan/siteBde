@@ -1,10 +1,7 @@
 <?php
-// Démarrer la session
-session_start();
-
 // Connexion à la base de données
 $host = 'localhost';
-$dbname = 'Sae';
+$dbname = 'sae';
 $username = 'root';
 $password = '';
 
@@ -16,33 +13,29 @@ try {
 }
 
 // Fonction pour vérifier si un utilisateur est administrateur
-function isAdmin($pdo) {
-    // Vérifier si l'utilisateur est un administrateur dans la session
-    return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
-}
+session_start();
+$is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
 // Message pour le formulaire d'ajout
 $message = "";
 
 // Gestion de l'ajout d'un produit
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     $name = $_POST['name'];
-    $type = $_POST['type'];
     $price = $_POST['price'];
     $stock = $_POST['stock'];
 
     // Upload de l'image
-    $targetDir = "image/";
+    $targetDir = "imagesAdmin/";
     $targetFile = $targetDir . basename($_FILES["photo"]["name"]);
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
         try {
             $stmt = $pdo->prepare("
-                INSERT INTO produit (Nom_prod, Type_prod, Prix_prod, Stock_prod, Photo_prod) 
-                VALUES (:name, :type, :price, :stock, :photo)
+                INSERT INTO produit (Nom_prod, Prix_prod, Stock_prod, Photo_prod) 
+                VALUES (:name, :price, :stock, :photo)
             ");
             $stmt->execute([
                 'name' => $name,
-                'type' => $type,
                 'price' => $price,
                 'stock' => $stock,
                 'photo' => basename($_FILES["photo"]["name"])
@@ -105,19 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
         <?php if (!empty($message)) echo $message; ?>
 
         <!-- Formulaire d'ajout pour les admins -->
-        <?php if (isAdmin($pdo)): ?>
+        <?php if ($is_admin): ?>
         <div class="add-product">
             <h3>Ajouter un consommable</h3>
             <form action="" method="POST" enctype="multipart/form-data" class="add-product-form">
                 <label for="name">Nom du produit :</label>
                 <input type="text" id="name" name="name" required>
-
-                <label for="type">Type :</label>
-                <select id="type" name="type" required>
-                    <option value="boisson">Boisson</option>
-                    <option value="snack">Snack</option>
-                    <option value="autres">Autres</option>
-                </select>
 
                 <label for="price">Prix (€) :</label>
                 <input type="number" id="price" name="price" min="0" step="0.01" required>
@@ -133,17 +119,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
         </div>
         <?php endif; ?>
 
-        <!-- Contenu des sections -->
-        <?php
-        $categories = ['boisson' => 'Boissons', 'snack' => 'Snacks', 'autres' => 'Autres'];
-        foreach ($categories as $key => $label) {
-            echo "<div class='sub-section'>";
-            echo "<h3>$label :</h3>";
-            echo "<div class='product-container'>";
+        <!-- Affichage des produits -->
+        <div class="product-container">
+            <h3>Tous les produits :</h3>
+            <?php
             try {
-                $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = '$key'");
+                // Récupération de tous les produits
+                $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit");
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $imageUrl = "image/" . htmlspecialchars($row['Photo_prod']);
+                    $imageUrl = "imagesAdmin/". htmlspecialchars($row['Photo_prod']);
                     echo "
                     <div class='product'>
                         <img src='{$imageUrl}' alt='" . htmlspecialchars($row['Nom_prod']) . "' class='frame'>
@@ -157,10 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
             } catch (PDOException $e) {
                 echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
             }
-            echo "</div>";
-            echo "</div>";
-        }
-        ?>
+            ?>
+        </div>
     </section>
 </main>
 </body>
