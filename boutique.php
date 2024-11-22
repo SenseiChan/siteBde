@@ -1,37 +1,39 @@
 <?php
+// Démarrer la session
+session_start();
+
 // Connexion à la base de données
+$host = 'localhost';
+$dbname = 'Sae';
+$username = 'root';
+$password = '';
+
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=Sae;charset=utf8", "root", "");
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erreur : " . $e->getMessage());
 }
 
-// Fonction pour vérifier si l'utilisateur est administrateur
-function isAdmin($userId, $pdo) {
-    $stmt = $pdo->prepare("SELECT is_admin FROM users WHERE id = :id");
-    $stmt->execute(['id' => $userId]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result['is_admin'] ?? 0; // Retourne 1 si admin, 0 sinon
+// Fonction pour vérifier si un utilisateur est administrateur
+function isAdmin($pdo) {
+    // Vérifier si l'utilisateur est un administrateur dans la session
+    return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 }
 
-// Simulez l'ID de l'utilisateur connecté (à remplacer par votre système d'authentification)
-$currentUserId = 1; // ID fictif pour l'exemple
-$isAdmin = isAdmin($currentUserId, $pdo);
-
-// Traitement de l'ajout de produit si le formulaire est soumis
+// Message pour le formulaire d'ajout
 $message = "";
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
+
+// Gestion de l'ajout d'un produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
     $name = $_POST['name'];
     $type = $_POST['type'];
     $price = $_POST['price'];
     $stock = $_POST['stock'];
 
-    // Gestion de l'upload de l'image
+    // Upload de l'image
     $targetDir = "image/";
     $targetFile = $targetDir . basename($_FILES["photo"]["name"]);
-    $uploadOk = 1;
-
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
         try {
             $stmt = $pdo->prepare("
@@ -50,16 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
             $message = "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
         }
     } else {
-        $message = "<p style='color:red;'>Échec de l'upload de l'image.</p>";
+        $message = "<p style='color:red;'>Erreur lors de l'upload de l'image.</p>";
     }
-}
-
-// Récupération des produits existants
-try {
-    $stmt = $pdo->query("SELECT * FROM produit ORDER BY Type_prod");
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Erreur : " . $e->getMessage());
 }
 ?>
 
@@ -75,7 +69,7 @@ try {
 <header>
     <div class="header-container">
         <a href="index.php" class="logo">
-            <img src="imagesAdmin/logoAdiil.png" alt="Logo ADIIL">
+            <img src="image/logoAdiil.png" alt="Logo ADIIL">
         </a>
         <nav>
             <ul class="nav-links">
@@ -89,57 +83,84 @@ try {
         <div class="header-buttons">
             <button class="connectButtonHeader">Se connecter</button>
             <button class="registerButtonHeader">S'inscrire</button>
-            <img src="imagesAdmin/logoPanier.png" alt="Panier" class="cartIcon">
+            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
         </div>
     </div>
 </header>
 <main>
+    <!-- Grades Section -->
+    <section class="grades" style="padding: 80px 0px;">
+        <h2>Grades</h2>
+        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+        <div class="grades-container">
+            <!-- Contenu des grades -->
+        </div>
+    </section>
+
+    <!-- Consommables Section -->
     <section class="consommables">
         <h2>Consommables</h2>
+        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+
         <?php if (!empty($message)) echo $message; ?>
 
-        <div class="product-container">
-            <?php foreach ($products as $product): ?>
-                <div class="product">
-                    <img src="image/<?php echo htmlspecialchars($product['Photo_prod']); ?>" alt="Produit">
-                    <p>
-                        <span class="name"><?php echo htmlspecialchars($product['Nom_prod']); ?></span><br>
-                        Type : <?php echo htmlspecialchars($product['Type_prod']); ?><br>
-                        Prix : <?php echo htmlspecialchars($product['Prix_prod']); ?> €<br>
-                        Stock : <?php echo htmlspecialchars($product['Stock_prod']); ?>
-                    </p>
-                </div>
-            <?php endforeach; ?>
+        <!-- Formulaire d'ajout pour les admins -->
+        <?php if (isAdmin($pdo)): ?>
+        <div class="add-product">
+            <h3>Ajouter un consommable</h3>
+            <form action="" method="POST" enctype="multipart/form-data" class="add-product-form">
+                <label for="name">Nom du produit :</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="type">Type :</label>
+                <select id="type" name="type" required>
+                    <option value="boisson">Boisson</option>
+                    <option value="snack">Snack</option>
+                    <option value="autres">Autres</option>
+                </select>
+
+                <label for="price">Prix (€) :</label>
+                <input type="number" id="price" name="price" min="0" step="0.01" required>
+
+                <label for="stock">Stock :</label>
+                <input type="number" id="stock" name="stock" min="0" required>
+
+                <label for="photo">Photo du produit :</label>
+                <input type="file" id="photo" name="photo" accept="image/*" required>
+
+                <button type="submit" class="registerButtonHeader">Ajouter</button>
+            </form>
         </div>
-
-        <!-- Section pour ajouter des produits (seulement pour les admins) -->
-        <?php if ($isAdmin): ?>
-            <div class="add-product">
-                <h3>Ajouter un consommable</h3>
-                <form action="" method="POST" enctype="multipart/form-data" class="add-product-form">
-                    <label for="name">Nom du produit :</label>
-                    <input type="text" id="name" name="name" required>
-
-                    <label for="type">Type :</label>
-                    <select id="type" name="type" required>
-                        <option value="boisson">Boisson</option>
-                        <option value="snack">Snack</option>
-                        <option value="autres">Autres</option>
-                    </select>
-
-                    <label for="price">Prix (€) :</label>
-                    <input type="number" id="price" name="price" min="0" step="0.01" required>
-
-                    <label for="stock">Stock :</label>
-                    <input type="number" id="stock" name="stock" min="0" required>
-
-                    <label for="photo">Photo du produit :</label>
-                    <input type="file" id="photo" name="photo" accept="image/*" required>
-
-                    <button type="submit" class="registerButtonHeader">Ajouter</button>
-                </form>
-            </div>
         <?php endif; ?>
+
+        <!-- Contenu des sections -->
+        <?php
+        $categories = ['boisson' => 'Boissons', 'snack' => 'Snacks', 'autres' => 'Autres'];
+        foreach ($categories as $key => $label) {
+            echo "<div class='sub-section'>";
+            echo "<h3>$label :</h3>";
+            echo "<div class='product-container'>";
+            try {
+                $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = '$key'");
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $imageUrl = "image/" . htmlspecialchars($row['Photo_prod']);
+                    echo "
+                    <div class='product'>
+                        <img src='{$imageUrl}' alt='" . htmlspecialchars($row['Nom_prod']) . "' class='frame'>
+                        <p>
+                            <span class='name'>" . htmlspecialchars($row['Nom_prod']) . "</span><br><br>
+                            Prix : " . htmlspecialchars($row['Prix_prod']) . "€<br><br>
+                            En stock : " . htmlspecialchars($row['Stock_prod']) . "
+                        </p>
+                    </div>";
+                }
+            } catch (PDOException $e) {
+                echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+            }
+            echo "</div>";
+            echo "</div>";
+        }
+        ?>
     </section>
 </main>
 </body>
