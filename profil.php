@@ -118,6 +118,23 @@ $badgesQuery = $pdo->prepare("
 $badgesQuery->execute(['id' => $userId]);
 $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch all badges
+$allBadgesQuery = $pdo->query("
+    SELECT Id_badge, Nom_badge, Photo_badge
+    FROM badge
+");
+$allBadges = $allBadgesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch user's badges
+$userBadgesQuery = $pdo->prepare("
+    SELECT Id_badge
+    FROM decrocher
+    WHERE Id_user = :userId
+");
+$userBadgesQuery->execute(['userId' => $userId]);
+$userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
+
+
 ?>
 
 
@@ -166,10 +183,8 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
         <div class="header-buttons">
             <?php
             if ($userId!=null):
-                // Utilisateur connecté
-                $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
             ?>
-                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Profil" class="profile-icon">
                 <form action="logout.php" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Se déconnecter</button>
                 </form>
@@ -280,6 +295,43 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
             <button class="save-info-btn">Enregistrer</button>
             <button class="close-modal">Fermer</button>
         </div>
+    </div>
+
+    <div class="history-modal hidden">
+        <div class="history-header">
+            <h2>Historique</h2>
+            <button class="close-history-modal">X</button>
+        </div>
+        <div class="history-search">
+            <input type="text" id="transaction-search" placeholder="Rechercher par nom..." />
+        </div>
+        <div class="history-content">
+            <!-- Transactions will be dynamically loaded here -->
+        </div>
+    </div>
+    <div class="badge-modal hidden">
+        <h2>Badges</h2>
+        <div class="modal-body">
+            <div class="badge-category">
+                <h3>Année :</h3>
+                <div class="badges">
+                    <?php foreach ($allBadges as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="badge-category">
+                <h3>Taux de participations :</h3>
+                <!-- Repeat similar structure for other badge categories -->
+            </div>
+            <div class="badge-category">
+                <h3>Grades :</h3>
+                <!-- Repeat similar structure for grade-related badges -->
+            </div>
+        </div>
+        <button class="close-badge-modal">X</button>
     </div>
     <script src="js/scriptProf.js"></script>
 </body>
