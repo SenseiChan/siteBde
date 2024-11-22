@@ -1,4 +1,7 @@
 <?php
+// Démarrer la session
+session_start();
+
 // Connexion à la base de données
 $host = 'localhost';
 $dbname = 'Sae';
@@ -13,22 +16,16 @@ try {
 }
 
 // Fonction pour vérifier si un utilisateur est administrateur
-function isAdmin($userId, $pdo) {
-    $stmt = $pdo->prepare("SELECT is_admin FROM users WHERE id = :id");
-    $stmt->execute(['id' => $userId]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result['is_admin'] ?? 0; // Retourne 1 si admin, 0 sinon
+function isAdmin($pdo) {
+    // Vérifier si l'utilisateur est un administrateur dans la session
+    return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 }
-
-// ID de l'utilisateur connecté (remplacez par le système de gestion de session)
-$currentUserId = 1; // Simule un utilisateur connecté
-$isAdmin = isAdmin($currentUserId, $pdo);
 
 // Message pour le formulaire d'ajout
 $message = "";
 
 // Gestion de l'ajout d'un produit
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAdmin($pdo)) {
     $name = $_POST['name'];
     $type = $_POST['type'];
     $price = $_POST['price'];
@@ -108,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
         <?php if (!empty($message)) echo $message; ?>
 
         <!-- Formulaire d'ajout pour les admins -->
-        <?php if ($isAdmin): ?>
+        <?php if (isAdmin($pdo)): ?>
         <div class="add-product">
             <h3>Ajouter un consommable</h3>
             <form action="" method="POST" enctype="multipart/form-data" class="add-product-form">
