@@ -146,22 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
             <h3>Boissons :</h3>
             <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
             <div class="product-container">
-                <?php
-                // Connexion à la base de données
-                $host = 'localhost';
-                $dbname = 'Sae';
-                $username = 'root';
-                $password = '';
-
+            <?php
                 try {
-                    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                    // Récupération des boissons
+                    // Récupération des snacks
                     $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $imageUrl = "image/" . $row['Nom_prod'];
-
                         echo "
                         <div class='product'>
                             <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
