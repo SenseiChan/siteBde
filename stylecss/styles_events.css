@@ -369,10 +369,12 @@ main {
   border-radius: 5px;
   cursor: pointer;
   align-self: flex-start;
+  text-decoration: none;
 }
 
 .register-btn:hover {
   background-color: #9B5FEF;
+  text-decoration: none;
 }
 
 /* --------------------------------------------- */

@@ -229,7 +229,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                   </div>
               </div>
               <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-              <button class="register-btn">S'inscrire</button>
+              <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
             </div>
           </div>
           <?php endforeach; ?>
