@@ -10,7 +10,7 @@
 <header>
     <div class="header-container">
         <a href="index.php" class="logo">
-            <img src="imagesAdmin/logoAdiil.png" alt="Logo ADIIL">
+            <img src="image/logoAdiil.png" alt="Logo ADIIL">
         </a>
         <nav>
             <ul class="nav-links">
@@ -24,7 +24,7 @@
         <div class="header-buttons">
             <button class="connectButtonHeader">Se connecter</button>
             <button class="registerButtonHeader">S'inscrire</button>
-            <img src="imagesAdmin/logoPanier.png" alt="Panier" class="cartIcon">
+            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
         </div>
     </div>
 </header>
@@ -130,7 +130,7 @@
         <!-- Section Autres -->
         <div class="sub-section">
             <h3>Autres :</h3>
-            <div style="width: 10%; height: 100%; border: 25px #AC6CFF solid; border-radius: 15px;"></div>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
             <div class="product-container">
                 <?php
                 try {
