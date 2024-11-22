@@ -56,7 +56,11 @@ try {
         $stmt->execute();
 
         // Réponse JSON
-        echo json_encode(['success' => true, 'message' => 'Statistique ajoutée avec succès.']);
+        // Réponse JSON pour succès
+        echo json_encode([
+            'success' => true,
+            'message' => 'Nouvelle statistique ajoutée avec succès.'
+        ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
     }

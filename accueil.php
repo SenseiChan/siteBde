@@ -57,6 +57,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
         const userId = <?php echo json_encode($userId); ?>;
     </script>
 </head>
+<div id="admin-popup" class="popup hidden"></div>
 <body>
     <header>
         <div class="header-container">
@@ -177,7 +178,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
                 <!-- Input caché pour le téléchargement -->
                 <input type="file" id="image-input" accept="image/*" class="hidden">
                 <textarea id="modal-description" placeholder="Description"></textarea>
-                <button id="save-modal" class="modal-save-button">
+                <button id="save-modal" class="modal-save-button" onclick="addStat()">
                     <img src="image/tick.png" alt="Enregistrer">
                 </button>
             </div>
@@ -249,7 +250,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
                 </button>
                 <textarea id="news-modal-titre" placeholder="Titre"></textarea>
                 <textarea id="news-modal-description" placeholder="Description"></textarea>
-                <button id="news-save-modal" class="news-modal-save-button">
+                <button id="news-save-modal" class="news-modal-save-button" onclick="addNews()">
                     <img src="image/tick.png" alt="Enregistrer">
                 </button>
             </div>

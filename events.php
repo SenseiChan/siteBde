@@ -32,6 +32,17 @@ if ($userId) {
     }
 }
 
+// Fonction pour vérifier si un utilisateur est inscrit à un événement
+function isUserRegistered($pdo, $userId, $eventId) {
+    $query = "SELECT COUNT(*) FROM Participer WHERE Id_user = :userId AND Id_event = :eventId";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([
+        'userId' => $userId,
+        'eventId' => $eventId,
+    ]);
+    return $stmt->fetchColumn() > 0;
+}
+
 // Requête pour récupérer tous les événements
 $query = "
     SELECT 
@@ -161,11 +172,12 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
     });
 </script>
 <body>
-    <header>
+<header>
         <div class="header-container">
-            <a href="index.php" class="logo">
-                <img src="image/logoAdiil.png" alt="Logo ADIIL">
-            </a>
+            <!-- Logo -->
+            <div class="logo">
+                <img src="image/logoAdiil.png" alt="Logo BDE">
+            </div>
 
             <!-- Menu Admin -->
             <?php if ($is_admin): ?>
@@ -180,7 +192,8 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                 </div>
             </div>
             <?php endif; ?>
-            
+
+            <!-- Navigation -->
             <nav>
                 <ul class="nav-links">
                     <li><a href="accueil.php">Accueil</a></li>
@@ -190,20 +203,27 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                     <li><a href="faq.php">FAQ</a></li>
                 </ul>
             </nav>
+
+            <!-- Boutons / Profil -->
             <div class="header-buttons">
-                <?php if ($userId): ?>
-                    <img src="<?= htmlspecialchars(!empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg') ?>" alt="Profil" class="profile-icon">
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
                     <form action="logout.php" method="post" class="logout-form">
                         <button type="submit" class="logout-button">Se déconnecter</button>
                     </form>
                     <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
                 <?php else: ?>
+                    <!-- Boutons si non connecté -->
                     <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
                     <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
                 <?php endif; ?>
             </div>
         </div>
-    </header>     
+    </header>    
 
   <main>
     <section class="events">
@@ -251,7 +271,11 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                   </div>
               </div>
               <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-              <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
+              <?php if (isUserRegistered($pdo, $userId, $event['Id_event'])): ?>
+                <button class="register-btn disabled" disabled>Déjà inscrit</button>
+              <?php else: ?>
+                <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
+              <?php endif; ?>
             </div>
           </div>
           <?php endforeach; ?>

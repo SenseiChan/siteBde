@@ -49,7 +49,12 @@ try {
         $stmt->execute();
 
         // Réponse JSON
-        echo json_encode(['success' => true, 'message' => 'Données ajoutées avec succès.']);
+        // Réponse JSON pour succès
+        echo json_encode([
+            'success' => true,
+            'message' => 'Nouvelle actualité ajoutée avec succès.'
+        ]);
+
     } else {
         echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
     }
