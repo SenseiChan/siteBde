@@ -174,3 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const badgeButton = document.querySelector('.view-badges'); // Add this class to the "Badges" button
+    const badgeModal = document.querySelector('.badge-modal');
+    const closeBadgeModal = document.querySelector('.close-badge-modal');
+    const blurElements = document.querySelectorAll('.blur-target'); // Elements to blur
+
+    badgeButton.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.add('blur'));
+        badgeModal.classList.remove('hidden');
+    });
+
+    closeBadgeModal.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.remove('blur'));
+        badgeModal.classList.add('hidden');
+    });
+});
