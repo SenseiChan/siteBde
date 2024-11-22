@@ -8,6 +8,9 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 // Vérifie si l'utilisateur est connecté et admin
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
+// Vérifie si le message de succès doit être affiché
+$showSuccessPopup = isset($_GET['success']) && $_GET['success'] === 'true';
+
 // Connexion à la base de données
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
@@ -138,6 +141,25 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
   <title>Événements - BDE ADIIL</title>
   <link rel="stylesheet" href="stylecss/styles_events.css">
 </head>
+<?php if ($showSuccessPopup): ?>
+    <div id="success-popup" class="popup">
+        Inscription réussie !
+    </div>
+<?php endif; ?>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('success-popup');
+        if (popup) {
+            // Affiche le pop-up
+            popup.classList.add('show');
+            
+            // Cache le pop-up après 3 secondes
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+    });
+</script>
 <body>
     <header>
         <div class="header-container">
@@ -229,7 +251,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                   </div>
               </div>
               <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-              <button class="register-btn">S'inscrire</button>
+              <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
             </div>
           </div>
           <?php endforeach; ?>

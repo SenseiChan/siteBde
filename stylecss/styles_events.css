@@ -369,10 +369,12 @@ main {
   border-radius: 5px;
   cursor: pointer;
   align-self: flex-start;
+  text-decoration: none;
 }
 
 .register-btn:hover {
   background-color: #9B5FEF;
+  text-decoration: none;
 }
 
 /* --------------------------------------------- */
@@ -426,6 +428,30 @@ main {
   color: #999999; /* Couleur grisée pour la description */
 }
 
+/* --------------------------------------------- */
+/* Popup inscription réussie */
+/* --------------------------------------------- */
+
+.popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: #FFFFFF;
+  padding: 15px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popup.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* --------------------------------------------- */
 /* Footer */
