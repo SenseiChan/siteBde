@@ -15,6 +15,8 @@ try {
 // Fonction pour vérifier si un utilisateur est administrateur
 session_start();
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
 
 // Message pour le formulaire d'ajout
 $message = "";
@@ -60,26 +62,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 </head>
 <body>
 <header>
-    <div class="header-container">
-        <a href="index.php" class="logo">
-            <img src="image/logoAdiil.png" alt="Logo ADIIL">
-        </a>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="accueil.php">Accueil</a></li>
-                <li><a href="events.php">Événements</a></li>
-                <li><a href="boutique.php"class="active">Boutique</a></li>
-                <li><a href="bde.php">BDE</a></li>
-                <li><a href="faq.php">FAQ</a></li>
-            </ul>
-        </nav>
-        <div class="header-buttons">
-            <button class="connectButtonHeader">Se connecter</button>
-            <button class="registerButtonHeader">S'inscrire</button>
-            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="image/logoAdiil.png" alt="Logo BDE">
+            </div>
+
+           <!-- Navigation -->
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="accueil.php">Accueil</a></li>
+                    <li><a href="events.php">Événements</a></li>
+                    <li><a href="boutique.php" class="active">Boutique</a></li>
+                    <li><a href="bde.php">BDE</a></li>
+                    <li><a href="faq.php">FAQ</a></li>
+                </ul>
+            </nav>
+
+            <!-- Boutons / Profil -->
+            <div class="header-buttons">
+                <?php
+                if ($userId!=null):
+                    // Utilisateur connecté
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                ?>
+                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                    <form action="logout.php" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Se déconnecter</button>
+                    </form>
+                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <?php else: ?>
+                    <!-- Boutons si non connecté -->
+                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
+
 <main>
     <!-- Grades Section -->
     <section class="grades" style="padding: 80px 0px;">
@@ -148,10 +168,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
             <div class="product-container">
             <?php
                 try {
-                    // Récupération des snacks
                     $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = "image/" . $row['Nom_prod'];
+                        $imageUrl = "imagesAdmin/". $row['Photo_prod'];
                         echo "
                         <div class='product'>
                             <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
@@ -176,10 +195,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
             <div class="product-container">
                 <?php
                 try {
-                    // Récupération des snacks
                     $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = "image/" . $row['Nom_prod'];
+                        $imageUrl = "imagesAdmin/" . $row['Photo_prod'];
 
                         echo "
                         <div class='product'>
@@ -205,10 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
             <div class="product-container">
                 <?php
                 try {
-                    // Récupération des produits "Autres"
                     $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = "image/" . $row['Nom_prod'];
+                        $imageUrl = "imagesAdmin/" . $row['Photo_prod'];
 
                         echo "
                         <div class='product'>
