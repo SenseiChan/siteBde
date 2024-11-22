@@ -124,43 +124,122 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 <label for="name">Nom du produit :</label>
                 <input type="text" id="name" name="name" required>
 
-                <label for="price">Prix (€) :</label>
-                <input type="number" id="price" name="price" min="0" step="0.01" required>
-
                 <label for="stock">Stock :</label>
                 <input type="number" id="stock" name="stock" min="0" required>
 
+                <label for="price">Prix (€) :</label>
+                <input type="number" id="price" name="price" min="0" step="0.01" required>
+
                 <label for="photo">Photo du produit :</label>
                 <input type="file" id="photo" name="photo" accept="image/*" required>
+
+                <label for="type_prod">type du produit (boisson, snack ou autre)</label>
+                <input type="file" id="photo" name="type_prod" accept="boisson" "snack" "autre" required>
 
                 <button type="submit" class="registerButtonHeader">Ajouter</button>
             </form>
         </div>
         <?php endif; ?>
 
-        <!-- Affichage des produits -->
-        <div class="product-container">
-            <h3>Tous les produits :</h3>
-            <?php
-            try {
-                // Récupération de tous les produits
-                $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit");
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $imageUrl = "imagesAdmin/". htmlspecialchars($row['Photo_prod']);
-                    echo "
-                    <div class='product'>
-                        <img src='{$imageUrl}' alt='" . htmlspecialchars($row['Nom_prod']) . "' class='frame'>
-                        <p>
-                            <span class='name'>" . htmlspecialchars($row['Nom_prod']) . "</span><br><br>
-                            Prix : " . htmlspecialchars($row['Prix_prod']) . "€<br><br>
-                            En stock : " . htmlspecialchars($row['Stock_prod']) . "
-                        </p>
-                    </div>";
+        <section class="consommables">
+        <h2>Consommables</h2>
+        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+
+        <!-- Section Boissons -->
+        <div class="sub-section" style="padding: 30px 0px;">
+            <h3>Boissons :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                // Connexion à la base de données
+                $host = 'localhost';
+                $dbname = 'Sae';
+                $username = 'root';
+                $password = '';
+
+                try {
+                    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    // Récupération des boissons
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
+
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
                 }
-            } catch (PDOException $e) {
-                echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-            }
-            ?>
+                ?>
+            </div>
+        </div>
+
+        <!-- Section Snacks -->
+        <div class="sub-section">
+            <h3>Snacks :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                try {
+                    // Récupération des snacks
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
+
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
+
+        <!-- Section Autres -->
+        <div class="sub-section">
+            <h3>Autres :</h3>
+            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div class="product-container">
+                <?php
+                try {
+                    // Récupération des produits "Autres"
+                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = "image/" . $row['Nom_prod'];
+
+                        echo "
+                        <div class='product'>
+                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            <p>
+                                <span class='name'>{$row['Nom_prod']}</span><br><br>
+                                Prix : {$row['Prix_prod']}€<br><br>
+                                En stock : {$row['Stock_prod']}
+                            </p>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                gros caca prout de ta grosse daronne la reine des chauves
+                ?>
+            </div>
         </div>
     </section>
 </main>
