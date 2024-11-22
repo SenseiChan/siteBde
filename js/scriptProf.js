@@ -42,3 +42,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editButton = document.querySelector('.edit-info-btn');
+    const modal = document.querySelector('.modal');
+    const closeModal = document.querySelector('.close-modal');
+    const saveButton = document.querySelector('.save-info-btn');
+    const blurElements = document.querySelectorAll('.blur-target'); // Select elements to blur
+
+    // Add blur effect and show modal
+    editButton.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.add('blur')); // Add blur to specific elements
+        modal.classList.remove('hidden'); // Show the modal
+    });
+
+    // Close modal and remove blur
+    closeModal.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.remove('blur')); // Remove blur from specific elements
+        modal.classList.add('hidden'); // Hide the modal
+    });
+
+    // Save information and close modal
+    saveButton.addEventListener('click', () => {
+        // TODO: Add functionality for saving user information
+        blurElements.forEach(element => element.classList.remove('blur'));
+        modal.classList.add('hidden');
+    });
+});
