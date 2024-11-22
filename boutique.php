@@ -237,6 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 } catch (PDOException $e) {
                     echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
                 }
+                gros caca prout de ta grosse daronne la reine des chauves
                 ?>
             </div>
         </div>
