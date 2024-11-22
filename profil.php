@@ -3,6 +3,7 @@ session_start(); // Démarrer la session
 
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
+
 // Vérifie si l'utilisateur est connecté et admin
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
@@ -27,9 +28,19 @@ try {
 
 // Récupération des informations utilisateur
 $userQuery = $pdo->prepare("
-    SELECT u.Nom_user, u.Prenom_user, u.Tel_user, u.Email_user, u.Photo_user, g.Nom_grade
+    SELECT 
+        u.Nom_user, 
+        u.Prenom_user, 
+        u.Tel_user, 
+        u.Email_user, 
+        u.Photo_user, 
+        g.Nom_grade,
+        a.NomNumero_rue, 
+        a.Ville, 
+        a.Code_postal
     FROM utilisateur u
     LEFT JOIN grade g ON u.Id_grade = g.Id_grade
+    LEFT JOIN adresse a ON u.Id_adr = a.Id_adr
     WHERE u.Id_user = :id
 ");
 $userQuery->execute(['id' => $userId]);
@@ -76,12 +87,21 @@ foreach ($userEvents as $event) { // Utilisation correcte de $userEvents
     $eventsByDay[$day][] = $event;
 }
 
-// Récupération des 3 dernières transactions
+// Récupération des 3 dernières transactions avec leurs détails
 $transactionQuery = $pdo->prepare("
-    SELECT Montant_trans, Date_trans, Id_event, Id_prod
-    FROM transactions
-    WHERE Id_user = :id
-    ORDER BY Date_trans DESC
+    SELECT 
+        t.Montant_trans, 
+        t.Date_trans, 
+        t.Id_event, 
+        t.Id_prod, 
+        t.Id_grade,
+        COALESCE(e.Nom_event, p.Nom_prod, g.Nom_grade) AS Transaction_desc
+    FROM transactions t
+    LEFT JOIN evenement e ON t.Id_event = e.Id_event
+    LEFT JOIN produit p ON t.Id_prod = p.Id_prod
+    LEFT JOIN grade g ON t.Id_grade = g.Id_grade
+    WHERE t.Id_user = :id
+    ORDER BY t.Date_trans DESC
     LIMIT 3
 ");
 $transactionQuery->execute(['id' => $userId]);
@@ -110,7 +130,7 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="stylecss/styleProf.css"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
-  <header>
+  <header class="blur-target">
     <div class="header-container">
         <!-- Logo -->
         <div class="logo">
@@ -159,7 +179,8 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
       </div>
   </header>
 
-  <main>
+  <main class="blur-target">
+    <br><br><br>
         <div class="profile-header">
             <div class="profile-title">
                 <h1><?= htmlspecialchars($user['Prenom_user'] . ' ' . $user['Nom_user']) ?></h1>
@@ -199,38 +220,67 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
                 </div>
               </div>
             <!-- Informations -->
-            <div class="profile-section">
-                <h3>Informations</h3>
-                <p>Téléphone : <?= htmlspecialchars($user['Tel_user'] ?? 'Non renseigné') ?></p>
-                <p>Email : <?= htmlspecialchars($user['Email_user'] ?? 'Non renseigné') ?></p>
-                <button class="edit-info">Éditer les Informations</button>
-            </div>
+            <div class="right">
+              <div class="profile-section">
+                  <h3>Informations</h3>
+                  <div class="profile-info">
+                    <p>Téléphone : <?= htmlspecialchars($user['Tel_user'] ?? 'Non renseigné') ?></p>
+                    <p>Email : <?= htmlspecialchars($user['Email_user'] ?? 'Non renseigné') ?></p>
+                    <p>Adresse : <?= htmlspecialchars($user['NomNumero_rue'] ?? 'Non renseigné') ?> <?= htmlspecialchars($user['Code_postal'] ?? 'Non renseigné') ?> <?= htmlspecialchars($user['Ville'] ?? 'Non renseigné') ?></p>
+                  </div>
+                  <button class="edit-info-btn">Éditer les Informations</button>
+              </div>
 
-            <!-- Historique -->
-            <div class="profile-section">
+              <!-- Historique -->
+              <div class="profile-section">
                 <h3>Historique</h3>
                 <ul>
                     <?php foreach ($transactions as $transaction): ?>
                         <li>
-                            <?= htmlspecialchars($transaction['Montant_trans'] . '€ - ' . date('d/m/Y', strtotime($transaction['Date_trans']))) ?>
+                            <?= htmlspecialchars($transaction['Transaction_desc'] . ' - ' . $transaction['Montant_trans'] . '€ - ' . date('d/m/Y', strtotime($transaction['Date_trans']))) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
                 <button class="view-history">Accéder à l'historique</button>
-            </div>
+              </div>
 
-            <!-- Badges -->
-            <div class="profile-section badges">
-                <h3>Badges</h3>
-                <div class="badge-list">
-                    <?php foreach ($badges as $badge): ?>
-                        <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
-                    <?php endforeach; ?>
-                </div>
-                <button class="view-badges">Voir tous les badges</button>
+              <!-- Badges -->
+              <div class="profile-section badges">
+                  <h3>Badges</h3>
+                  <div class="badge-list">
+                      <?php foreach ($badges as $badge): ?>
+                          <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                      <?php endforeach; ?>
+                  </div>
+                  <button class="view-badges">Voir tous les badges</button>
+              </div>
             </div>
         </div>
     </main>
+    <!-- Modal -->
+    <div class="modal hidden">
+        <h2>Informations</h2>
+        <div class="modal-body">
+            <label for="tel">Téléphone</label>
+            <input type="text" id="tel" value="<?= htmlspecialchars($user['Tel_user'] ?? ''); ?>">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" value="<?= htmlspecialchars($user['Email_user'] ?? ''); ?>">
+
+            <label for="numNomRue">Numéro et Nom de rue</label>
+            <input type="text" id="numNomRue" value="<?= htmlspecialchars($user['NomNumero_rue'] ?? ''); ?>">
+
+            <label for="ville">Ville</label>
+            <input type="text" id="ville" value="<?= htmlspecialchars($user['Ville'] ?? ''); ?>">
+
+            <label for="codePostal">Code Postal</label>
+            <input type="text" id="codePostal" value="<?= htmlspecialchars($user['Code_postal'] ?? ''); ?>">
+        </div>
+        <div class="modal-footer">
+            <button class="save-info-btn">Enregistrer</button>
+            <button class="close-modal">Fermer</button>
+        </div>
+    </div>
     <script src="js/scriptProf.js"></script>
 </body>
 </html>

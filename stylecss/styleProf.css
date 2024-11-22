@@ -155,7 +155,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 20px 60px 20px 60px;
     background-color: #AC6CFF;
 }
 
@@ -187,9 +187,22 @@ header {
 }
 
 .profile-section {
-    background-color: #2E2E3A;
-    padding: 20px;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* Empile les éléments verticalement */
+    justify-content: flex-start; /* Aligne les éléments en haut */
+    align-items: left; /* Centre horizontalement les éléments */
+    background-color: #2F1C48;
+    border: 2px solid #AC6CFF; /* Bordure de 2px avec la couleur spécifiée */
+    border-radius: 15px; /* Coins arrondis */
+    padding: 20px 20px;
+    color: #FFFFFF;
+    width: 300px;
+    gap: 5px; /* Espace entre les éléments */
+    margin: 10px auto;
+}
+
+.profile-info{
+    gap: 5px;
 }
 
 .badge-list img {
@@ -204,7 +217,8 @@ header {
     width: 100%;
     margin: 20px auto;
     background-color: #2f1c48;
-    border-radius: 10px;
+    border: 2px solid #AC6CFF; /* Bordure de 2px avec la couleur spécifiée */
+    border-radius: 15px; /* Coins arrondis */
     padding: 20px;
     color: #fff;
 }
@@ -247,4 +261,89 @@ header {
     padding: 5px;
     margin-bottom: 5px;
     font-size: 12px;
+}
+
+
+.right{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.profile-content button{
+    background-color:#AC6CFF;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer; /* Ajout de cette propriété pour le curseur */
+    transition: background-color 0.3s ease; /* Optionnel : transition fluide pour les survols */
+}
+
+.right button{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+
+
+/* Blur Effect */
+.blur {
+    filter: blur(8px);
+    pointer-events: none;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2F1C48;
+    border: 2px solid #AC6CFF;
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #FFF;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal h2 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+    color: #FFF;
+}
+
+.modal .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal .modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal button {
+    background-color: #AC6CFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+    background-color: #9B5FEF;
 }
