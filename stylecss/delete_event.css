@@ -1,3 +1,7 @@
+/* --------------------------------------------- */
+/* Général */
+/* --------------------------------------------- */
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #2C2E33;
@@ -6,14 +10,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* S'adapte à la taille de l'écran */
 }
 
 .confirmation-container {
     background-color: #3A3B40;
     border-radius: 10px;
     padding: 30px;
-    width: 400px;
+    width: 90%; /* S'adapte sur mobile */
+    max-width: 600px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
@@ -25,7 +30,7 @@ h1 {
 
 .event-details {
     background-color: #2C2E33;
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
     margin: 20px 0;
     text-align: left;
@@ -41,6 +46,10 @@ p {
     margin: 5px 0;
 }
 
+/* --------------------------------------------- */
+/* Boutons */
+/* --------------------------------------------- */
+
 .confirm-btn, .cancel-btn {
     display: inline-block;
     padding: 10px 20px;
@@ -51,24 +60,132 @@ p {
     cursor: pointer;
     text-decoration: none;
     margin: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .confirm-btn {
     background-color: #FF6B6B;
     color: #FFFFFF;
-    transition: background-color 0.3s ease;
 }
 
 .confirm-btn:hover {
     background-color: #FF4949;
 }
 
+.confirm-btn:disabled {
+    background-color: #808080;
+    cursor: not-allowed;
+}
+
 .cancel-btn {
     background-color: #AC6CFF;
     color: #FFFFFF;
-    transition: background-color 0.3s ease;
 }
 
 .cancel-btn:hover {
     background-color: #9B5FEF;
+}
+
+/* --------------------------------------------- */
+/* Tableau des participants */
+/* --------------------------------------------- */
+
+.table-container {
+    margin-top: 20px;
+    background-color: #2C2E33;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    overflow-x: auto; /* Gère le défilement horizontal pour les petits écrans */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+}
+
+td {
+    background-color: #3A3B40;
+    color: #FFFFFF;
+    border-bottom: 1px solid #444;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.action-btn {
+    background-color: #FF6B6B;
+    color: #FFFFFF;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.action-btn:hover {
+    background-color: #FF4949;
+}
+
+/* --------------------------------------------- */
+/* Popup */
+/* --------------------------------------------- */
+
+.popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    color: #fff;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popup.success {
+    background-color: #4CAF50;
+}
+
+.popup.error {
+    background-color: #FF6B6B;
+}
+
+.popup.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --------------------------------------------- */
+/* Réduction pour les petits écrans */
+/* --------------------------------------------- */
+
+@media (max-width: 768px) {
+    .confirmation-container {
+        width: 95%;
+    }
+
+    th, td {
+        font-size: 0.9rem;
+    }
+
+    .confirm-btn, .cancel-btn {
+        font-size: 0.9rem;
+    }
 }
