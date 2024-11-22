@@ -281,6 +281,19 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
             <button class="close-modal">Fermer</button>
         </div>
     </div>
+
+    <div class="history-modal hidden">
+        <div class="history-header">
+            <h2>Historique</h2>
+            <button class="close-history-modal">X</button>
+        </div>
+        <div class="history-search">
+            <input type="text" id="transaction-search" placeholder="Rechercher par nom..." />
+        </div>
+        <div class="history-content">
+            <!-- Transactions will be dynamically loaded here -->
+        </div>
+    </div>
     <script src="js/scriptProf.js"></script>
 </body>
 </html>
