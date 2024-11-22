@@ -10,7 +10,7 @@
 <header>
     <div class="header-container">
         <a href="index.php" class="logo">
-            <img src="../images/logoAdiil.png" alt="Logo ADIIL">
+            <img src="image/logoAdiil.png" alt="Logo ADIIL">
         </a>
         <nav>
             <ul class="nav-links">
@@ -24,7 +24,7 @@
         <div class="header-buttons">
             <button class="connectButtonHeader">Se connecter</button>
             <button class="registerButtonHeader">S'inscrire</button>
-            <img src="../images/logoPanier.png" alt="Panier" class="cartIcon">
+            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
         </div>
     </div>
 </header>
@@ -34,7 +34,7 @@
         <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
         <div class="grades-container">
             <div class="grade-card grade-fer">
-                <img src="../images/lingotDeFer.png" alt="lingot de fer" width=80px>
+                <img src="image/lingotDeFer.png" alt="lingot de fer" width=80px>
                 <h3>Fer</h3>
                 <p>Fais vivre le BDE</p>
                 <span class="price">5€</span>
