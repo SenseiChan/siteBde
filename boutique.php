@@ -10,7 +10,7 @@
 <header>
     <div class="header-container">
         <a href="index.php" class="logo">
-            <img src="image/logoAdiil.png" alt="Logo ADIIL">
+            <img src="../images/logoAdiil.png" alt="Logo ADIIL">
         </a>
         <nav>
             <ul class="nav-links">
@@ -24,7 +24,7 @@
         <div class="header-buttons">
             <button class="connectButtonHeader">Se connecter</button>
             <button class="registerButtonHeader">S'inscrire</button>
-            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+            <img src="../images/logoPanier.png" alt="Panier" class="cartIcon">
         </div>
     </div>
 </header>
@@ -40,14 +40,14 @@
                 <span class="price">5€</span>
             </div>
             <div class="grade-card grade-diamant">
-                <img src="../images/mineraiDiamant.png" alt="minerai de diamant" width=70px >
+                <img src="image/mineraiDiamant.png" alt="minerai de diamant" width=90px >
                 <h3>Diamant</h3>
                 <p>Adhésion au BDE</p>
                 <p>Le grade premium sur serveur Minecraft de l'ADIL</p>
                 <span class="price">13€</span>
             </div>
             <div class="grade-card grade-or">
-                <img src="../images/lingotDOr.png" alt="lingot de fer" width=80px>
+                <img src="image/lingotDOr.png" alt="lingot d'or" width=80px>
                 <h3>Or</h3>
                 <p>Adhésion au BDE</p>
                 <p>Grade premium sur le serveur Minecraft</p>
