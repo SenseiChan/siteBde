@@ -141,10 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         </div>
         <?php endif; ?>
 
-        <section class="consommables">
-        <h2>Consommables</h2>
-        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-
         <!-- Section Boissons -->
         <div class="sub-section" style="padding: 30px 0px;">
             <h3>Boissons :</h3>
@@ -237,7 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 } catch (PDOException $e) {
                     echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
                 }
-                gros caca prout de ta grosse daronne la reine des chauves
                 ?>
             </div>
         </div>
