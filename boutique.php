@@ -83,10 +83,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 <main>
     <!-- Grades Section -->
     <section class="grades" style="padding: 80px 0px;">
-        <h2>Grades</h2>
+    <h2>Grades</h2>
         <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
         <div class="grades-container">
-            <!-- Contenu des grades -->
+            <div class="grade-card grade-fer">
+                <img src="image/lingotDeFer.png" alt="lingot de fer" width=80px>
+                <h3>Fer</h3>
+                <p>Fais vivre le BDE</p>
+                <span class="price">5€</span>
+            </div>
+            <div class="grade-card grade-diamant">
+                <img src="image/mineraiDiamant.png" alt="minerai de diamant" width=90px >
+                <h3>Diamant</h3>
+                <p>Adhésion au BDE</p>
+                <p>Le grade premium sur serveur Minecraft de l'ADIL</p>
+                <span class="price">13€</span>
+            </div>
+            <div class="grade-card grade-or">
+                <img src="image/lingotDOr.png" alt="lingot d'or" width=80px>
+                <h3>Or</h3>
+                <p>Adhésion au BDE</p>
+                <p>Grade premium sur le serveur Minecraft</p>
+                <span class="price">10€</span>
+            </div>
         </div>
     </section>
 
