@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $id_adr = mysqli_insert_id($conn);
             $sql_user = "INSERT INTO Utilisateur 
                         (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr, Annee_promo) 
-                        VALUES ('$nom', '$prenom', '$mdp_hache', NOW(), NOW(), '$telephone', '$email', 'default.jpg', 1, $id_adr, '$promo')";
+                        VALUES ('$nom', '$prenom', '$mdp_hache', NOW(), NOW(), '$telephone', '$email', 'image/default.png', 1, $id_adr, '$promo')";
             
             if (!mysqli_query($conn, $sql_user)) {
                 throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));

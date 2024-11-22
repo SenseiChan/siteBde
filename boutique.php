@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 <?php
                 if ($userId!=null):
                     // Utilisateur connecté
-                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/default.png';
                 ?>
                     <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
                     <form action="logout.php" method="post" class="logout-form">
