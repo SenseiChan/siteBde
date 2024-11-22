@@ -166,10 +166,8 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
         <div class="header-buttons">
             <?php
             if ($userId!=null):
-                // Utilisateur connecté
-                $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
             ?>
-                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Profil" class="profile-icon">
                 <form action="logout.php" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Se déconnecter</button>
                 </form>
