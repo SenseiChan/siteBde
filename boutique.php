@@ -66,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         </a>
         <nav>
             <ul class="nav-links">
-                <li><a href="index.php" class="active">Accueil</a></li>
+                <li><a href="accueil.php">Accueil</a></li>
                 <li><a href="events.php">Événements</a></li>
-                <li><a href="boutique.php">Boutique</a></li>
+                <li><a href="boutique.php"class="active">Boutique</a></li>
                 <li><a href="bde.php">BDE</a></li>
                 <li><a href="faq.php">FAQ</a></li>
             </ul>
