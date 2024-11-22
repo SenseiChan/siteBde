@@ -66,8 +66,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Save information and close modal
     saveButton.addEventListener('click', () => {
-        // TODO: Add functionality for saving user information
-        blurElements.forEach(element => element.classList.remove('blur'));
-        modal.classList.add('hidden');
+        const tel = document.getElementById('tel').value;
+        const email = document.getElementById('email').value;
+        const numNomRue = document.getElementById('numNomRue').value;
+        const ville = document.getElementById('ville').value;
+        const codePostal = document.getElementById('codePostal').value;
+
+        // Send data to the server via AJAX
+        fetch('update_user.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                tel: tel,
+                email: email,
+                numNomRue: numNomRue,
+                ville: ville,
+                codePostal: codePostal,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Informations mises à jour avec succès');
+                } else {
+                    alert('Erreur lors de la mise à jour : ' + data.message);
+                }
+                blurElements.forEach(element => element.classList.remove('blur'));
+                modal.classList.add('hidden');
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+                alert('Erreur lors de la mise à jour.');
+            });
     });
 });
