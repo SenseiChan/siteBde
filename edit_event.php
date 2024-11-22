@@ -166,11 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label for="Code_postal">Code Postal :</label>
-                        <input type="text" name="Code_postal" id="Code_postal" value="<?= htmlspecialchars($event['Code_postal']) ?>">
+                        <input type="text" name="Code_postal" id="Code_postal" pattern="^\d{5}$" title="Le code postal doit contenir exactement 5 chiffres." required>
                     </div>
                     <div class="form-group">
                         <label for="Ville">Ville :</label>
-                        <input type="text" name="Ville" id="Ville" value="<?= htmlspecialchars($event['Ville']) ?>">
+                        <input type="text" name="Ville" id="Ville" pattern="^[A-Za-zÀ-ÿ\s\-]+$" title="La ville doit uniquement contenir des lettres." required>
                     </div>
                     <div class="form-group">
                         <label for="Prix_event">Prix (€) :</label>

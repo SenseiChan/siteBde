@@ -75,7 +75,7 @@ try {
 <header>
     <div class="header-container">
         <a href="index.php" class="logo">
-            <img src="image/logoAdiil.png" alt="Logo ADIIL">
+            <img src="imagesAdmin/logoAdiil.png" alt="Logo ADIIL">
         </a>
         <nav>
             <ul class="nav-links">
@@ -89,7 +89,7 @@ try {
         <div class="header-buttons">
             <button class="connectButtonHeader">Se connecter</button>
             <button class="registerButtonHeader">S'inscrire</button>
-            <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+            <img src="imagesAdmin/logoPanier.png" alt="Panier" class="cartIcon">
         </div>
     </div>
 </header>
