@@ -325,7 +325,7 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             <div class="badge-category">
                 <h3>Taux de participations :</h3>
                 <div class="badges">
-                    <?php foreach (array_slice($allBadges, 3, 6) as $badge): ?>
+                    <?php foreach (array_slice($allBadges, 3, 5) as $badge): ?>
                         <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
                         </div>
@@ -335,7 +335,7 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             <div class="badge-category">
                 <h3>Grades :</h3>
                 <div class="badges">
-                    <?php foreach (array_slice($allBadges, 9, 3) as $badge): ?>
+                    <?php foreach (array_slice($allBadges, 8, 3) as $badge): ?>
                         <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
                         </div>
