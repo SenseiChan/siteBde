@@ -12,6 +12,11 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $profileImage = isset($_SESSION['Photo_user']) && !empty($_SESSION['Photo_user']) 
     ? htmlspecialchars($_SESSION['Photo_user']) 
     : 'image/default.png';
+
+// Fonction pour vérifier si une page est active
+function isActive($page) {
+    return basename($_SERVER['PHP_SELF']) === $page ? 'active' : '';
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,56 +29,53 @@ $profileImage = isset($_SESSION['Photo_user']) && !empty($_SESSION['Photo_user']
 </head>
 <body>
 <header>
-        <div class="header-container">
-            <!-- Logo -->
-            <div class="logo">
-                <img src="image/logoAdiil.png" alt="Logo BDE">
-            </div>
+    <div class="header-container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="image/logoAdiil.png" alt="Logo BDE">
+        </div>
 
-            <!-- Menu Admin -->
-            <?php if ($is_admin): ?>
-            <div class="dropdown">
-                <button class="dropdown-toggle">Admin</button>
-                <div class="dropdown-menu">
-                <a href="#">Espace partagé</a>
+        <!-- Menu Admin -->
+        <?php if ($is_admin): ?>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Admin</button>
+            <div class="dropdown-menu">
+                <a href="espace_partage.php">Espace partagé</a>
                 <a href="gestionMembre.php">Gestion membre</a>
-                <a href="#">Statistique</a>
-                <a href="#">Banque</a>
-                <a href="#">Gestion site</a>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <!-- Navigation -->
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="accueil.php" class="active">Accueil</a></li>
-                    <li><a href="events.php">Événements</a></li>
-                    <li><a href="boutique.php">Boutique</a></li>
-                    <li><a href="bde.php">BDE</a></li>
-                    <li><a href="faq.php">FAQ</a></li>
-                </ul>
-            </nav>
-
-            <!-- Boutons / Profil -->
-            <div class="header-buttons">
-                <?php
-                if ($userId!=null):
-                    // Utilisateur connecté
-                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/default.png';
-                ?>
-                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
-                    <form action="logout.php" method="post" class="logout-form">
-                        <button type="submit" class="logout-button">Se déconnecter</button>
-                    </form>
-                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
-                <?php else: ?>
-                    <!-- Boutons si non connecté -->
-                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
-                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
-                <?php endif; ?>
+                <a href="statistique.php">Statistique</a>
+                <a href="banque.php">Banque</a>
+                <a href="chat_admin.php">Chat Administrateur</a>
             </div>
         </div>
-    </header>
+        <?php endif; ?>
+
+        <!-- Navigation -->
+        <nav>
+            <ul class="nav-links">
+                <li><a href="accueil.php" class="<?= isActive('accueil.php') ?>">Accueil</a></li>
+                <li><a href="events.php" class="<?= isActive('events.php') ?>">Événements</a></li>
+                <li><a href="boutique.php" class="<?= isActive('boutique.php') ?>">Boutique</a></li>
+                <li><a href="bde.php" class="<?= isActive('bde.php') ?>">BDE</a></li>
+                <li><a href="faq.php" class="<?= isActive('faq.php') ?>">FAQ</a></li>
+            </ul>
+        </nav>
+
+        <!-- Boutons / Profil -->
+        <div class="header-buttons">
+            <?php if ($userId != null): ?>
+                <!-- Utilisateur connecté -->
+                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <form action="logout.php" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Se déconnecter</button>
+                </form>
+                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+            <?php else: ?>
+                <!-- Boutons si non connecté -->
+                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</header>
 </body>
 </html>
