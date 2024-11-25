@@ -100,6 +100,7 @@ foreach ($membres as $membre) {
             <div class="header-buttons">
                 <?php
                 if ($userId != null):
+                    // Utilisateur connecté
                     $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/default.png';
                 ?>
                     <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
@@ -161,6 +162,7 @@ foreach ($membres as $membre) {
             </div>
         </div>
     </main>
+
 
     <footer class="site-footer">
         <div class="footer-content">
