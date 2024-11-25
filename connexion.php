@@ -36,7 +36,7 @@ try {
             $updateStmt->execute(['id' => $user['Id_user']]);
 
             // Rediriger vers la page d'accueil
-            header("Location: accueil.php");
+            header("Location: profil.php");
             exit();
         } else {
             // Erreur d'authentification

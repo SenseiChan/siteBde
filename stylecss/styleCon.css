@@ -112,3 +112,22 @@ input:focus {
 .submit-btn:hover {
     background-color: #8A4BFF; /* Changement de couleur au survol */
 }
+
+.signup-btn {
+    padding: 10px;
+    font-size: 0.8rem;
+    background-color: #AC6CFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    width: 94%; /* Le bouton prend toute la largeur du formulaire */
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.signup-btn:hover {
+    background-color: #8A4BFF; /* Changement de couleur au survol */
+}
