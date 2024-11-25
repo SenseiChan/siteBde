@@ -18,10 +18,10 @@ try {
         // Récupération des données envoyées
         $description = isset($_POST['description']) ? trim($_POST['description']) : null;
         $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+        $defaultImage = 'image/partyIconStat.png'; // Chemin de l'image par défaut
 
-        // Vérification des fichiers téléchargés
-        $imagePath = null;
-        if (isset($_FILES['new-image']) && $_FILES['new-image']['error'] === UPLOAD_ERR_OK) {
+        // Vérifiez si un fichier image a été téléchargé
+        if (!empty($_FILES['new-image']['name'])) {
             $imageTmp = $_FILES['new-image']['tmp_name'];
             $imageName = basename($_FILES['new-image']['name']);
             $uploadDir = 'imagesAdmin/';
@@ -31,6 +31,9 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Erreur lors du téléchargement de l\'image.']);
                 exit;
             }
+        } else {
+            // Utilisez l'image par défaut si aucune image n'a été téléchargée
+            $imagePath = $defaultImage;
         }
 
         // Validation des données
