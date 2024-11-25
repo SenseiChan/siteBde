@@ -172,7 +172,7 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
         <nav>
             <ul class="nav-links">
                 <li><a href="accueil.php">Accueil</a></li>
-                <li><a href="evenements.php">Événements</a></li>
+                <li><a href="events.php">Événements</a></li>
                 <li><a href="boutique.php">Boutique</a></li>
                 <li><a href="bde.php">BDE</a></li>
                 <li><a href="faq.php">FAQ</a></li>
@@ -315,7 +315,7 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             <div class="badge-category">
                 <h3>Année :</h3>
                 <div class="badges">
-                    <?php foreach ($allBadges as $badge): ?>
+                    <?php foreach (array_slice($allBadges, 0, 3) as $badge): ?>
                         <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
                         </div>
@@ -324,11 +324,23 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             </div>
             <div class="badge-category">
                 <h3>Taux de participations :</h3>
-                <!-- Repeat similar structure for other badge categories -->
+                <div class="badges">
+                    <?php foreach (array_slice($allBadges, 3, 6) as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="badge-category">
                 <h3>Grades :</h3>
-                <!-- Repeat similar structure for grade-related badges -->
+                <div class="badges">
+                    <?php foreach (array_slice($allBadges, 9, 3) as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <button class="close-badge-modal">X</button>
