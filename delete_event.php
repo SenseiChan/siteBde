@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 .then(data => {
                     if (data.success) {
                         showPopup(data.message, true);
-                        setTimeout(() => window.location.href = 'events.php', 2000);
+                        setTimeout(() => window.location.href = 'events.php', 1000);
                     } else {
                         showPopup(data.message || 'Erreur lors de la suppression.', false);
                     }

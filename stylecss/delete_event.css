@@ -96,7 +96,7 @@ p {
     padding: 15px;
     border-radius: 10px;
     text-align: left;
-    overflow-x: auto; /* Gère le défilement horizontal pour les petits écrans */
+    overflow-x: auto;
 }
 
 table {
