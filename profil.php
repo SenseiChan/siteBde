@@ -1,16 +1,22 @@
 <?php
 session_start(); // Démarrer la session
 
-$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+// Vérifie si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header("Location: accueil.php");
+    exit(); // Redirection si non connecté
+}
 
-
-// Vérifie si l'utilisateur est connecté et admin
+// Détermine si l'utilisateur est administrateur
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
-// Redirige si l'utilisateur n'est pas connecté
-if ($userId == null) {
-    header("Location: accueil.php");
-    exit(); // Assurez-vous de terminer le script après la redirection
+// Récupération de l'ID utilisateur via GET ou SESSION
+if ($is_admin && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    // Si l'utilisateur est admin et qu'un ID est passé via GET, utiliser cet ID
+    $userId = intval($_GET['id']);
+} else {
+    // Sinon, utiliser l'ID utilisateur connecté
+    $userId = $_SESSION['user_id'];
 }
 
 // Connexion à la base de données
@@ -46,48 +52,42 @@ $userQuery = $pdo->prepare("
 $userQuery->execute(['id' => $userId]);
 $user = $userQuery->fetch(PDO::FETCH_ASSOC);
 
-// Détermine le mois et l'année actuels ou sélectionnés
+if (!$user) {
+    echo "Utilisateur non trouvé.";
+    exit();
+}
+
+// Le reste du code pour récupérer événements, badges, etc., reste inchangé
 $currentYear = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
 $currentMonth = isset($_GET['month']) ? intval($_GET['month']) : date('m');
-
-// Calcul des jours dans le mois
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
 
 function getUserEvents($pdo, $userId, $month, $year) {
-  $query = $pdo->prepare("
-      SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
-      FROM evenement e
-      JOIN participer p ON e.Id_event = p.Id_event
-      WHERE p.Id_user = :userId
-      AND MONTH(e.Date_deb_event) = :month
-      AND YEAR(e.Date_deb_event) = :year
-  ");
-  $query->execute([
-      'userId' => $userId,
-      'month' => $month,
-      'year' => $year
-  ]);
+    $query = $pdo->prepare("
+        SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
+        FROM evenement e
+        JOIN participer p ON e.Id_event = p.Id_event
+        WHERE p.Id_user = :userId
+        AND MONTH(e.Date_deb_event) = :month
+        AND YEAR(e.Date_deb_event) = :year
+    ");
+    $query->execute([
+        'userId' => $userId,
+        'month' => $month,
+        'year' => $year
+    ]);
 
-  return $query->fetchAll(PDO::FETCH_ASSOC);
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-// Appel de la fonction pour récupérer les événements
 $userEvents = getUserEvents($pdo, $userId, $currentMonth, $currentYear);
 
-// Vérification pour éviter des erreurs si aucun événement n'est récupéré
-if (!is_array($userEvents)) {
-    $userEvents = [];
-}
-
-// Organisation des événements par jour
 $eventsByDay = [];
-foreach ($userEvents as $event) { // Utilisation correcte de $userEvents
+foreach ($userEvents as $event) {
     $day = (int) date('j', strtotime($event['Date_deb_event']));
     $eventsByDay[$day][] = $event;
 }
 
-// Récupération des 3 dernières transactions avec leurs détails
 $transactionQuery = $pdo->prepare("
     SELECT 
         t.Montant_trans, 
@@ -107,7 +107,6 @@ $transactionQuery = $pdo->prepare("
 $transactionQuery->execute(['id' => $userId]);
 $transactions = $transactionQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Récupération des badges de l'utilisateur
 $badgesQuery = $pdo->prepare("
     SELECT b.Nom_badge, b.Desc_badge, b.Photo_badge
     FROM decrocher d
@@ -118,14 +117,12 @@ $badgesQuery = $pdo->prepare("
 $badgesQuery->execute(['id' => $userId]);
 $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch all badges
 $allBadgesQuery = $pdo->query("
     SELECT Id_badge, Nom_badge, Photo_badge
     FROM badge
 ");
 $allBadges = $allBadgesQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch user's badges
 $userBadgesQuery = $pdo->prepare("
     SELECT Id_badge
     FROM decrocher
@@ -134,8 +131,8 @@ $userBadgesQuery = $pdo->prepare("
 $userBadgesQuery->execute(['userId' => $userId]);
 $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
 
-
 ?>
+
 
 
 <!DOCTYPE html>
