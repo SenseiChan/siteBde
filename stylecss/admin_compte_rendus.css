@@ -69,12 +69,12 @@ body, html {
 .modal-content {
     background-color: #2a2a3d;
     color: #ffcc00;
-    padding: 20px;
+    padding: 30px; /* Augmente l'espace autour du contenu */
     border-radius: 8px;
     text-align: center;
-    position: relative; /* Permet de positionner l'icône par rapport à ce conteneur */
+    position: relative; /* Pour positionner l'icône */
     width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ajoute une ombre subtile */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Style pour le bouton de fermeture */
@@ -150,4 +150,79 @@ body, html {
 .year-folder span {
     color: #ffffff;
     font-size: 1em;
+}
+
+/* ------------------ */
+/* Bouton ajouter
+/* ------------------ */
+
+.add-file-container {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.add-file-btn {
+    background-color: #444466;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.add-file-btn:hover {
+    background-color: #555577;
+}
+
+#add-file-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#add-file-form label {
+    font-size: 1em;
+    color: #f1f1f1;
+}
+
+#add-file-form input[type="date"],
+#add-file-form input[type="file"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.submit-btn {
+    background-color: #44aa44;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #55bb55;
+}
+
+/* ------------------ */
+/* SCROLL */
+/* ------------------ */
+
+#file-list {
+    max-height: 200px; /* Ajoute un scroll au bout de 5> fichiers */
+    overflow-y: auto;
+    margin-top: 10px;
+    padding: 0 10px;
+    text-align: left;
+}
+
+#file-list li {
+    margin-bottom: 10px;
 }
