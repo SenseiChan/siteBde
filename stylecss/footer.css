@@ -1,0 +1,44 @@
+/* --------------------------------------------- */
+/* Footer */
+/* --------------------------------------------- */
+
+.site-footer {
+    background-color: #2D2D2D;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px 15px;
+    border-top: 1px solid #444444;
+}
+
+.footer-content p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #CCCCCC;
+}
+
+.footer-content a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
+.footer-icons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-icons a img {
+    width: 40px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.footer-icons a img:hover {
+    transform: scale(1.2);
+}
