@@ -48,6 +48,7 @@ body, html {
     margin-right: 8px;
 }
 
+/* Style pour la modale */
 .modal {
     position: fixed;
     top: 0;
@@ -67,30 +68,31 @@ body, html {
 
 .modal-content {
     background-color: #2a2a3d;
-    color: #f1f1f1;
+    color: #ffcc00;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    position: relative; /* Permet de positionner l'icône par rapport à ce conteneur */
     width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ajoute une ombre subtile */
 }
 
-.modal-content ul li a {
-    color: #ffcc00;
-    text-decoration: none;
-}
-
-.modal-content ul li a:hover {
-    text-decoration: underline;
-}
-
+/* Style pour le bouton de fermeture */
 .close-modal {
     position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 1.5em;
+    top: 10px; /* Position en haut */
+    right: 10px; /* Position à droite */
+    width: 24px;
+    height: 24px;
     cursor: pointer;
-    color: #f1f1f1;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+.close-modal:hover {
+    transform: scale(1.2); /* Agrandit légèrement au survol */
+    opacity: 0.8; /* Rendu visuel plus subtil */
+}
+
 
 /* Style des sections */
 .compte-rendus-section {

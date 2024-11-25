@@ -68,7 +68,7 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
                 <div class="sort-container">
                     <a href="?order=<?= $nextOrder ?>" class="sort-button">
                         <img src="image/icon_tri.png" alt="Trier" class="sort-icon">
-                        Trier par : <?= $order === 'asc' ? 'Z-A' : 'A-Z' ?>
+                        Trier par : <?= $order === 'asc' ? 'A-Z' : 'Z-A' ?>
                     </a>
                 </div>
 
@@ -124,7 +124,7 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
         <!-- Modale -->
         <div id="file-modal" class="modal hidden">
             <div class="modal-content">
-                <span class="close-modal">&times;</span>
+                <img src="image/icon_close.png" alt="Fermer" class="close-modal">
                 <h3 id="modal-title">Fichiers pour l'année sélectionnée</h3>
                 <ul id="file-list">
                     <!-- Les fichiers seront ajoutés ici dynamiquement -->
@@ -138,52 +138,53 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
     <!-- Script JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('file-modal');
-            const closeModal = document.querySelector('.close-modal');
-            const fileList = document.getElementById('file-list');
-            const modalTitle = document.getElementById('modal-title');
+    const modal = document.getElementById('file-modal');
+    const closeModal = document.querySelector('.close-modal');
+    const fileList = document.getElementById('file-list');
+    const modalTitle = document.getElementById('modal-title');
 
-            document.querySelectorAll('.year-folder').forEach(folder => {
-                folder.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const year = folder.dataset.year;
-                    const type = folder.dataset.type;
+    document.querySelectorAll('.year-folder').forEach(folder => {
+        folder.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const year = folder.dataset.year;
+            const type = folder.dataset.type;
 
-                    // Requête AJAX pour récupérer les fichiers
-                    try {
-                        const response = await fetch(`?year=${year}&type=${type}`);
-                        const data = await response.json();
+            // Requête AJAX pour récupérer les fichiers
+            try {
+                const response = await fetch(`?year=${year}&type=${type}`);
+                const data = await response.json();
 
-                        if (data.success) {
-                            modalTitle.textContent = `Fichiers pour ${year}`;
-                            fileList.innerHTML = '';
+                if (data.success) {
+                    modalTitle.textContent = `Fichiers pour ${year}`;
+                    fileList.innerHTML = '';
 
-                            if (data.files.length > 0) {
-                                data.files.forEach(file => {
-                                    const listItem = document.createElement('li');
-                                    listItem.innerHTML = `
-                                        <a href="${file.Url_fichier}" target="_blank">${file.Url_fichier.split('/').pop()}</a>
-                                    `;
-                                    fileList.appendChild(listItem);
-                                });
-                            } else {
-                                fileList.innerHTML = '<li>Aucun fichier disponible.</li>';
-                            }
-
-                            modal.classList.remove('hidden');
-                        } else {
-                            alert(data.message || 'Une erreur est survenue.');
-                        }
-                    } catch (error) {
-                        alert('Erreur lors de la récupération des fichiers.');
+                    if (data.files.length > 0) {
+                        data.files.forEach(file => {
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <a href="${file.Url_fichier}" target="_blank">${file.Url_fichier.split('/').pop()}</a>
+                            `;
+                            fileList.appendChild(listItem);
+                        });
+                    } else {
+                        fileList.innerHTML = '<li>Aucun fichier disponible.</li>';
                     }
-                });
-            });
 
-            closeModal.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
+                    modal.classList.remove('hidden');
+                } else {
+                    alert(data.message || 'Une erreur est survenue.');
+                }
+            } catch (error) {
+                alert('Erreur lors de la récupération des fichiers.');
+            }
         });
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+});
+
     </script>
 </body>
 </html>
