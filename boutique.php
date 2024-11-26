@@ -145,6 +145,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 ?>
             </div>
         </div>
+
+        <!-- Autres Section -->
+        <div class="sub-section">
+            <h3>Autres</h3>
+            <div class="product-container">
+                <?php
+                try {
+                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = $row['Photo_prod'];
+                        echo "
+                        <div class='product'>
+                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
+                            <div class='product-image'>
+                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            </div>
+                            <div class='product-details'>
+                                <p class='name'>{$row['Nom_prod']}</p>
+                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                            </div>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
     </section>
     <?php if ($is_admin): ?>
         <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
@@ -153,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 <script>
     function openEditModal(productId) {
         alert("Modifier le produit ID : " + productId);
-        // Ajoutez votre logique pour afficher une fenêtre modale ou charger un formulaire d'édition
     }
 </script>
 </body>
