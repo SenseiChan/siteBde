@@ -1,100 +1,124 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Afficher les fichiers pour une année spécifique
-    document.querySelectorAll('.year-folder').forEach(folder => {
-        folder.addEventListener('click', function (e) {
-            e.preventDefault();
-            const year = this.dataset.year;
-            const type = this.dataset.type;
+document.addEventListener("DOMContentLoaded", function () {
+    const addReleveBtn = document.getElementById("add-releve");
+    const addFileModal = document.getElementById("add-file-modal");
+    const closeAddModal = document.querySelector(".close-add-modal");
+    const addFileForm = document.getElementById("add-file-form");
+    const fileModal = document.getElementById("file-modal");
+    const closeFileModal = document.querySelector(".close-modal");
+    const fileList = document.getElementById("file-list");
 
-            fetch(`banque.php?action=get_files&year=${year}&type=${type}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const fileList = document.getElementById('file-list');
-                        fileList.innerHTML = ''; // Réinitialise la liste
-                        data.files.forEach(file => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<a href="${file.Url_fichier}" target="_blank">${file.Url_fichier}</a>`;
-                            fileList.appendChild(li);
-                        });
-                        document.getElementById('file-modal-title').textContent = `Fichiers pour ${year}`;
-                        document.getElementById('file-modal').classList.remove('hidden');
-                    } else {
-                        alert(data.message || 'Aucun fichier trouvé.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    alert('Erreur lors de la récupération des fichiers.');
-                });
-        });
+    // Affichage de la modale d'ajout
+    addReleveBtn.addEventListener("click", () => {
+        addFileModal.classList.remove("hidden");
     });
 
-    // Ouvrir la modale pour ajouter un fichier
-    document.getElementById('add-releve').addEventListener('click', function () {
-        document.getElementById('add-file-modal').classList.remove('hidden');
+    // Fermeture de la modale d'ajout
+    closeAddModal.addEventListener("click", () => {
+        addFileModal.classList.add("hidden");
     });
 
-    // Fermer les modales
-    document.querySelectorAll('.close-modal, .close-add-modal').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function () {
-            this.closest('.modal').classList.add('hidden');
-        });
+    // Fermeture de la modale des fichiers
+    closeFileModal.addEventListener("click", () => {
+        fileModal.classList.add("hidden");
     });
 
-    // Gestion de l'ajout d'un fichier
-    document.getElementById('add-file-form').addEventListener('submit', function (e) {
+    // Gestion du formulaire d'ajout
+    addFileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const formData = new FormData(this);
+        const formData = new FormData(addFileForm);
 
-        fetch('banque.php', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert(data.message || 'Erreur lors de l\'ajout du fichier.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Erreur lors de l\'ajout du fichier.');
+        try {
+            const response = await fetch("banque.php", {
+                method: "POST",
+                body: formData,
             });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert("Fichier ajouté avec succès !");
+                location.reload(); // Recharge la page pour voir les nouveaux fichiers
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert("Erreur lors de l'ajout du fichier.");
+        }
+    });
+
+    // Gestion de l'affichage des fichiers par année
+    document.querySelectorAll(".year-folder").forEach((folder) => {
+        folder.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const year = folder.getAttribute("data-year");
+            const type = folder.getAttribute("data-type");
+
+            try {
+                const response = await fetch(`banque.php?action=get_files&year=${year}&type=${type}`);
+                const result = await response.json();
+
+                if (Array.isArray(result) && result.length > 0) {
+                    fileList.innerHTML = ""; // Vide la liste actuelle
+
+                    result.forEach((file) => {
+                        const listItem = document.createElement("li");
+                        const link = document.createElement("a");
+                        link.href = file.Url_fichier;
+                        link.textContent = file.Url_fichier.split("/").pop(); // Affiche uniquement le nom du fichier
+                        link.target = "_blank"; // Ouvre le fichier dans un nouvel onglet
+                        listItem.appendChild(link);
+                        fileList.appendChild(listItem);
+                    });
+
+                    const fileModalTitle = document.getElementById("file-modal-title");
+                    fileModalTitle.textContent = `Fichiers pour ${year}`;
+                    fileModal.classList.remove("hidden");
+                } else {
+                    alert("Aucun fichier trouvé pour cette année.");
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
+                alert("Erreur lors de la récupération des fichiers.");
+            }
+        });
     });
 });
 
-function openFileModal(files, yearTitle) {
-    const fileModal = document.getElementById("file-modal");
-    const fileList = document.getElementById("file-list");
-    const modalTitle = document.getElementById("file-modal-title");
+document.addEventListener("DOMContentLoaded", function () {
+    const addReleveBtn = document.getElementById("add-releve");
+    const addFileModal = document.getElementById("add-file-modal");
+    const closeAddModal = document.querySelector(".close-add-modal");
+    const addFileForm = document.getElementById("add-file-form");
 
-    // Mise à jour du titre de la modale
-    modalTitle.textContent = `Fichiers pour ${yearTitle}`;
+    // Afficher la modale d'ajout
+    addReleveBtn.addEventListener("click", () => {
+        addFileModal.classList.remove("hidden");
+    });
 
-    // Efface le contenu précédent
-    fileList.innerHTML = "";
+    // Fermer la modale d'ajout
+    closeAddModal.addEventListener("click", () => {
+        addFileModal.classList.add("hidden");
+    });
 
-    // Ajout des fichiers au format stylisé
-    if (files.length > 0) {
-        files.forEach(file => {
-            const fileItem = document.createElement("a");
-            fileItem.href = file.Url_fichier;
-            fileItem.target = "_blank";
-            fileItem.className = "file-item";
-            fileItem.innerHTML = `
-                <img src="image/iconFile.png" alt="Fichier">
-                <span>${file.Url_fichier.split("/").pop()}</span>
-            `;
-            fileList.appendChild(fileItem);
-        });
-    } else {
-        fileList.innerHTML = "<p>Aucun fichier disponible.</p>";
-    }
+    // Gestion du formulaire d'ajout
+    addFileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    // Affiche la modale
-    fileModal.classList.remove("hidden");
-}
+        const formData = new FormData(addFileForm);
+
+        try {
+            const response = await fetch("banque.php", {
+                method: "POST",
+                body: formData,
+            });
+
+            // Pas besoin de traiter de JSON, car PHP redirige directement
+            if (response.ok) {
+                alert("Traitement en cours...");
+            }
+        } catch (error) {
+            alert("Erreur lors de l'ajout du fichier.");
+        }
+    });
+});

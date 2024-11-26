@@ -226,3 +226,59 @@ body, html {
 #file-list li {
     margin-bottom: 10px;
 }
+
+/* ------------------ */
+/* POPUP */
+/* ------------------ */
+
+#notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-width: 90%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    background-color: #444466;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards, fadeOut 0.5s 4.5s forwards;
+}
+
+.notification.success {
+    background-color: #44aa44;
+}
+
+.notification.error {
+    background-color: #aa4444;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}

@@ -97,6 +97,8 @@ try {
     die('Erreur de connexion : ' . $e->getMessage());
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -108,7 +110,6 @@ try {
 <body>
     <div class="page-container">
         <?php include 'header.php'; ?>
-
         <main class="content">
             <div class="admin-page-container">
                 <!-- Section "Compte rendus de réunion" -->
@@ -171,7 +172,7 @@ try {
                 </form>
             </div>
         </div>
-
+        <div id="notification-container"></div>
         <?php include 'footer.php'; ?>
     </div>
 
