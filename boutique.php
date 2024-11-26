@@ -331,7 +331,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
     </section>
 </main>
-<<<<<<< HEAD
 
 
 <script src="js/scriptBoutique.js"></script>
@@ -339,8 +338,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 </html>
 
-=======
-<?php include 'footer.php'; ?>
-</body>
-</html>
->>>>>>> df09128f376ecf1e914b055cc8e2f28f7df8121b
