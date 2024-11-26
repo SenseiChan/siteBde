@@ -1,124 +1,113 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const addReleveBtn = document.getElementById("add-releve");
-    const addFileModal = document.getElementById("add-file-modal");
-    const closeAddModal = document.querySelector(".close-add-modal");
-    const addFileForm = document.getElementById("add-file-form");
-    const fileModal = document.getElementById("file-modal");
-    const closeFileModal = document.querySelector(".close-modal");
-    const fileList = document.getElementById("file-list");
+document.addEventListener('DOMContentLoaded', () => {
+    const addFileButtons = document.querySelectorAll('.add-file-btn');
+    const yearFolders = document.querySelectorAll('.year-folder');
+    const addFileModal = document.getElementById('add-file-modal'); // Modale pour l'ajout de fichier
+    const fileModal = document.getElementById('file-modal'); // Modale pour afficher les fichiers
+    const closeButtons = document.querySelectorAll('.close-modal'); // Boutons de fermeture
+    const addFileForm = document.getElementById('add-file-form'); // Formulaire d'ajout de fichier
+    const fileList = document.getElementById('file-list'); // Liste des fichiers
+    const modalTitle = document.getElementById('modal-title'); // Titre de la modale de fichiers
 
-    // Affichage de la modale d'ajout
-    addReleveBtn.addEventListener("click", () => {
-        addFileModal.classList.remove("hidden");
-    });
+    // Vérifier que les éléments nécessaires existent
+    if (!addFileModal || !fileModal || !addFileForm) {
+        console.error('Certains éléments nécessaires ne sont pas trouvés dans le DOM.');
+        return;
+    }
 
-    // Fermeture de la modale d'ajout
-    closeAddModal.addEventListener("click", () => {
-        addFileModal.classList.add("hidden");
-    });
+    // Fonction pour afficher les notifications
+    function showNotification(message, type = 'success') {
+        const container = document.getElementById('notification-container');
 
-    // Fermeture de la modale des fichiers
-    closeFileModal.addEventListener("click", () => {
-        fileModal.classList.add("hidden");
-    });
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
 
-    // Gestion du formulaire d'ajout
-    addFileForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const formData = new FormData(addFileForm);
+        container.appendChild(notification);
 
-        try {
-            const response = await fetch("banque.php", {
-                method: "POST",
-                body: formData,
-            });
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
 
-            const result = await response.json();
-
-            if (result.success) {
-                alert("Fichier ajouté avec succès !");
-                location.reload(); // Recharge la page pour voir les nouveaux fichiers
+    // Ouvrir la modale pour ajouter un fichier
+    addFileButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (addFileModal) {
+                addFileModal.classList.remove('hidden'); // Afficher la modale d'ajout
             } else {
-                alert(result.message);
-            }
-        } catch (error) {
-            alert("Erreur lors de l'ajout du fichier.");
-        }
-    });
-
-    // Gestion de l'affichage des fichiers par année
-    document.querySelectorAll(".year-folder").forEach((folder) => {
-        folder.addEventListener("click", async (e) => {
-            e.preventDefault();
-
-            const year = folder.getAttribute("data-year");
-            const type = folder.getAttribute("data-type");
-
-            try {
-                const response = await fetch(`banque.php?action=get_files&year=${year}&type=${type}`);
-                const result = await response.json();
-
-                if (Array.isArray(result) && result.length > 0) {
-                    fileList.innerHTML = ""; // Vide la liste actuelle
-
-                    result.forEach((file) => {
-                        const listItem = document.createElement("li");
-                        const link = document.createElement("a");
-                        link.href = file.Url_fichier;
-                        link.textContent = file.Url_fichier.split("/").pop(); // Affiche uniquement le nom du fichier
-                        link.target = "_blank"; // Ouvre le fichier dans un nouvel onglet
-                        listItem.appendChild(link);
-                        fileList.appendChild(listItem);
-                    });
-
-                    const fileModalTitle = document.getElementById("file-modal-title");
-                    fileModalTitle.textContent = `Fichiers pour ${year}`;
-                    fileModal.classList.remove("hidden");
-                } else {
-                    alert("Aucun fichier trouvé pour cette année.");
-                }
-            } catch (error) {
-                console.error("Erreur:", error);
-                alert("Erreur lors de la récupération des fichiers.");
+                console.error('addFileModal introuvable.');
             }
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-    const addReleveBtn = document.getElementById("add-releve");
-    const addFileModal = document.getElementById("add-file-modal");
-    const closeAddModal = document.querySelector(".close-add-modal");
-    const addFileForm = document.getElementById("add-file-form");
-
-    // Afficher la modale d'ajout
-    addReleveBtn.addEventListener("click", () => {
-        addFileModal.classList.remove("hidden");
+    // Fermer les modales
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (addFileModal) addFileModal.classList.add('hidden');
+            if (fileModal) fileModal.classList.add('hidden');
+        });
     });
 
-    // Fermer la modale d'ajout
-    closeAddModal.addEventListener("click", () => {
-        addFileModal.classList.add("hidden");
-    });
-
-    // Gestion du formulaire d'ajout
-    addFileForm.addEventListener("submit", async (e) => {
+    // Soumission du formulaire pour ajouter un fichier
+    addFileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const formData = new FormData(addFileForm);
 
         try {
-            const response = await fetch("banque.php", {
-                method: "POST",
+            const response = await fetch('', {
+                method: 'POST',
                 body: formData,
             });
+            const data = await response.json();
 
-            // Pas besoin de traiter de JSON, car PHP redirige directement
-            if (response.ok) {
-                alert("Traitement en cours...");
+            if (data.success) {
+                showNotification(data.message || 'Fichier ajouté avec succès.', 'success');
+                setTimeout(() => location.reload(), 1000); // Recharger la page après un délai
+            } else {
+                showNotification(data.message || 'Erreur lors de l’ajout du fichier.', 'error');
             }
         } catch (error) {
-            alert("Erreur lors de l'ajout du fichier.");
+            showNotification('Une erreur est survenue.', 'error');
         }
+    });
+
+    // Ouvrir la modale pour consulter les fichiers
+    yearFolders.forEach(folder => {
+        folder.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const year = folder.dataset.year;
+
+            try {
+                // Requête AJAX pour récupérer les fichiers de l'année
+                const response = await fetch(`?year=${year}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    if (modalTitle) modalTitle.textContent = `Fichiers pour ${year}`;
+                    if (fileList) {
+                        fileList.innerHTML = '';
+                        if (data.files.length > 0) {
+                            data.files.forEach(file => {
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.href = file.Url_fichier;
+                                link.textContent = file.Url_fichier.split('/').pop();
+                                link.target = '_blank';
+                                listItem.appendChild(link);
+                                fileList.appendChild(listItem);
+                            });
+                        } else {
+                            fileList.innerHTML = '<li>Aucun fichier trouvé pour cette année.</li>';
+                        }
+                    }
+                    fileModal.classList.remove('hidden'); // Afficher la modale de fichiers
+                } else {
+                    showNotification(data.message || 'Erreur lors de la récupération des fichiers.', 'error');
+                }
+            } catch (error) {
+                showNotification('Erreur lors de la récupération des fichiers.', 'error');
+            }
+        });
     });
 });
