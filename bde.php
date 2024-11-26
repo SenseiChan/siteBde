@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="stylecss/styleInfoBde.css">
 </head>
 <body>
+    <?php include 'header.php'; ?>
     <!-- Barre Bleue -->
     <div class="topBleu"></div>
 
@@ -16,10 +17,11 @@
         <p id="presEquipe">L’équipe du BDE est composée, cette année, de 6 membres avec chacun des fonctions différentes</p>
     </div>
 
-    <!-- Mascotte -->
+    <!-- Mascotte 
     <div class="moderation_img">
         <img src="image/moderation.png" alt="mascotte IUT">
     </div>
+    
 
     <!-- Membres de l'Équipe -->
     <div class="team-section">
@@ -63,6 +65,6 @@
             </div>
         </div>
     </div>
-
+    <?php include 'footer.php'; ?>
 </body>
 </html>

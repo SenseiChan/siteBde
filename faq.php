@@ -7,33 +7,7 @@
     <link rel="stylesheet" href="stylecss/faqCss.css">
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <!-- Logo -->
-            <div class="logo">
-                <img src="image/logoAdiil.png" alt="Logo BDE">
-            </div>
-
-            <!-- Navigation -->
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="accueil.php">Accueil</a></li>
-                    <li><a href="events.php">Événements</a></li>
-                    <li><a href="boutique.php">Boutique</a></li>
-                    <li><a href="bde.php">BDE</a></li>
-                    <li><a href="faq.php" class="active">FAQ</a></li>
-                </ul>
-            </nav>
-
-            <!-- Boutons -->
-            <div class="header-buttons">
-                <a href="connexion.html" class="connect-button">Se connecter</a>
-                <a href="inscription.html" class="register-button">S'inscrire</a>
-                <img src="image/logoPanier.png" alt="Panier" class="cart-icon">
-            </div>
-        </div>
-    </header>
-
+<?php include 'header.php'; ?>  
     <main>
         <section class="faq-section">
             <h1>FAQ</h1>
@@ -55,6 +29,7 @@
             </div>
         </section>
     </main>
+
 
 </body>
 </html>
