@@ -1,0 +1,65 @@
+body {
+    font-family: 'Poppins', sans-serif; /* Mise à jour pour correspondre au style général */
+    margin: 0;
+    padding: 0;
+    background-color: #2C2E33; /* Fond principal */
+    color: #FFFFFF; /* Texte principal */
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+    padding: 20px;
+    background: #2D2D2D; /* Couleur secondaire pour le contenu */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Ombre subtile */
+    border-radius: 10px; /* Coins arrondis */
+}
+
+h1 {
+    text-align: center;
+    color: #FFFFFF; /* Titre en blanc */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    border: 1px solid #444; /* Bordure foncée */
+    padding: 10px;
+    text-align: center;
+    color: #FFFFFF; /* Texte des cellules */
+}
+
+table th {
+    background-color: #2C2E33; /* Fond des en-têtes */
+    color: #AC6CFF; /* Couleur pour les titres des colonnes */
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #3A3B40; /* Lignes alternées */
+}
+
+table tr:hover {
+    background-color: #444; /* Surlignage des lignes */
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #FFFFFF; /* Texte du bouton */
+    background-color: #AC6CFF; /* Fond violet */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #9B55E3; /* Survol du bouton */
+}
