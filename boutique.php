@@ -21,7 +21,7 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 // Message pour le formulaire d'ajout
 $message = "";
 
-// Gestion de l'ajout d'un produit
+// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     $name = $_POST['name'];
     $price = $_POST['price'];
@@ -42,14 +42,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 'stock' => $stock,
                 'photo' => basename($_FILES["photo"]["name"])
             ]);
-            $message = "<p style='color:green;'>Produit ajouté avec succès.</p>";
+            // Retourner un message de succès
+            echo "<p style='color:green;'>Produit ajouté avec succès.</p>";
         } catch (PDOException $e) {
-            $message = "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+            // Retourner un message d'erreur
+            echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
         }
     } else {
-        $message = "<p style='color:red;'>Erreur lors de l'upload de l'image.</p>";
+        echo "<p style='color:red;'>Erreur lors de l'upload de l'image.</p>";
     }
+    exit; // Terminer le script PHP après la réponse AJAX
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -62,71 +67,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 </head>
 <body>
 <header>
-        <div class="header-container">
-            <!-- Logo -->
-            <div class="logo">
-                <img src="image/logoAdiil.png" alt="Logo BDE">
-            </div>
+    <div class="header-container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="image/logoAdiil.png" alt="Logo BDE">
+        </div>
 
-             <!-- Menu Admin -->
-             <?php if ($is_admin): ?>
-            <div class="dropdown">
-                <button class="dropdown-toggle">Admin</button>
-                <div class="dropdown-menu">
+        <!-- Menu Admin -->
+        <?php if ($is_admin): ?>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Admin</button>
+            <div class="dropdown-menu">
                 <a href="#">Espace partagé</a>
                 <a href="gestionMembre.php">Gestion membre</a>
                 <a href="#">Statistique</a>
                 <a href="#">Banque</a>
                 <a href="boutique.php?gestion_site=true">Gestion site</a>
-                </div>
-            </div>
-            <?php endif; ?>
-
-           <!-- Navigation -->
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="accueil.php">Accueil</a></li>
-                    <li><a href="events.php">Événements</a></li>
-                    <li><a href="boutique.php" class="active">Boutique</a></li>
-                    <li><a href="bde.php">BDE</a></li>
-                    <li><a href="faq.php">FAQ</a></li>
-                </ul>
-            </nav>
-
-            <!-- Boutons / Profil -->
-            <div class="header-buttons">
-                <?php
-                if ($userId!=null):
-                    // Utilisateur connecté
-                    $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
-                ?>
-                    <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
-                    <form action="logout.php" method="post" class="logout-form">
-                        <button type="submit" class="logout-button">Se déconnecter</button>
-                    </form>
-                    <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
-                <?php else: ?>
-                    <!-- Boutons si non connecté -->
-                    <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
-                    <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
-                <?php endif; ?>
             </div>
         </div>
-    </header>
+        <?php endif; ?>
+
+        <!-- Navigation -->
+        <nav>
+            <ul class="nav-links">
+                <li><a href="accueil.php">Accueil</a></li>
+                <li><a href="events.php">Événements</a></li>
+                <li><a href="boutique.php" class="active">Boutique</a></li>
+                <li><a href="bde.php">BDE</a></li>
+                <li><a href="faq.php">FAQ</a></li>
+            </ul>
+        </nav>
+
+        <!-- Boutons / Profil -->
+        <div class="header-buttons">
+            <?php
+            if ($userId!=null):
+                // Utilisateur connecté
+                $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
+            ?>
+                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <form action="logout.php" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Se déconnecter</button>
+                </form>
+                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+            <?php else: ?>
+                <!-- Boutons si non connecté -->
+                <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
+                <a href="inscription.html" class="registerButtonHeader">S'inscrire</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</header>
 
 <main>
     <!-- Grades Section -->
-    <section class="grades" style="padding: 80px 0px;">
-    <h2>Grades</h2>
+    <section id="noBlurSection" class="grades" style="padding: 80px 0px;">
+        <h2>Grades</h2>
         <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
 
         <!-- Logo Admin -->
-         <br><br><br>
+        <br><br><br>
         <?php if ($is_admin && isset($_GET['gestion_site']) && $_GET['gestion_site'] == 'true'): ?>
             <div class="admin-logo">
-                <img src="image/pensilIconModifChiffre.png" alt="Logo Admin" class="admin-logo-img">
+                <a href="boutique.php?gestion_site=true" id="editModeButton">
+                    <img src="image/pensilIconModifChiffre.png" alt="Logo Admin" class="admin-logo-img">
+                </a>
             </div>
-            <?php endif; ?>
+        <?php endif; ?>
 
         <div class="grades-container">
             <div class="grade-card grade-fer">
@@ -159,8 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 
         <?php if (!empty($message)) echo $message; ?>
 
-
-
         <!-- Section Boissons -->
         <div class="sub-section" style="padding: 30px 0px;">
             <h3>Boissons :</h3>
@@ -185,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                                 <p>
                                     <span class='name'>{$row['Nom_prod']}</span><br><br>
                                     Prix : {$row['Prix_prod']}€<br><br>
-                                    En stock : {$row['Stock_prod']}
+                                    En stock : {$row['Stock_prod']}<br><br>
                                 </p>
                             </div>";
                         }
@@ -270,5 +275,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         </div>
     </section>
 </main>
+
+
+<script src="js/scriptBoutique.js"></script>
+
 </body>
 </html>
+

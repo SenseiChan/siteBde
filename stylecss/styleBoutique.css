@@ -448,3 +448,28 @@ main {
   .dropdown:hover .dropdown-menu {
     display: flex;
   }
+
+/* Gestion du flou */
+body.blur * {
+    filter: blur(5px); /* Applique le flou global */
+    transition: filter 0.3s ease;
+}
+
+/* Exclusion des éléments spécifiques */
+body.blur .no-blur {
+    filter: none !important; /* Supprime le flou pour ces éléments */
+    position: relative;
+    z-index: 10; /* S'assure que ces éléments sont visibles au premier plan */
+}
+
+/* Exclusion par ID */
+body.blur #noBlurSection {
+    filter: none;
+    position: relative;
+    z-index: 10;
+}
+
+/* Applique le flou sauf aux éléments spécifiques */
+body.blur *:not(.grades):not(.no-blur) {
+    filter: blur(5px);
+}
