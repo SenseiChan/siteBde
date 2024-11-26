@@ -88,25 +88,11 @@ body, html {
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.close-add-modal {
-    position: absolute;
-    top: 10px; /* Ajuste la position verticale */
-    right: 10px; /* Ajuste la position horizontale */
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.close-add-modal:hover {
-    transform: scale(1.2); /* Zoom léger au survol */
-    opacity: 0.8; /* Réduit l'opacité */
-}
-
 .close-modal:hover {
     transform: scale(1.2); /* Agrandit légèrement au survol */
     opacity: 0.8; /* Rendu visuel plus subtil */
 }
+
 
 /* Style des sections */
 .compte-rendus-section {
@@ -167,7 +153,7 @@ body, html {
 }
 
 /* ------------------ */
-/* Bouton ajouter */
+/* Bouton ajouter
 /* ------------------ */
 
 .add-file-container {
@@ -241,66 +227,88 @@ body, html {
     margin-bottom: 10px;
 }
 
-
 /* ------------------ */
-/* Style finance section */
+/* CAISSE DU BDE */
 /* ------------------ */
 
-.finance-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.caisse-container {
     text-align: center;
+    margin: 20px 0;
 }
 
-.finance-item {
-    background-color: #3a3a55;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: 1.2em;
-}
-
-.finance-item h3 {
-    margin-bottom: 10px;
-    color: #ffcc00;
-}
-
-.amount {
-    color: #44aa44;
+.caisse-container p {
     font-size: 1.5em;
+    color: #f4d34d;
+    margin-bottom: 15px;
+}
+
+.caisse-container .edit-amount-btn {
+    background-color: #444466;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-/* Conteneur des fichiers en grille */
-.file-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    max-height: 400px; /* Limite la hauteur et ajoute un scroll si nécessaire */
-    overflow-y: auto;
-    padding: 10px;
+.caisse-container .edit-amount-btn:hover {
+    background-color: #555577;
 }
 
-/* Style des liens de fichiers */
-.file-item {
+/* ------------------ */
+/* POPUP */
+/* ------------------ */
+
+#notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-width: 90%;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #ffcc00;
-    font-weight: bold;
-    transition: transform 0.3s ease, color 0.3s ease;
+    gap: 10px;
 }
 
-.file-item:hover {
-    color: #ffffff;
-    transform: translateY(-3px);
+.notification {
+    background-color: #444466;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards, fadeOut 0.5s 4.5s forwards;
 }
 
-/* Icône des fichiers */
-.file-item img {
-    width: 50px;
-    height: auto;
-    margin-bottom: 10px;
+.notification.success {
+    background-color: #44aa44;
+}
+
+.notification.error {
+    background-color: #aa4444;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 }
