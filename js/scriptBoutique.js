@@ -1,26 +1,22 @@
-const editButton = document.querySelector('#editModeButton');
-const body = document.body;
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById("myModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtn = document.getElementById("closeModal");
 
-// Ajoutez une classe spécifique pour les éléments que vous souhaitez exclure du flou
-const excludedSections = document.querySelectorAll('.no-blur');
+    // Afficher la fenêtre modale
+    openBtn.onclick = function() {
+        modal.style.display = "flex";
+    };
 
-editButton.addEventListener('click', function (event) {
-    event.preventDefault();
+    // Fermer la fenêtre modale
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    };
 
-    // Vérifiez si le flou est déjà activé
-    if (body.classList.contains('blur')) {
-        body.classList.remove('blur');
-
-        // Supprime également le flou sur les sections exclues
-        excludedSections.forEach(section => {
-            section.style.filter = 'none';
-        });
-    } else {
-        body.classList.add('blur');
-
-        // Assurez-vous que les sections exclues ne sont pas floutées
-        excludedSections.forEach(section => {
-            section.style.filter = 'none';
-        });
-    }
+    // Fermer la fenêtre en cliquant à l'extérieur
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
 });
