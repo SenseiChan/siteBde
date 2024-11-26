@@ -64,7 +64,7 @@ function isActive($page) {
         <div class="header-buttons">
             <?php if ($userId != null): ?>
                 <!-- Utilisateur connecté -->
-                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <a href="profil.php"><img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon"></a>
                 <form action="logout.php" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Se déconnecter</button>
                 </form>

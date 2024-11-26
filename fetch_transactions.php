@@ -6,7 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$userId = $_SESSION['user_id'];
+// Use the user_id parameter if provided, otherwise fallback to session user ID
+$userId =$_SESSION['user_id'];
+
 $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 $transactionsPerPage = 10;
 $searchQuery = isset($_GET['query']) ? trim($_GET['query']) : '';
@@ -25,22 +27,16 @@ try {
 
     $query = $pdo->prepare("
         SELECT t.Montant_trans AS amount, t.Date_trans AS date,
-               COALESCE(
-                   e.Nom_event, 
-                   p.Nom_prod, 
-                   g.Nom_grade,
-                   'Grade'
-               ) AS description
+               COALESCE(e.Nom_event, p.Nom_prod, g.Nom_grade, 'Autre') AS description
         FROM transactions t
         LEFT JOIN evenement e ON t.Id_event = e.Id_event
         LEFT JOIN produit p ON t.Id_prod = p.Id_prod
         LEFT JOIN grade g ON t.Id_grade = g.Id_grade
         WHERE t.Id_user = :userId
         AND (
-            e.Nom_event LIKE :searchQuery 
-            OR p.Nom_prod LIKE :searchQuery 
+            e.Nom_event LIKE :searchQuery
+            OR p.Nom_prod LIKE :searchQuery
             OR g.Nom_grade LIKE :searchQuery
-            OR 'Grade' LIKE :searchQuery
         )
         ORDER BY t.Date_trans DESC
         LIMIT :limit OFFSET :offset
@@ -57,4 +53,5 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur de base de données : ' . $e->getMessage()]);
 }
+
 ?>

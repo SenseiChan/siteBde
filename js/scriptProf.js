@@ -114,15 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const blurElements = document.querySelectorAll('.blur-target'); // Select elements to blur
 
     const fetchTransactions = (page, searchQuery = '') => {
-        // Fetch transactions based on the search query and page
-        fetch(`fetch_transactions.php?page=${page}&query=${searchQuery}`)
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id') || ''; // Ensure it defaults to logged-in user only if absent
+    
+        fetch(`fetch_transactions.php?page=${page}&query=${searchQuery}&user_id=${userId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     const transactions = data.transactions;
-
+    
                     if (page === 0) historyContent.innerHTML = ''; // Clear previous content for new searches
-
+    
                     transactions.forEach(transaction => {
                         const transactionElement = document.createElement('div');
                         transactionElement.classList.add('transaction-item');
@@ -133,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                         historyContent.appendChild(transactionElement);
                     });
-
+    
                     if (transactions.length === 0 && page === 0) {
                         historyContent.innerHTML = '<p>Aucun résultat trouvé.</p>';
                     }
@@ -142,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => console.error('Erreur :', error));
-    };
+    };    
+    
 
     historyButton.addEventListener('click', () => {
         blurElements.forEach(element => element.classList.add('blur')); // Add blur to specific elements

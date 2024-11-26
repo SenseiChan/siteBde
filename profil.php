@@ -158,9 +158,9 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             <div class="dropdown-menu">
             <a href="espace_partage.php">Espace partagé</a>
             <a href="gestionMembre.php">Gestion membre</a>
-            <a href="#">Statistique</a>
-            <a href="#">Banque</a>
-            <a href="#">Gestion site</a>
+            <a href="statistique.php">Statistique</a>
+            <a href="banque.php">Banque</a>
+            <a href="chat_admin.php">Chat Administrateur</a>
             </div>
         </div>
         <?php endif; ?>
