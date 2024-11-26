@@ -12,6 +12,8 @@ try {
     die("Erreur : " . $e->getMessage());
 }
 
+
+
 // Fonction pour vérifier si un utilisateur est administrateur
 session_start();
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
@@ -26,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     $name = $_POST['name'];
     $price = $_POST['price'];
     $stock = $_POST['stock'];
+    $type = $_POST['type'];
 
     // Upload de l'image
     $targetDir = "imagesAdmin/";
@@ -33,14 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
         try {
             $stmt = $pdo->prepare("
-                INSERT INTO produit (Nom_prod, Prix_prod, Stock_prod, Photo_prod) 
-                VALUES (:name, :price, :stock, :photo)
+                INSERT INTO produit (Nom_prod, Prix_prod, Stock_prod, Photo_prod, Type_prod) 
+                VALUES (:name, :price, :stock, :photo, :type)
             ");
             $stmt->execute([
                 'name' => $name,
                 'price' => $price,
                 'stock' => $stock,
-                'photo' => basename($_FILES["photo"]["name"])
+                'photo' => basename($_FILES["photo"]["name"]),
+                'type' => $type
             ]);
             // Retourner un message de succès
             echo "<p style='color:green;'>Produit ajouté avec succès.</p>";
@@ -66,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     <link rel="stylesheet" href="stylecss/styleBoutique.css">
 </head>
 <body>
+<<<<<<< HEAD
 <header>
     <div class="header-container">
         <!-- Logo -->
@@ -119,11 +124,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     </div>
 </header>
 
+=======
+<?php include 'header.php'; ?>
+>>>>>>> df09128f376ecf1e914b055cc8e2f28f7df8121b
 <main>
+    <?php
+// Variables de message de confirmation
+
+
+// Vérifier si le formulaire a été soumis
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Vérifiez ici si toutes les données sont présentes et valides
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+    $type = $_POST['type'];
+    $photo = $_FILES['photo']; // Gestion de l'upload de photo
+
+    // Simulez l'ajout du produit (vous devez ici traiter l'ajout à la base de données et l'upload de la photo)
+    // Par exemple :
+    // Si l'ajout est réussi, afficher un message de succès
+    if ($name && $price && $stock && $type && $photo) {
+        // Traitez l'ajout ici (vérifiez si tout est valide et effectuez l'upload de l'image)
+        // Exemple : $result = ajouterProduit($name, $price, $stock, $type, $photo);
+
+        // Si le traitement est réussi, afficher un message de succès
+        $message = "Produit ajouté avec succès !";
+    } else {
+        // Si une erreur survient, affichez un message d'erreur
+        $message = "Erreur dans l'ajout du produit.";
+    }
+}
+?>
+
+
+<!-- Zone de message (affichée après la soumission) -->
+<?php if ($message): ?>
+    <div id="message">
+        <?php echo $message; ?>
+    </div>
+<?php endif; ?>
+    <script>
+        // Gestion des événements pour le pop-up
+        const modal = document.getElementById("myModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtn = document.getElementById("closeModal");
+
+        // Afficher la fenêtre modale
+        openBtn.onclick = () => {
+            modal.style.display = "flex";
+        };
+
+        // Fermer la fenêtre modale
+        closeBtn.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        // Fermer la fenêtre en cliquant à l'extérieur
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
     <!-- Grades Section -->
+<<<<<<< HEAD
     <section id="noBlurSection" class="grades" style="padding: 80px 0px;">
         <h2>Grades</h2>
         <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+=======
+    <section class="grades" style="padding: 80px 0px;">
+    <h2>Grades</h2>
+        <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+>>>>>>> df09128f376ecf1e914b055cc8e2f28f7df8121b
 
         <!-- Logo Admin -->
         <br><br><br>
@@ -162,14 +235,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     <!-- Consommables Section -->
     <section class="consommables">
         <h2>Consommables</h2>
-        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+        <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
 
-        <?php if (!empty($message)) echo $message; ?>
+       
+
+<!-- Pop-Up (fenêtre modale) -->
+<div id="myModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="product_id" id="product_id">
+            <input type="text" name="name" id="name" placeholder="Nom du produit" required>
+            <input type="number" name="price" id="price" placeholder="Prix du produit" required>
+            <input type="number" name="stock" id="stock" placeholder="Stock du produit" required>
+            <input type="text" name="type" id="type" placeholder="Type du produit" required pattern="^(boisson|snack|autres)$" title="Veuillez entrer 'boisson', 'snack' ou 'autres'.">
+            <input type="file" name="photo" id="photo" required>
+            <button type="submit">Sauvegarder</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des événements pour le pop-up
+        const modal = document.getElementById("myModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtn = document.getElementById("closeModal");
+
+        // Afficher la fenêtre modale
+        openBtn.onclick = function() {
+            modal.style.display = "flex";
+        };
+
+        // Fermer la fenêtre modale
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        // Fermer la fenêtre en cliquant à l'extérieur
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    });
+</script>
 
         <!-- Section Boissons -->
         <div class="sub-section" style="padding: 30px 0px;">
             <h3>Boissons :</h3>
-            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
             
             <!-- Logo Admin -->
             <?php if ($is_admin && isset($_GET['gestion_site']) && $_GET['gestion_site'] == 'true'): ?>
@@ -204,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         <!-- Section Snacks -->
         <div class="sub-section">
             <h3>Snacks :</h3>
-            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
 
             <!-- Logo Admin -->
             <?php if ($is_admin && isset($_GET['gestion_site']) && $_GET['gestion_site'] == 'true'): ?>
@@ -241,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         <!-- Section Autres -->
         <div class="sub-section">
             <h3>Autres :</h3>
-            <div style="width: 10%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
+            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
 
             <!-- Logo Admin -->
             <?php if ($is_admin && isset($_GET['gestion_site']) && $_GET['gestion_site'] == 'true'): ?>
@@ -273,8 +388,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 ?>
             </div>
         </div>
+         <!-- Bouton Ajouter un produit, déplacé après la liste des produits -->
+    <?php if ($is_admin): ?>
+        <button id="openModal" class="ajouter-produit-btn">
+            <h5>Ajouter un produit</h5>
+        </button>
+    <?php endif; ?>
     </section>
 </main>
+<<<<<<< HEAD
 
 
 <script src="js/scriptBoutique.js"></script>
@@ -282,3 +404,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 </body>
 </html>
 
+=======
+<?php include 'footer.php'; ?>
+</body>
+</html>
+>>>>>>> df09128f376ecf1e914b055cc8e2f28f7df8121b

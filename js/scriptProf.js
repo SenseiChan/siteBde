@@ -66,8 +66,129 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Save information and close modal
     saveButton.addEventListener('click', () => {
-        // TODO: Add functionality for saving user information
+        const tel = document.getElementById('tel').value;
+        const email = document.getElementById('email').value;
+        const numNomRue = document.getElementById('numNomRue').value;
+        const ville = document.getElementById('ville').value;
+        const codePostal = document.getElementById('codePostal').value;
+
+        // Send data to the server via AJAX
+        fetch('update_user.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                tel: tel,
+                email: email,
+                numNomRue: numNomRue,
+                ville: ville,
+                codePostal: codePostal,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Informations mises à jour avec succès');
+                } else {
+                    alert('Erreur lors de la mise à jour : ' + data.message);
+                }
+                blurElements.forEach(element => element.classList.remove('blur'));
+                modal.classList.add('hidden');
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+                alert('Erreur lors de la mise à jour.');
+            });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const historyButton = document.querySelector('.view-history');
+    const historyModal = document.querySelector('.history-modal');
+    const closeHistoryModal = document.querySelector('.close-history-modal');
+    const historyContent = document.querySelector('.history-content');
+    const transactionSearch = document.querySelector('#transaction-search');
+    let currentPage = 0; // Track the current page of transactions
+    const blurElements = document.querySelectorAll('.blur-target'); // Select elements to blur
+
+    const fetchTransactions = (page, searchQuery = '') => {
+        // Fetch transactions based on the search query and page
+        fetch(`fetch_transactions.php?page=${page}&query=${searchQuery}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const transactions = data.transactions;
+
+                    if (page === 0) historyContent.innerHTML = ''; // Clear previous content for new searches
+
+                    transactions.forEach(transaction => {
+                        const transactionElement = document.createElement('div');
+                        transactionElement.classList.add('transaction-item');
+                        transactionElement.innerHTML = `
+                            <span>${transaction.description}</span>
+                            <span>${new Date(transaction.date).toLocaleDateString()}</span>
+                            <span>${transaction.amount}€</span>
+                        `;
+                        historyContent.appendChild(transactionElement);
+                    });
+
+                    if (transactions.length === 0 && page === 0) {
+                        historyContent.innerHTML = '<p>Aucun résultat trouvé.</p>';
+                    }
+                } else {
+                    alert(data.message || 'Erreur lors de la récupération des transactions.');
+                }
+            })
+            .catch(error => console.error('Erreur :', error));
+    };
+
+    historyButton.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.add('blur')); // Add blur to specific elements
+        historyModal.classList.remove('hidden'); // Show the modal
+
+        // Fetch the first page of transactions
+        currentPage = 0;
+        fetchTransactions(currentPage);
+    });
+
+    closeHistoryModal.addEventListener('click', () => {
+        historyModal.classList.add('hidden'); // Show the modal
+        blurElements.forEach(element => element.classList.remove('blur')); // Add blur to specific elements
+    });
+
+    // Handle transaction search
+    transactionSearch.addEventListener('input', (e) => {
+        const searchQuery = e.target.value.trim();
+        currentPage = 0; // Reset to the first page
+        fetchTransactions(currentPage, searchQuery); // Fetch transactions based on search query
+    });
+
+    // Swipe functionality to load more transactions
+    historyModal.addEventListener('wheel', (e) => {
+        if (e.deltaY > 0) { // Scroll down
+            currentPage++;
+            fetchTransactions(currentPage, transactionSearch.value.trim());
+        }
+    });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const badgeButton = document.querySelector('.view-badges'); // Add this class to the "Badges" button
+    const badgeModal = document.querySelector('.badge-modal');
+    const closeBadgeModal = document.querySelector('.close-badge-modal');
+    const blurElements = document.querySelectorAll('.blur-target'); // Elements to blur
+
+    badgeButton.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.add('blur'));
+        badgeModal.classList.remove('hidden');
+    });
+
+    closeBadgeModal.addEventListener('click', () => {
         blurElements.forEach(element => element.classList.remove('blur'));
-        modal.classList.add('hidden');
+        badgeModal.classList.add('hidden');
     });
 });

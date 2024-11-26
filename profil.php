@@ -1,16 +1,22 @@
 <?php
 session_start(); // Démarrer la session
 
-$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+// Vérifie si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header("Location: accueil.php");
+    exit(); // Redirection si non connecté
+}
 
-
-// Vérifie si l'utilisateur est connecté et admin
+// Détermine si l'utilisateur est administrateur
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
-// Redirige si l'utilisateur n'est pas connecté
-if ($userId == null) {
-    header("Location: accueil.php");
-    exit(); // Assurez-vous de terminer le script après la redirection
+// Récupération de l'ID utilisateur via GET ou SESSION
+if ($is_admin && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    // Si l'utilisateur est admin et qu'un ID est passé via GET, utiliser cet ID
+    $userId = intval($_GET['id']);
+} else {
+    // Sinon, utiliser l'ID utilisateur connecté
+    $userId = $_SESSION['user_id'];
 }
 
 // Connexion à la base de données
@@ -46,48 +52,42 @@ $userQuery = $pdo->prepare("
 $userQuery->execute(['id' => $userId]);
 $user = $userQuery->fetch(PDO::FETCH_ASSOC);
 
-// Détermine le mois et l'année actuels ou sélectionnés
+if (!$user) {
+    echo "Utilisateur non trouvé.";
+    exit();
+}
+
+// Le reste du code pour récupérer événements, badges, etc., reste inchangé
 $currentYear = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
 $currentMonth = isset($_GET['month']) ? intval($_GET['month']) : date('m');
-
-// Calcul des jours dans le mois
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
 
 function getUserEvents($pdo, $userId, $month, $year) {
-  $query = $pdo->prepare("
-      SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
-      FROM evenement e
-      JOIN participer p ON e.Id_event = p.Id_event
-      WHERE p.Id_user = :userId
-      AND MONTH(e.Date_deb_event) = :month
-      AND YEAR(e.Date_deb_event) = :year
-  ");
-  $query->execute([
-      'userId' => $userId,
-      'month' => $month,
-      'year' => $year
-  ]);
+    $query = $pdo->prepare("
+        SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
+        FROM evenement e
+        JOIN participer p ON e.Id_event = p.Id_event
+        WHERE p.Id_user = :userId
+        AND MONTH(e.Date_deb_event) = :month
+        AND YEAR(e.Date_deb_event) = :year
+    ");
+    $query->execute([
+        'userId' => $userId,
+        'month' => $month,
+        'year' => $year
+    ]);
 
-  return $query->fetchAll(PDO::FETCH_ASSOC);
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-// Appel de la fonction pour récupérer les événements
 $userEvents = getUserEvents($pdo, $userId, $currentMonth, $currentYear);
 
-// Vérification pour éviter des erreurs si aucun événement n'est récupéré
-if (!is_array($userEvents)) {
-    $userEvents = [];
-}
-
-// Organisation des événements par jour
 $eventsByDay = [];
-foreach ($userEvents as $event) { // Utilisation correcte de $userEvents
+foreach ($userEvents as $event) {
     $day = (int) date('j', strtotime($event['Date_deb_event']));
     $eventsByDay[$day][] = $event;
 }
 
-// Récupération des 3 dernières transactions avec leurs détails
 $transactionQuery = $pdo->prepare("
     SELECT 
         t.Montant_trans, 
@@ -107,7 +107,6 @@ $transactionQuery = $pdo->prepare("
 $transactionQuery->execute(['id' => $userId]);
 $transactions = $transactionQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Récupération des badges de l'utilisateur
 $badgesQuery = $pdo->prepare("
     SELECT b.Nom_badge, b.Desc_badge, b.Photo_badge
     FROM decrocher d
@@ -118,7 +117,22 @@ $badgesQuery = $pdo->prepare("
 $badgesQuery->execute(['id' => $userId]);
 $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
 
+$allBadgesQuery = $pdo->query("
+    SELECT Id_badge, Nom_badge, Photo_badge
+    FROM badge
+");
+$allBadges = $allBadgesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$userBadgesQuery = $pdo->prepare("
+    SELECT Id_badge
+    FROM decrocher
+    WHERE Id_user = :userId
+");
+$userBadgesQuery->execute(['userId' => $userId]);
+$userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
+
 ?>
+
 
 
 <!DOCTYPE html>
@@ -142,7 +156,7 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
         <div class="dropdown">
             <button class="dropdown-toggle">Admin</button>
             <div class="dropdown-menu">
-            <a href="#">Espace partagé</a>
+            <a href="espace_partage.php">Espace partagé</a>
             <a href="gestionMembre.php">Gestion membre</a>
             <a href="#">Statistique</a>
             <a href="#">Banque</a>
@@ -155,7 +169,7 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
         <nav>
             <ul class="nav-links">
                 <li><a href="accueil.php">Accueil</a></li>
-                <li><a href="evenements.php">Événements</a></li>
+                <li><a href="events.php">Événements</a></li>
                 <li><a href="boutique.php">Boutique</a></li>
                 <li><a href="bde.php">BDE</a></li>
                 <li><a href="faq.php">FAQ</a></li>
@@ -166,10 +180,8 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
         <div class="header-buttons">
             <?php
             if ($userId!=null):
-                // Utilisateur connecté
-                $profileImage = !empty($_SESSION['Photo_user']) ? $_SESSION['Photo_user'] : 'image/ppBaptProf.jpg';
             ?>
-                <img src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="profile-icon">
+                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Profil" class="profile-icon">
                 <form action="logout.php" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Se déconnecter</button>
                 </form>
@@ -280,6 +292,55 @@ $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
             <button class="save-info-btn">Enregistrer</button>
             <button class="close-modal">Fermer</button>
         </div>
+    </div>
+
+    <div class="history-modal hidden">
+        <div class="history-header">
+            <h2>Historique</h2>
+            <button class="close-history-modal">X</button>
+        </div>
+        <div class="history-search">
+            <input type="text" id="transaction-search" placeholder="Rechercher par nom..." />
+        </div>
+        <div class="history-content">
+            <!-- Transactions will be dynamically loaded here -->
+        </div>
+    </div>
+    <div class="badge-modal hidden">
+        <h2>Badges</h2>
+        <div class="modal-body">
+            <div class="badge-category">
+                <h3>Année :</h3>
+                <div class="badges">
+                    <?php foreach (array_slice($allBadges, 0, 3) as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="badge-category">
+                <h3>Taux de participations :</h3>
+                <div class="badges">
+                    <?php foreach (array_slice($allBadges, 3, 5) as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="badge-category">
+                <h3>Grades :</h3>
+                <div class="badges">
+                    <?php foreach (array_slice($allBadges, 8, 3) as $badge): ?>
+                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                            <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <button class="close-badge-modal">X</button>
     </div>
     <script src="js/scriptProf.js"></script>
 </body>

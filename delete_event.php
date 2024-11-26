@@ -29,20 +29,55 @@ if (!$event) {
     die('Événement introuvable.');
 }
 
-// Suppression après confirmation
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-    try {
-        // Supprimer l'événement
-        $deleteEventQuery = "DELETE FROM Evenement WHERE Id_event = :id";
-        $deleteStmt = $pdo->prepare($deleteEventQuery);
-        $deleteStmt->execute(['id' => $eventId]);
+// Récupérer les participants
+$participantsQuery = "
+    SELECT u.Id_user, u.Nom_user, u.Prenom_user 
+    FROM Participer p
+    JOIN Utilisateur u ON p.Id_user = u.Id_user
+    WHERE p.Id_event = :eventId
+";
+$participantsStmt = $pdo->prepare($participantsQuery);
+$participantsStmt->execute(['eventId' => $eventId]);
+$participants = $participantsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Redirection vers la page des événements
-        header('Location: events.php?delete=success');
+// Désinscription d'un utilisateur (AJAX)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $action = $input['action'] ?? null;
+    $userId = $input['user_id'] ?? null;
+
+    if ($action === 'remove_user' && $userId) {
+        $deleteQuery = "DELETE FROM Participer WHERE Id_user = :userId AND Id_event = :eventId";
+        $deleteStmt = $pdo->prepare($deleteQuery);
+        $deleteStmt->execute(['userId' => $userId, 'eventId' => $eventId]);
+
+        // Retourner la liste mise à jour des participants
+        $participantsStmt->execute(['eventId' => $eventId]);
+        $updatedParticipants = $participantsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['success' => true, 'participants' => $updatedParticipants]);
         exit();
-    } catch (Exception $e) {
-        die('Erreur lors de la suppression de l\'événement : ' . $e->getMessage());
     }
+
+    if ($action === 'delete_event') {
+        // Vérifier s'il reste des participants
+        $participantsStmt->execute(['eventId' => $eventId]);
+        $remainingParticipants = $participantsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($remainingParticipants)) {
+            $deleteEventQuery = "DELETE FROM Evenement WHERE Id_event = :eventId";
+            $deleteEventStmt = $pdo->prepare($deleteEventQuery);
+            $deleteEventStmt->execute(['eventId' => $eventId]);
+
+            echo json_encode(['success' => true, 'message' => 'Événement supprimé avec succès.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Impossible de supprimer un événement avec des participants inscrits.']);
+        }
+        exit();
+    }
+
+    echo json_encode(['success' => false, 'message' => 'Action non reconnue ou données invalides.']);
+    exit();
 }
 ?>
 
@@ -67,11 +102,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm']) && $_POST[
                 <?= htmlspecialchars($event['Ville'] ?? 'Non spécifiée') ?>
             </p>
         </div>
-        <form method="POST" action="">
-            <input type="hidden" name="confirm" value="yes">
-            <button type="submit" class="confirm-btn">Oui, supprimer</button>
-            <a href="events.php" class="cancel-btn">Annuler</a>
-        </form>
+
+        <?php if (!empty($participants)): ?>
+            <h2>Participants inscrits</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="participants-table">
+                        <?php foreach ($participants as $participant): ?>
+                            <tr data-user-id="<?= $participant['Id_user'] ?>">
+                                <td><?= htmlspecialchars($participant['Nom_user']) ?></td>
+                                <td><?= htmlspecialchars($participant['Prenom_user']) ?></td>
+                                <td>
+                                    <button class="action-btn remove-user-btn" data-user-id="<?= $participant['Id_user'] ?>">Retirer</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p>Aucun utilisateur inscrit à cet événement.</p>
+        <?php endif; ?>
+
+        <button id="delete-event-btn" class="confirm-btn" <?= empty($participants) ? '' : 'disabled' ?>>
+            Supprimer l'événement
+        </button>
+        <a href="events.php" class="cancel-btn">Annuler</a>
     </div>
+
+    <div id="popup" class="popup"></div>
+    <script src="js/delete_event.js"></script>
 </body>
 </html>
