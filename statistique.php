@@ -433,6 +433,4 @@ new Chart(ctx, config);
 </body>
 </html>
 
-<?php
-$conn->close();
-?>
+
