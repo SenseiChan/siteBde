@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="stylecss/faqCss.css">
 </head>
 <body>
-<?php include 'header.php'; ?>  
+<?php include 'header.php'; ?>
     <main>
+        <br>
         <section class="faq-section">
             <h1>FAQ</h1>
             <div class="faq-item">
@@ -29,7 +30,7 @@
             </div>
         </section>
     </main>
-
+    <?php include 'footer.php'; ?>
 
 </body>
 </html>

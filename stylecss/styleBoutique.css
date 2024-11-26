@@ -362,7 +362,6 @@ main {
         width: auto;
     }
 }
-<<<<<<< HEAD
 
 /* Style pour le logo admin */
 .admin-logo {
@@ -450,5 +449,3 @@ body.blur #noBlurSection {
 body.blur *:not(.grades):not(.no-blur) {
     filter: blur(5px);
 }
-=======
->>>>>>> df09128f376ecf1e914b055cc8e2f28f7df8121b

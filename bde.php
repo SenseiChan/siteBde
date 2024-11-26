@@ -27,7 +27,7 @@
     <div class="team-section">
         <!-- Président -->
         <div class="team-president">
-            <img src="imagesAdmin/tom.jpg" alt="Enzo">
+            <img src="imagesAdmin/Enzo_adiil.jpg" alt="Enzo">
             <h3>Enzo RYNDERS--VITU</h3>
             <p>Président</p>
         </div>
@@ -35,12 +35,12 @@
         <!-- Secrétaire & Trésorier -->
         <div class="row">
             <div class="team-member">
-                <img src="imagesAdmin/tom.jpg" alt="Gémino">
+                <img src="imagesAdmin/gemino_adiil.jpg" alt="Gémino">
                 <h3>Gémino RUFFAULT--RAVENEL</h3>
                 <p>Secrétaire</p>
             </div>
             <div class="team-member">
-                <img src="imagesAdmin/tom.jpg" alt="Tom">
+                <img src="imagesAdmin/tom_adiil.jpg" alt="Tom">
                 <h3>Tom YSOPE</h3>
                 <p>Trésorier</p>
             </div>
@@ -49,22 +49,23 @@
         <!-- Chauffeur, Événementiel, Communication -->
         <div class="row">
             <div class="team-member">
-                <img src="imagesAdmin/tom.jpg" alt="Axel">
+                <img src="imagesAdmin/Axel_adiil.jpg" alt="Axel">
                 <h3>Axel GALLARD</h3>
                 <p>Chauffeur</p>
             </div>
             <div class="team-member">
-                <img src="imagesAdmin/tom.jpg" alt="Julien">
+                <img src="imagesAdmin/julien_adiil.jpg" alt="Julien">
                 <h3>Julien DAUVERGNE</h3>
                 <p>Événementiel</p>
             </div>
             <div class="team-member">
-                <img src="imagesAdmin/tom.jpg" alt="Mathis">
+                <img src="imagesAdmin/Mathis_adiil.jpg" alt="Mathis">
                 <h3>Mathis LE NÔTRE</h3>
                 <p>Chargé de communication</p>
             </div>
         </div>
     </div>
+    <br>
     <?php include 'footer.php'; ?>
 </body>
 </html>
