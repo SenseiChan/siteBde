@@ -1,4 +1,3 @@
-Voici boutique.php : 
 <?php
 $host = 'localhost';
 $dbname = 'sae';
@@ -18,6 +17,7 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 $message = "";
 
+// Gestion des ajouts/modifications produits par l'admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     $name = $_POST['name'];
     $price = $_POST['price'];
@@ -36,17 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                 'name' => $name,
                 'price' => $price,
                 'stock' => $stock,
-                'photo' => basename($_FILES["photo"]["name"]),
+                'photo' => basename($_FILES["photo"]["name"]), // Stock uniquement le nom de fichier
                 'type' => $type
             ]);
-            echo "<p style='color:green;'>Produit ajouté avec succès.</p>";
+            $message = "<p style='color:green;'>Produit ajouté avec succès.</p>";
         } catch (PDOException $e) {
-            echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+            $message = "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
         }
     } else {
-        echo "<p style='color:red;'>Erreur lors de l'upload de l'image.</p>";
+        $message = "<p style='color:red;'>Erreur lors de l'upload de l'image.</p>";
     }
-    exit; 
+    exit;
 }
 ?>
 
@@ -61,20 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
 <body>
 <?php include 'header.php'; ?>
 <main>
-    <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
-    $type = $_POST['type'];
-    $photo = $_FILES['photo']; 
-}
-?>
-    <!-- Grades Section -->
-    <section id="noBlurSection" class="grades" style="padding: 80px 0px;">
+    <section class="grades">
         <h2>Grades</h2>
-        <div style="width: 100%; height: 100%; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-
         <div class="grades-container">
             <div class="grade-card grade-fer">
                 <img src="image/lingotDeFer.png" alt="lingot de fer" width=80px>
@@ -86,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <img src="image/mineraiDiamant.png" alt="minerai de diamant" width=90px >
                 <h3>Diamant</h3>
                 <p>Adhésion au BDE</p>
-                <p>Le grade premium sur serveur Minecraft de l'ADIL</p>
+                <p>Grade premium sur le serveur Minecraft</p>
                 <span class="price">13€</span>
             </div>
             <div class="grade-card grade-or">
@@ -102,80 +90,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Consommables Section -->
     <section class="consommables">
         <h2>Consommables</h2>
-        <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-
-       
-<!-- Pop-Up (fenêtre modale) -->
-<div id="myModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-btn" id="closeModal">&times;</span>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="product_id" id="product_id">
-            <input type="text" name="name" id="name" placeholder="Nom du produit" required>
-            <input type="number" name="price" id="price" placeholder="Prix du produit" required>
-            <input type="number" name="stock" id="stock" placeholder="Stock du produit" required>
-            <select name="type" id="type" required>
-                <option value="" disabled selected>Choisissez un type</option>
-                <option value="boisson">Boisson</option>
-                <option value="snack">Snack</option>
-                <option value="autres">Autres</option>
-            </select>
-            <input type="file" name="photo" id="photo" required>
-            <button type="submit">Sauvegarder</button>
-        </form>
-    </div>
-</div>
-
-
-        <!-- Section Boissons -->
-        <div class="sub-section" style="padding: 30px 0px;">
-            <h3>Boissons :</h3>
-            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-
+        <div class="sub-section">
+            <h3>Boissons</h3>
             <div class="product-container">
                 <?php
-                    try {
-                        $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
-                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $imageUrl = "imagesAdmin/". $row['Photo_prod'];
-                            echo "
-                            <div class='product'>
+                try {
+                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = $row['Photo_prod'];
+                        echo "
+                        <div class='product'>
+                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
+                            <div class='product-image'>
                                 <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                                <p>
-                                    <span class='name'>{$row['Nom_prod']}</span><br><br>
-                                    Prix : {$row['Prix_prod']}€<br><br>
-                                    En stock : {$row['Stock_prod']}<br><br>
-                                </p>
-                            </div>";
-                        }
-                    } catch (PDOException $e) {
-                        echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-                    }
-                ?>
-            </div>
-        </div>
-
-        <!-- Section Snacks -->
-        <div class="sub-section">
-            <h3>Snacks :</h3>
-            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-            
-            <div class="product-container">
-                
-                <?php
-                try {
-                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = "imagesAdmin/" . $row['Photo_prod'];
-
-                        echo "
-                        <div class='product'>
-                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                            <p>
-                                <span class='name'>{$row['Nom_prod']}</span><br><br>
-                                Prix : {$row['Prix_prod']}€<br><br>
-                                En stock : {$row['Stock_prod']}
-                            </p>
+                            </div>
+                            <div class='product-details'>
+                                <p class='name'>{$row['Nom_prod']}</p>
+                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                            </div>
                         </div>";
                     }
                 } catch (PDOException $e) {
@@ -185,26 +118,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
 
-        <!-- Section Autres -->
         <div class="sub-section">
-            <h3>Autres :</h3>
-            <div style="width: 100%; height: 0px; border: 3px #AC6CFF solid; border-radius: 15px;"></div>
-
+            <h3>Snacks</h3>
             <div class="product-container">
                 <?php
                 try {
-                    $stmt = $pdo->query("SELECT Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = "imagesAdmin/" . $row['Photo_prod'];
-
+                        $imageUrl = $row['Photo_prod'];
                         echo "
                         <div class='product'>
-                            <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                            <p>
-                                <span class='name'>{$row['Nom_prod']}</span><br><br>
-                                Prix : {$row['Prix_prod']}€<br><br>
-                                En stock : {$row['Stock_prod']}
-                            </p>
+                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
+                            <div class='product-image'>
+                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            </div>
+                            <div class='product-details'>
+                                <p class='name'>{$row['Nom_prod']}</p>
+                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                            </div>
                         </div>";
                     }
                 } catch (PDOException $e) {
@@ -213,16 +145,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ?>
             </div>
         </div>
-         <!-- Bouton Ajouter un produit, déplacé après la liste des produits -->
-    <?php if ($is_admin): ?>
-        <button id="openModal" class="ajouter-produit-btn">
-            <h5>Ajouter un produit</h5>
-        </button>
-    <?php endif; ?>
+
+        <!-- Autres Section -->
+        <div class="sub-section">
+            <h3>Autres</h3>
+            <div class="product-container">
+                <?php
+                try {
+                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $imageUrl = $row['Photo_prod'];
+                        echo "
+                        <div class='product'>
+                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
+                            <div class='product-image'>
+                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
+                            </div>
+                            <div class='product-details'>
+                                <p class='name'>{$row['Nom_prod']}</p>
+                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                            </div>
+                        </div>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+                }
+                ?>
+            </div>
+        </div>
     </section>
+    <?php if ($is_admin): ?>
+        <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
+    <?php endif; ?>
 </main>
-
-<script src="js/scriptBoutique.js"></script>   
-
+<script>
+    function openEditModal(productId) {
+        alert("Modifier le produit ID : " + productId);
+    }
+</script>
 </body>
 </html>
