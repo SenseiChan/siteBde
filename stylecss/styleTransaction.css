@@ -69,6 +69,11 @@ table th, table td {
     text-align: center;
 }
 
+/* Style spécifique pour la colonne des produits */
+table td:nth-child(4) {
+    word-wrap: break-word; /* Permet de couper les mots longs si nécessaire */
+    max-width: 200px; /* Limite la largeur de la colonne */
+}
 
 /* Style pour les boutons et formulaires */
 form {
