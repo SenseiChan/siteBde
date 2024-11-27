@@ -22,6 +22,37 @@ try {
 // Vérifier si l'utilisateur est administrateur
 $isAdmin = false;
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+function getParticipants($pdo, $eventId) {
+  $query = "SELECT u.Nom_user, u.Prenom_user, u.Email_user
+            FROM Utilisateur u
+            JOIN Participer p ON u.Id_user = p.Id_user
+            WHERE p.Id_event = :eventId";
+
+  $stmt = $pdo->prepare($query);
+  $stmt->execute(['eventId' => $eventId]);
+  $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // Debugging
+  if (empty($result)) {
+      error_log("Aucun participant trouvé pour l'événement ID: $eventId");
+  }
+
+  return $result; // Retourne les participants sous forme de tableau associatif
+}
+
+if (isset($_GET['eventId'])) {
+  $eventId = $_GET['eventId'];
+  error_log("Récupération des participants pour l'événement ID: " . $eventId);
+  $participants = getParticipants($pdo, $eventId);
+  error_log("Participants récupérés: " . print_r($participants, true));
+  echo json_encode($participants);
+  exit; // Fin de l'exécution du script
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
 if ($userId) {
     $roleQuery = $pdo->prepare('SELECT Id_role FROM Utilisateur WHERE Id_user = :userId');
     $roleQuery->execute(['userId' => $userId]);
@@ -151,6 +182,7 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Événements - BDE ADIIL</title>
   <link rel="stylesheet" href="stylecss/styles_events.css">
+  <script src="js/scriptEvent.js" defer></script>
 </head>
 <?php if ($showSuccessPopup): ?>
     <div id="success-popup" class="popup">
@@ -225,6 +257,13 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
               <?php else: ?>
                 <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
               <?php endif; ?>
+
+              <!---------------------------------------------------------------------------------------------->
+              <br>
+              <button class="show-participants-btn" data-event-id="<?= $event['Id_event'] ?>">Voir les participants</button>
+              <div id="participants-list-<?= $event['Id_event'] ?>" class="participants-list"></div>
+              <!---------------------------------------------------------------------------------------------->
+
             </div>
           </div>
           <?php endforeach; ?>

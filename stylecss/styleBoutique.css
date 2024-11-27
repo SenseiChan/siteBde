@@ -16,7 +16,7 @@ main {
 /* Section Grades */
 .grades {
     margin-top: 75px; /* Espace sous le header */
-    margin-bottom: 50px;
+    margin-bottom: 100px;
 }
 
 .grades h2 {
@@ -144,20 +144,22 @@ main {
 
 /* Bouton Ajouter un produit */
 .ajouter-produit-btn {
-    display: block;
-    margin: 30px auto;  /* Centre le bouton horizontalement */
-    padding: 10px 20px;
+    display: inline-block;
+    padding: 12px 20px;
     background-color: #AC6CFF;
     color: white;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .ajouter-produit-btn:hover {
     background-color: #9B55E3;
+    transform: scale(1.05);
 }
 
 /* Responsivité */
@@ -540,4 +542,27 @@ body.blur *:not(.grades):not(.no-blur) {
     max-width: 500px;
     text-align: center;
     font-weight: bold;
+}
+
+/* -------------------------- */
+/* PARTIE ADMIN
+/* -------------------------- */
+
+/* Style pour l'icône Modifier */
+.edit-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-block;
+}
+
+.edit-icon img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.edit-icon img:hover {
+    transform: scale(1.2);
 }

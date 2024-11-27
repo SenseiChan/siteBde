@@ -90,7 +90,6 @@ main {
   margin-bottom: 0.5rem;
 }
 
-
 /* --------------------------------------------- */
 /* Détails des événements */
 /* --------------------------------------------- */
@@ -179,12 +178,36 @@ main {
   background-color: #9B5FEF;
   text-decoration: none;
 }
+
 .register-btn.disabled {
   background-color: #808080;
   cursor: not-allowed;
   pointer-events: none;
   text-decoration: none;
 }
+
+/* --------------------------------------------- */
+/* Bouton Voir les Participant */
+/* --------------------------------------------- */
+
+.show-participants-btn{
+  background-color: #AC6CFF;
+  color: #FFFFFF;
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-start;
+  text-decoration: none;
+}
+
+.show-participants-btn:hover {
+  background-color: #9B5FEF;
+  text-decoration: none;
+}
+
 
 /* --------------------------------------------- */
 /* Boutons administrateurs */
@@ -306,3 +329,26 @@ main {
 .footer-icons a img:hover {
   transform: scale(1.2);
 }
+
+/* Styles pour la popup de succès */
+#success-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+}
+
+#success-popup.show {
+  display: block;
+}
+
+#success-popup.hide {
+  display: none;
+}
+
+
