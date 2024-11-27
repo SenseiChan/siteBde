@@ -22,71 +22,112 @@ h1 {
 .cart-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
 .cart-item {
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
     background-color: #3E4148;
     border-radius: 10px;
-    padding: 15px;
+    padding: 10px 15px;
+    gap: 15px;
 }
 
 .product-image {
-    width: 80px;
+    width: 60px;
     height: auto;
     border-radius: 5px;
 }
 
 .cart-details {
     flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
 }
 
 .cart-details h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    color: #AC6CFF;
+    flex: 2;
 }
 
+/* Gestion des boutons +, - et quantité */
 .quantity-controls {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 10px 0;
+}
+
+.quantity-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .quantity-form button {
     background-color: #AC6CFF;
     color: #FFFFFF;
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 50%;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: bold;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .quantity-form button:hover {
     background-color: #9B55E3;
+    transform: scale(1.1);
 }
 
 .quantity {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
     color: #FFFFFF;
+    text-align: center;
+    min-width: 30px;
 }
 
-.remove-form button {
-    background-color: transparent;
-    color: #FF6B6B;
+/* Style pour le prix */
+.price {
+    font-size: 1rem;
+    color: #EAEAEA;
+    flex: 1;
+    text-align: center;
+}
+
+/* Suppression d'article */
+.remove-btn {
+    background: none;
     border: none;
-    font-size: 1.2rem;
     cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.remove-form button:hover {
-    color: #FF4D4D;
+.remove-btn img {
+    width: 24px;
+    height: 24px;
 }
 
+.remove-btn:hover img {
+    filter: brightness(0.8);
+}
+
+/* Total */
 .cart-total {
     text-align: center;
     margin-top: 20px;
@@ -106,23 +147,57 @@ h1 {
     background-color: #9B55E3;
 }
 
-/*-----------------*/
-/* BOUTON RETOUR */
-/*-----------------*/
+/* Boutons "Payer" et "Retour à la boutique" */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
 
-.return-btn {
-    display: inline-block;
-    margin: 20px auto;
+.return-to-shop-btn {
+    background-color: #444;
+    color: #FFFFFF;
+    border: none;
     padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.return-to-shop-btn:hover {
+    background-color: #555;
+}
+
+.pay-btn {
     background-color: #AC6CFF;
     color: #FFFFFF;
-    text-decoration: none;
+    border: none;
+    padding: 10px 20px;
     border-radius: 5px;
-    text-align: center;
     font-size: 1rem;
     cursor: pointer;
 }
 
-.return-btn:hover {
+.pay-btn:hover {
     background-color: #9B55E3;
+}
+
+/* limite de stock */
+
+.stock-limit-msg {
+    font-size: 0.9rem;
+    color: #FF6B6B;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.quantity-form button:disabled {
+    background-color: #666; /* Gris pour le bouton désactivé */
+    color: #ccc; /* Couleur du texte désactivée */
+    cursor: not-allowed; /* Curseur d'interdiction */
+    transform: none; /* Pas d'animation de transformation */
 }
