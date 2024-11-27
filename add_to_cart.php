@@ -1,12 +1,10 @@
 <?php
 session_start();
 
-// Initialiser le panier s'il n'existe pas
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Vérifiez si les données POST sont présentes
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productId = $_POST['product_id'];
     $productName = $_POST['product_name'];
@@ -14,22 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productImage = $_POST['product_image'];
     $productStock = $_POST['product_stock'];
 
-    // Si le produit est déjà dans le panier, incrémentez la quantité
+    // Ajoutez correctement le produit au panier
     if (isset($_SESSION['cart'][$productId])) {
         $_SESSION['cart'][$productId]['quantity']++;
     } else {
-        // Sinon, ajoutez le produit au panier avec une quantité initiale de 1
         $_SESSION['cart'][$productId] = [
-            'name' => $productName,
+            'name' => htmlspecialchars_decode($productName, ENT_QUOTES), // Decode HTML entities for names with apostrophes
             'price' => $productPrice,
             'image' => $productImage,
             'stock' => $productStock,
             'quantity' => 1,
         ];
     }
-}
 
-// Redirigez vers la page panier
-header('Location: panier.php');
-exit();
-?>
+    // Redirige vers la page panier ou boutique
+    header('Location: panier.php');
+    exit;
+}
