@@ -126,6 +126,8 @@ function getDisabledClass($userGrade, $gradeId) {
     <?php
     // Section Produits Générale
     function renderProductSection($pdo, $type, $title) {
+        global $is_admin; // Utilisation de la variable $is_admin
+
         echo "<div class='sub-section'>
             <h3>$title</h3>
             <div class='product-container'>";
@@ -158,8 +160,17 @@ function getDisabledClass($userGrade, $gradeId) {
                         <button type='submit' class='add-to-cart-btn'" . ($isOutOfStock ? ' disabled' : '') . ">
                             Ajouter au panier
                         </button>
-                    </form>
-                </div>";
+                    </form>";
+
+                // Ajout du bouton de modification pour les administrateurs
+                if ($is_admin) {
+                    echo "
+                    <a href='edit_produit.php?id=" . htmlspecialchars($productId, ENT_QUOTES) . "' class='edit-icon'>
+                        <img src='image/icon_modify.png' alt='Modifier' class='icon-modify'>
+                    </a>";
+                }
+
+                echo "</div>";
             }
         } catch (PDOException $e) {
             echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";

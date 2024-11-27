@@ -541,3 +541,26 @@ body.blur *:not(.grades):not(.no-blur) {
     text-align: center;
     font-weight: bold;
 }
+
+/* -------------------------- */
+/* PARTIE ADMIN
+/* -------------------------- */
+
+/* Style pour l'icône Modifier */
+.edit-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-block;
+}
+
+.edit-icon img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.edit-icon img:hover {
+    transform: scale(1.2);
+}
