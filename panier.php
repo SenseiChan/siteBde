@@ -1,67 +1,34 @@
 <?php
 session_start();
 
-try {
-    $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur : " . $e->getMessage());
-}
-
-// Vérification de l'action
-$action = isset($_GET['action']) ? $_GET['action'] : null;
-
-// Initialisation du panier
+// Initialisation du panier s'il n'existe pas encore
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Ajouter un produit au panier
-if ($action === 'add' && isset($_GET['id'])) {
-    $productId = intval($_GET['id']);
-
-    // Récupérer les informations du produit
-    $stmt = $pdo->prepare("SELECT * FROM produit WHERE Id_prod = :id");
-    $stmt->execute(['id' => $productId]);
-    $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($product) {
-        if (isset($_SESSION['cart'][$productId])) {
-            // Incrémente la quantité si déjà dans le panier
-            $_SESSION['cart'][$productId]['quantity']++;
-        } else {
-            // Ajoute le produit au panier
-            $_SESSION['cart'][$productId] = [
-                'id' => $productId,
-                'name' => $product['Nom_prod'],
-                'price' => $product['Prix_prod'],
-                'image' => $product['Photo_prod'],
-                'stock' => $product['Stock_prod'],
-                'quantity' => 1
-            ];
-        }
-    }
-    header('Location: panier.php');
-    exit();
-}
-
-// Supprimer un produit du panier
-if ($action === 'remove' && isset($_GET['id'])) {
-    $productId = intval($_GET['id']);
-    unset($_SESSION['cart'][$productId]);
-    header('Location: panier.php');
-    exit();
-}
-
-// Mettre à jour les quantités
+// Vérifier si l'utilisateur a modifié les quantités via les boutons
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    foreach ($_POST['quantities'] as $productId => $quantity) {
-        if (isset($_SESSION['cart'][$productId])) {
-            $_SESSION['cart'][$productId]['quantity'] = max(1, intval($quantity)); // Minimum 1
+    $action = $_POST['action'];
+    $productId = $_POST['product_id'];
+
+    if (isset($_SESSION['cart'][$productId])) {
+        if ($action === 'increment') {
+            // Incrémenter la quantité (vérification du stock possible ici)
+            $_SESSION['cart'][$productId]['quantity']++;
+        } elseif ($action === 'decrement') {
+            // Décrémenter la quantité, mais pas en dessous de 1
+            $_SESSION['cart'][$productId]['quantity'] = max(1, $_SESSION['cart'][$productId]['quantity'] - 1);
+        } elseif ($action === 'remove') {
+            // Supprimer le produit du panier
+            unset($_SESSION['cart'][$productId]);
         }
     }
-    header('Location: panier.php');
-    exit();
+}
+
+// Calcul du total
+$total = 0;
+foreach ($_SESSION['cart'] as $product) {
+    $total += $product['quantity'] * $product['price'];
 }
 ?>
 
@@ -74,53 +41,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="stylecss/stylePanier.css">
 </head>
 <body>
-<?php include 'header.php'; ?>
-<main>
-    <h1>Votre Panier</h1>
-    <?php if (!empty($_SESSION['cart'])): ?>
-        <form method="POST">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Produit</th>
-                        <th>Prix</th>
-                        <th>Quantité</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($_SESSION['cart'] as $item): ?>
-                        <tr>
-                            <td>
-                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" width="50">
-                                <?= htmlspecialchars($item['name']) ?>
-                            </td>
-                            <td><?= number_format($item['price'], 2) ?>€</td>
-                            <td>
-                                <input type="number" name="quantities[<?= $item['id'] ?>]" value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock'] ?>">
-                            </td>
-                            <td><?= number_format($item['price'] * $item['quantity'], 2) ?>€</td>
-                            <td>
-                                <a href="panier.php?action=remove&id=<?= $item['id'] ?>" class="remove-btn">Supprimer</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <button type="submit" class="update-btn">Mettre à jour le panier</button>
-        </form>
-        <div class="cart-summary">
-            <h2>Total : 
-                <?= number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $_SESSION['cart'])), 2) ?>€
-            </h2>
-            <a href="checkout.php" class="checkout-btn">Passer à la caisse</a>
-        </div>
-    <?php else: ?>
-        <p>Votre panier est vide.</p>
-        <a href="boutique.php" class="back-btn">Retour à la boutique</a>
-    <?php endif; ?>
-</main>
+    <?php include 'header.php'; ?>
 
+    <main>
+        <h1>Panier :</h1>
+        <div class="cart-container">
+        <?php if (empty($_SESSION['cart'])): ?>
+            <p>Votre panier est vide.</p>
+            <a href="boutique.php" class="return-btn">Retour à la boutique</a>
+        <?php else: ?>
+            <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
+                <div class="cart-item">
+                    <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
+                    <div class="cart-details">
+                        <h3><?= htmlspecialchars($product['name']) ?></h3>
+                        <p>Prix : <?= htmlspecialchars(number_format($product['price'], 2)) ?> €</p>
+                        <div class="quantity-controls">
+                            <form method="post" class="quantity-form">
+                                <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
+                                <button type="submit" name="action" value="decrement" class="decrement-btn">-</button>
+                                <span class="quantity"><?= htmlspecialchars($product['quantity']) ?></span>
+                                <button type="submit" name="action" value="increment" class="increment-btn">+</button>
+                            </form>
+                        </div>
+                        <form method="post" class="remove-form">
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
+                            <button type="submit" name="action" value="remove" class="remove-btn">🗑</button>
+                        </form>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </div>
+        <div class="cart-total">
+            <h2>Total : <?= htmlspecialchars(number_format($total, 2)) ?> €</h2>
+            <?php if (!empty($_SESSION['cart'])): ?>
+                <button class="pay-btn">Payer</button>
+            <?php endif; ?>
+        </div>
+    </main>
 </body>
 </html>

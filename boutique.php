@@ -87,100 +87,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
         </div>
     </section>
 
-    <!-- Consommables Section -->
-    <section class="consommables">
-        <h2>Consommables</h2>
-        <div class="sub-section">
-            <h3>Boissons</h3>
-            <div class="product-container">
-                <?php
-                try {
-                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = $row['Photo_prod'];
-                        echo "
-                        <div class='product'>
-                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
-                            <div class='product-image'>
-                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                            </div>
-                            <div class='product-details'>
-                                <p class='name'>{$row['Nom_prod']}</p>
-                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
-                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
-                            </div>
-                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
-                        </div>
-                        ";
-                    }
-                } catch (PDOException $e) {
-                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-                }
-                ?>
-            </div>
-        </div>
+    <?php
+    // Section Boissons
+    echo "<div class='sub-section'>
+        <h3>Boissons</h3>
+        <div class='product-container'>";
+    try {
+        $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'boisson'");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "
+            <div class='product'>
+                <div class='product-image'>
+                    <img src='{$row['Photo_prod']}' alt='{$row['Nom_prod']}' class='frame'>
+                </div>
+                <div class='product-details'>
+                    <p class='name'>{$row['Nom_prod']}</p>
+                    <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                    <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                </div>
+                <form method='post' action='add_to_cart.php'>
+                    <input type='hidden' name='product_id' value='{$row['Id_prod']}'>
+                    <input type='hidden' name='product_name' value='{$row['Nom_prod']}'>
+                    <input type='hidden' name='product_price' value='{$row['Prix_prod']}'>
+                    <input type='hidden' name='product_image' value='{$row['Photo_prod']}'>
+                    <input type='hidden' name='product_stock' value='{$row['Stock_prod']}'>
+                    <button type='submit' class='add-to-cart-btn'>Ajouter au panier</button>
+                </form>
+            </div>";
+        }
+    } catch (PDOException $e) {
+        echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+    }
+    echo "</div></div>";
 
-        <div class="sub-section">
-            <h3>Snacks</h3>
-            <div class="product-container">
-                <?php
-                try {
-                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = $row['Photo_prod'];
-                        echo "
-                        <div class='product'>
-                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
-                            <div class='product-image'>
-                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                            </div>
-                            <div class='product-details'>
-                                <p class='name'>{$row['Nom_prod']}</p>
-                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
-                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
-                            </div>
-                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
-                        </div>
-                        ";
-                    }
-                } catch (PDOException $e) {
-                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-                }
-                ?>
-            </div>
-        </div>
+    // Section Snacks
+    echo "<div class='sub-section'>
+        <h3>Snacks</h3>
+        <div class='product-container'>";
+    try {
+        $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'snack'");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "
+            <div class='product'>
+                <div class='product-image'>
+                    <img src='{$row['Photo_prod']}' alt='{$row['Nom_prod']}' class='frame'>
+                </div>
+                <div class='product-details'>
+                    <p class='name'>{$row['Nom_prod']}</p>
+                    <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                    <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                </div>
+                <form method='post' action='add_to_cart.php'>
+                    <input type='hidden' name='product_id' value='{$row['Id_prod']}'>
+                    <input type='hidden' name='product_name' value='{$row['Nom_prod']}'>
+                    <input type='hidden' name='product_price' value='{$row['Prix_prod']}'>
+                    <input type='hidden' name='product_image' value='{$row['Photo_prod']}'>
+                    <input type='hidden' name='product_stock' value='{$row['Stock_prod']}'>
+                    <button type='submit' class='add-to-cart-btn'>Ajouter au panier</button>
+                </form>
+            </div>";
+        }
+    } catch (PDOException $e) {
+        echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+    }
+    echo "</div></div>";
 
-        <!-- Autres Section -->
-        <div class="sub-section">
-            <h3>Autres</h3>
-            <div class="product-container">
-                <?php
-                try {
-                    $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $imageUrl = $row['Photo_prod'];
-                        echo "
-                        <div class='product'>
-                            " . ($is_admin ? "<img src='image/icon_modify.png' alt='Modifier' class='icon-modify' onclick='openEditModal({$row['Id_prod']})'>" : "") . "
-                            <div class='product-image'>
-                                <img src='{$imageUrl}' alt='{$row['Nom_prod']}' class='frame'>
-                            </div>
-                            <div class='product-details'>
-                                <p class='name'>{$row['Nom_prod']}</p>
-                                <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
-                                <p class='stock'>En stock : {$row['Stock_prod']}</p>
-                            </div>
-                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
-                        </div>
-                        ";
-                    }
-                } catch (PDOException $e) {
-                    echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
-                }
-                ?>
-            </div>
-        </div>
-    </section>
+    // Section Autres
+    echo "<div class='sub-section'>
+        <h3>Autres</h3>
+        <div class='product-container'>";
+    try {
+        $stmt = $pdo->query("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = 'autres'");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "
+            <div class='product'>
+                <div class='product-image'>
+                    <img src='{$row['Photo_prod']}' alt='{$row['Nom_prod']}' class='frame'>
+                </div>
+                <div class='product-details'>
+                    <p class='name'>{$row['Nom_prod']}</p>
+                    <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
+                    <p class='stock'>En stock : {$row['Stock_prod']}</p>
+                </div>
+                <form method='post' action='add_to_cart.php'>
+                    <input type='hidden' name='product_id' value='{$row['Id_prod']}'>
+                    <input type='hidden' name='product_name' value='{$row['Nom_prod']}'>
+                    <input type='hidden' name='product_price' value='{$row['Prix_prod']}'>
+                    <input type='hidden' name='product_image' value='{$row['Photo_prod']}'>
+                    <input type='hidden' name='product_stock' value='{$row['Stock_prod']}'>
+                    <button type='submit' class='add-to-cart-btn'>Ajouter au panier</button>
+                </form>
+            </div>";
+        }
+    } catch (PDOException $e) {
+        echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
+    }
+    echo "</div></div>";
+    ?>
+
     <?php if ($is_admin): ?>
         <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
     <?php endif; ?>
