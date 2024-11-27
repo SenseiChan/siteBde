@@ -95,17 +95,10 @@ foreach ($transactions as $transaction) {
                             <td><?= htmlspecialchars(date('d M Y', strtotime($transaction_group[0]['Date_trans']))) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Qte_trans']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_user'] . ' ' . $transaction_group[0]['Prenom_user']) ?></td>
-                            <td><?= htmlspecialchars($transaction_group[0]['Nom_paie'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_paie']) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_prod']). htmlspecialchars($transaction_group[0]['Nom_grade']). htmlspecialchars($transaction_group[0]['Nom_event']) ?></td> <!-- Affichage du produit et du grade -->
                             <td>
-                                <?= 
-                                    htmlspecialchars($transaction_group[0]['Nom_prod'] ?? '') . 
-                                    ' ' . 
-                                    htmlspecialchars($transaction_group[0]['Nom_grade'] ?? '') . 
-                                    ' ' . 
-                                    htmlspecialchars($transaction_group[0]['Nom_event'] ?? '') 
-                                ?>
-                            </td>
-                            <td>
+                                <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
                                 <form method="POST" style="display: inline;">
                                     <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction_id) ?>">
                                     <input type="hidden" name="payer" value="<?= $transaction_group[0]['Payer_trans'] ? 0 : 1 ?>">
