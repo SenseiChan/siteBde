@@ -40,14 +40,26 @@ table tr:hover {
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.oui:hover {
+    background-color: #28a745;
+    color: #FFF;
 }
 
 /* Style pour "Non" */
 .non {
-    color:  #dc3545;
+    color: #dc3545;
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.non:hover {
+    background-color: #dc3545;
+    color: #FFF;
 }
 
 /* Autres styles généraux */
@@ -65,13 +77,13 @@ form {
 }
 
 button {
-    background-color: #9B5FEF;
+    background-color: transparent;
     border: none;
-    color: black;
-    padding: 5px 10px;
+    color: inherit;
     cursor: pointer;
+    font-size: inherit;
 }
 
 button:hover {
-    background-color: #9B5FEF;
+    background-color: transparent;
 }

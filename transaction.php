@@ -71,7 +71,6 @@ $transactions = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                     <th>Utilisateur</th>
                     <th>Moyen de Paiement</th>
                     <th>Payé</th>
-                    <th>Modifier</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,28 +82,21 @@ $transactions = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($transaction['Qte_trans']) ?></td>
                             <td><?= htmlspecialchars($transaction['Nom_user'] . ' ' . $transaction['Prenom_user']) ?></td>
                             <td><?= htmlspecialchars($transaction['Nom_paie']) ?></td>
-                            <td class="<?= $transaction['Payer_trans'] ? 'oui' : 'non' ?>">
-                                <?= $transaction['Payer_trans'] ? 'Oui' : 'Non' ?>
-                            </td>
                             <td>
-                                <?php if (!in_array($transaction['Nom_paie'], ['Carte bancaire', 'Paypal'])): ?>
-                                    <form method="POST">
-                                        <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction['Id_trans']) ?>">
-                                        <label>
-                                            <input type="checkbox" name="payer" <?= $transaction['Payer_trans'] ? 'checked' : '' ?>>
-                                            Marquer comme payé
-                                        </label>
-                                        <button type="submit" name="update_payment">Mettre à jour</button>
-                                    </form>
-                                <?php else: ?>
-                                    <span>Non modifiable</span>
-                                <?php endif; ?>
+                                <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
+                                <form method="POST" style="display: inline;">
+                                    <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction['Id_trans']) ?>">
+                                    <input type="hidden" name="payer" value="<?= $transaction['Payer_trans'] ? 0 : 1 ?>">
+                                    <button type="submit" name="update_payment" class="pay-button <?= $transaction['Payer_trans'] ? 'oui' : 'non' ?>">
+                                        <?= $transaction['Payer_trans'] ? 'Oui' : 'Non' ?>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7">Aucune transaction trouvée.</td>
+                        <td colspan="6">Aucune transaction trouvée.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
