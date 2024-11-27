@@ -7,6 +7,7 @@ if (empty($_SESSION['cart'])) {
     exit();
 }
 
+// Connexion à la base de données
 $host = 'localhost';
 $dbname = 'sae';
 $username = 'root';
@@ -21,65 +22,101 @@ try {
 
 // Initialisation des variables
 $total_amount = 0;
-$quantity = 0;
-$user_id = $_SESSION['user_id']; // Assurez-vous que l'ID de l'utilisateur est stocké dans la session
+$user_id = $_SESSION['user_id']; // Assurez-vous que l'utilisateur est connecté et que l'ID utilisateur est stocké
 
 // Calcul du montant total et de la quantité
 foreach ($_SESSION['cart'] as $product_id => $product) {
     $total_amount += $product['price'] * $product['quantity'];
-    $quantity += $product['quantity'];
 }
+
+// Récupération du grade de l'utilisateur
+$sql_grade = "SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user";
+$stmt_grade = $pdo->prepare($sql_grade);
+$stmt_grade->bindParam(':id_user', $user_id, PDO::PARAM_INT);
+$stmt_grade->execute();
+$id_grade = $stmt_grade->fetchColumn(); // Récupère l'Id_grade (ou null si pas trouvé)
 
 // Traitement du paiement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     $payment_method = $_POST['payment_method'];
 
-    // Si une promo existe, vous pouvez récupérer l'ID de la promo ici (sinon, laissez null)
-    $id_promo = isset($_SESSION['promo_id']) ? $_SESSION['promo_id'] : null;
+    // Gestion des IDs (Promo, Event)
+    $id_promo = $_SESSION['promo_id'] ?? null;
+    $id_event = $_SESSION['event_id'] ?? null;
 
-    // Exemple d'ID de grade, ajustez selon la logique de l'application
-    $id_grade = 1;  // Remplacez par la logique appropriée pour récupérer l'ID du grade de l'utilisateur
+    // Mapper le moyen de paiement sur l'ID
+    $payment_method_id = match ($payment_method) {
+        'carte' => 1,
+        'espece' => 2,
+        'cheque' => 3,
+        'paypal' => 4,
+        'virement' => 5,
+        default => throw new Exception("Moyen de paiement invalide.")
+    };
 
-    // ID d'événement, s'il y en a un
-    $id_event = isset($_SESSION['event_id']) ? $_SESSION['event_id'] : null;
+    // Préparer la requête d'insertion pour les transactions
+    $sql = "INSERT INTO Transactions (
+                Montant_trans, 
+                Date_trans, 
+                Qte_trans, 
+                Payer_trans, 
+                Id_promo, 
+                Id_grade, 
+                Id_event, 
+                Id_prod, 
+                Id_user, 
+                Id_paie
+            )
+            VALUES (
+                :montant_trans, 
+                :date_trans, 
+                :qte_trans, 
+                :payer_trans, 
+                :id_promo, 
+                :id_grade, 
+                :id_event, 
+                :id_prod, 
+                :id_user, 
+                :id_paie
+            )";
 
-    // ID du produit (ou de l'événement), à extraire du panier
-    $id_prod = null;
-    if ($id_event === null) {
-        // Si c'est un produit et non un événement
-        $id_prod = $_SESSION['cart'][key($_SESSION['cart'])]['id_prod'];
+    $stmt = $pdo->prepare($sql);
+
+    $current_date = date('Y-m-d H:i:s'); // Date actuelle
+    $payer_trans = 1; // Transaction réglée
+
+    // Boucle pour insérer chaque produit comme une transaction
+    foreach ($_SESSION['cart'] as $product_id => $product) {
+        $montant_trans = $product['price'] * $product['quantity']; // Prix total pour ce produit
+        $qte_trans = $product['quantity']; // Quantité pour ce produit
+
+        // Liaison des variables aux colonnes
+        $stmt->bindParam(':montant_trans', $montant_trans);
+        $stmt->bindParam(':date_trans', $current_date);
+        $stmt->bindParam(':qte_trans', $qte_trans);
+        $stmt->bindParam(':payer_trans', $payer_trans);
+        $stmt->bindParam(':id_promo', $id_promo);
+        $stmt->bindParam(':id_grade', $id_grade);
+        $stmt->bindParam(':id_event', $id_event);
+        $stmt->bindParam(':id_prod', $product_id); // ID du produit
+        $stmt->bindParam(':id_user', $user_id);
+        $stmt->bindParam(':id_paie', $payment_method_id);
+
+        // Exécution de la requête
+        $stmt->execute();
     }
 
-    // Insertion de la transaction dans la base de données
-    $sql = "INSERT INTO Transactions (Montant_trans, Date_trans, Qte_trans, Id_promo, Id_grade, Id_event, Id_prod, Id_user, Id_paie)
-            VALUES (:montant_trans, :date_trans, :qte_trans, :id_promo, :id_grade, :id_event, :id_prod, :id_user, :id_paie)";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':montant_trans', $total_amount);
-    $stmt->bindParam(':date_trans', date('Y-m-d H:i:s'));
-    $stmt->bindParam(':qte_trans', $quantity);
-    $stmt->bindParam(':id_promo', $id_promo);
-    $stmt->bindParam(':id_grade', $id_grade);
-    $stmt->bindParam(':id_event', $id_event);
-    $stmt->bindParam(':id_prod', $id_prod);
-    $stmt->bindParam(':id_user', $user_id);
-    $stmt->bindParam(':id_paie', $payment_method == 'carte' ? 1 : 2); // 1 pour carte, 2 pour espèces
-    $stmt->execute();
-
-    // Récupérer l'ID de la transaction insérée
-    $transaction_id = $pdo->lastInsertId();
-
-    // Mise à jour de la colonne Payer_trans
-    $sql_update = "UPDATE Transactions SET Payer_trans = 1 WHERE Id_trans = :transaction_id";
-    $stmt_update = $pdo->prepare($sql_update);
-    $stmt_update->bindParam(':transaction_id', $transaction_id);
-    $stmt_update->execute();
+    // Suppression du panier après paiement
+    unset($_SESSION['cart']);
 
     // Redirection après paiement
-    header('Location: confirmation.php');
+    header('Location: boutique.php');
     exit();
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         <h3>Quantité totale: <?= $quantity ?> produit(s)</h3>
 
         <!-- Formulaire de sélection de paiement -->
-        <form method="POST">
+        <form method="POST" action="payement.php">
             <div class="payment-option">
                 <label>
                     <input type="radio" name="payment_method" value="carte" required>
@@ -115,6 +152,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
                 </label>
             </div>
 
+            <div class="payment-option">
+                <label>
+                    <input type="radio" name="payment_method" value="cheque" required>
+                    Paiement par Cheque
+                </label>
+            </div>
+
+            <div class="payment-option">
+                <label>
+                    <input type="radio" name="payment_method" value="paypal" required>
+                    Paiement par PayPal
+                </label>
+            </div>
+
+            <div class="payment-option">
+                <label>
+                    <input type="radio" name="payment_method" value="virement" required>
+                    Paiement par Virement Bancaire
+                </label>
+            </div>
+
+            <!-- Bouton de soumission -->
             <button type="submit" class="btn-pay">Valider le paiement</button>
         </form>
     </main>

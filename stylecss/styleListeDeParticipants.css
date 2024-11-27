@@ -1,0 +1,45 @@
+/* Style pour le tableau des participants */
+.participants-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.participants-table th, .participants-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.participants-table th {
+    background-color: #f2f2f2;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Bouton "Liste de participants" (hérite du style général avec quelques ajustements spécifiques) */
+a.button-back {
+    background-color: #AC6CFF !important; 
+    color: #FFFFFF !important; /* Texte blanc */
+    padding: 8px 12px !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    transition: background-color 0.3s ease !important;
+    flex: 1 !important; /* Assure que les deux boutons ont la même largeur si besoin */
+    max-width: 200px !important; /* Optionnel : limite la largeur */
+  }
