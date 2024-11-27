@@ -110,6 +110,7 @@ if ($result_events_gain->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="fr">
+<?php include 'header.php'; ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,8 +121,6 @@ if ($result_events_gain->num_rows > 0) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<?php include 'header.php'; ?>
-
 <div class="container">  
     <h1>Statistiques des Produits</h1>
     
