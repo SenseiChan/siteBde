@@ -1,128 +1,124 @@
-main {
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #2C2E33;
-    color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+body {
     font-family: 'Poppins', sans-serif;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.edit-product-container {
+    background-color: #3A3B40;
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    max-width: 1200px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 30px;
-    color: #AC6CFF;
+    margin: 0 0 20px 0;
+    font-size: 1.8rem;
 }
 
-form {
+.header-icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 10px;
+}
+
+.header-icons .delete-icon,
+.header-icons .close-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.header-icons img {
+    width: 32px;
+    height: 32px;
+}
+
+.form-content {
+    display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .image-container {
-    flex: 1 1 40%;
-    text-align: center;
-    margin-bottom: 20px;
+    flex: 1 1 30%;
 }
 
 .image-container img {
-    width: 200px;
-    height: auto;
+    width: 150px; /* Largeur fixe */
+    height: 150px; /* Hauteur fixe */
     border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease-in-out;
-}
-
-.image-container img:hover {
-    transform: scale(1.05);
-}
-
-.image-container .change-text {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #AC6CFF;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
+    object-fit: cover; /* L'image est ajustée au cadre sans distorsion */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optionnel : ajoute une ombre */
     display: block;
+    margin: 0 auto; /* Centrer l'image horizontalement */
 }
 
-form input,
-form select,
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #555;
-    border-radius: 5px;
-    background-color: #1E2025;
-    color: white;
-    box-sizing: border-box;
+.form-details {
+    flex: 1 1 65%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
-form textarea {
-    resize: vertical;
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    resize: none;
     height: 100px;
 }
 
-button,
-.cancel-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-button {
+.save-btn {
     background-color: #AC6CFF;
-    color: white;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #9B55E3;
-}
-
-.cancel-button {
-    background-color: #FF4D4D;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.cancel-button:hover {
-    background-color: #CC0000;
-}
-
-.success-message,
-.error-message {
-    text-align: center;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+    color: #FFFFFF;
+    font-size: 1rem;
     font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.success-message {
-    background-color: #DFF2BF;
-    color: #4F8A10;
+.save-btn:hover {
+    background-color: #9B5FEF;
 }
 
-.error-message {
-    background-color: #FFBABA;
-    color: #D8000C;
+input, textarea, select {
+    background-color: #2C2E33;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    color: #FFFFFF;
+    font-size: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #AC6CFF;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
 }
