@@ -69,7 +69,7 @@ function isActive($page) {
                 <form action="logout.php" method="post" class="logout-form">
                     <button type="submit" class="logout-button">Se déconnecter</button>
                 </form>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
+                <a href="panier.php"><img src="image/logoPanier.png" alt="Panier" class="cartIcon"></a>
             <?php else: ?>
                 <!-- Boutons si non connecté -->
                 <a href="connexion.html" class="connectButtonHeader">Se connecter</a>
