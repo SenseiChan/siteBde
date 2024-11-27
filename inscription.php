@@ -48,6 +48,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));
             }
 
+            $Id_user = mysqli_insert_id($conn);
+
+            // Ajout dans la table "decrocher"
+            if ($promo == '1') {
+                $sql_promo = "INSERT INTO decrocher (Id_user, Id_badge, Afficher_badge) VALUES ($Id_user, 1, 2)";    
+                if (!mysqli_query($conn, $sql_promo)) {
+                    throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));
+                }
+            }
+            elseif ($promo == '2') {
+                $sql_promo = "INSERT INTO decrocher (Id_user, Id_badge, Afficher_badge) VALUES ($Id_user, 2, 2)";    
+                if (!mysqli_query($conn, $sql_promo)) {
+                    throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));
+                }
+            }
+            elseif ($promo == '3') {
+                $sql_promo = "INSERT INTO decrocher (Id_user, Id_badge, Afficher_badge) VALUES ($Id_user, 3, 2)";    
+                if (!mysqli_query($conn, $sql_promo)) {
+                    throw new Exception("Erreur lors de l'insertion dans Utilisateur : " . mysqli_error($conn));
+                }
+            }
+
             mysqli_commit($conn);
             header("Location: connexion.html");
             echo "Inscription réussie !";

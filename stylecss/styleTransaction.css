@@ -1,0 +1,89 @@
+/* Général */
+main h1 {
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #3A3F44;
+}
+
+table th, table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #9B5FEF;
+    color: #000;
+}
+
+table td {
+    color: #FFF;
+}
+
+table tr:nth-child(even) {
+    background-color: #2E3136;
+}
+
+table tr:hover {
+    background-color: #444;
+}
+
+/* Style pour "Oui" */
+.oui {
+    color: #28a745;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.oui:hover {
+    background-color: #28a745;
+    color: #FFF;
+}
+
+/* Style pour "Non" */
+.non {
+    color: #dc3545;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.non:hover {
+    background-color: #dc3545;
+    color: #FFF;
+}
+
+/* Autres styles généraux */
+table th, table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+
+/* Style pour les boutons et formulaires */
+form {
+    display: inline-block;
+    text-align: center;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: inherit;
+}
+
+button:hover {
+    background-color: transparent;
+}
