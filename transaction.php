@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_payment'])) {
     $stmt->execute();
 }
 
-// Récupération des transactions
+// Requête pour récupérer les transactions avec les produits associés
 $sql = "SELECT 
             t.Id_trans, 
             t.Montant_trans, 
@@ -47,6 +47,12 @@ $sql = "SELECT
         ORDER BY t.Date_trans DESC";
 
 $transactions = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+// Regrouper les transactions par ID
+$grouped_transactions = [];
+foreach ($transactions as $transaction) {
+    $grouped_transactions[$transaction['Id_trans']][] = $transaction;
+}
 ?>
 
 <!DOCTYPE html>
@@ -74,21 +80,21 @@ $transactions = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </thead>
             <tbody>
-                <?php if (count($transactions) > 0): ?>
-                    <?php foreach ($transactions as $transaction): ?>
+                <?php if (count($grouped_transactions) > 0): ?>
+                    <?php foreach ($grouped_transactions as $transaction_id => $transaction_group): ?>
                         <tr>
-                            <td><?= htmlspecialchars($transaction['Montant_trans']) ?> €</td>
-                            <td><?= htmlspecialchars(date('d M Y', strtotime($transaction['Date_trans']))) ?></td>
-                            <td><?= htmlspecialchars($transaction['Qte_trans']) ?></td>
-                            <td><?= htmlspecialchars($transaction['Nom_user'] . ' ' . $transaction['Prenom_user']) ?></td>
-                            <td><?= htmlspecialchars($transaction['Nom_paie']) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Montant_trans']) ?> €</td>
+                            <td><?= htmlspecialchars(date('d M Y', strtotime($transaction_group[0]['Date_trans']))) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Qte_trans']) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_user'] . ' ' . $transaction_group[0]['Prenom_user']) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_paie']) ?></td>
                             <td>
                                 <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
                                 <form method="POST" style="display: inline;">
-                                    <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction['Id_trans']) ?>">
-                                    <input type="hidden" name="payer" value="<?= $transaction['Payer_trans'] ? 0 : 1 ?>">
-                                    <button type="submit" name="update_payment" class="pay-button <?= $transaction['Payer_trans'] ? 'oui' : 'non' ?>">
-                                        <?= $transaction['Payer_trans'] ? 'Oui' : 'Non' ?>
+                                    <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction_id) ?>">
+                                    <input type="hidden" name="payer" value="<?= $transaction_group[0]['Payer_trans'] ? 0 : 1 ?>">
+                                    <button type="submit" name="update_payment" class="pay-button <?= $transaction_group[0]['Payer_trans'] ? 'oui' : 'non' ?>">
+                                        <?= $transaction_group[0]['Payer_trans'] ? 'Oui' : 'Non' ?>
                                     </button>
                                 </form>
                             </td>
