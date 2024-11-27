@@ -36,7 +36,13 @@ $sql_grade = "SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user";
 $stmt_grade = $pdo->prepare($sql_grade);
 $stmt_grade->bindParam(':id_user', $user_id, PDO::PARAM_INT);
 $stmt_grade->execute();
-$id_grade = $stmt_grade->fetchColumn(); // Récupère l'ID du grade ou null
+$id_grade = $stmt_grade->fetchColumn();
+
+// Débogage pour vérifier la valeur de $id_grade
+if ($id_grade === false) {
+    $id_grade = null; // Si aucun grade trouvé, on le définit explicitement sur NULL
+}
+error_log("ID Grade récupéré : " . ($id_grade ?? "NULL"));
 
 // Traitement du paiement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
@@ -84,32 +90,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     $stmt = $pdo->prepare($sql);
 
     $current_date = date('Y-m-d H:i:s'); // Date actuelle
-    
-    if ($payment_method_id == 1) {
-        $payer_trans = 1;
-    }else{
-        $payer_trans = 0;
-    }
-    // Indicateur de transaction réglée
+    $payer_trans = $payment_method_id == 1 ? 1 : 0; // Indicateur de transaction réglée
 
-    // Boucle pour insérer chaque produit comme une transaction
+    // Boucle pour chaque produit dans le panier
     foreach ($_SESSION['cart'] as $product_id => $product) {
         $montant_trans = $product['price'] * $product['quantity'];
         $qte_trans = $product['quantity'];
 
-        // Liaison des variables aux colonnes
+        // Vérification si le produit existe dans la table produit
+        $sql_check_product = "SELECT COUNT(*) FROM produit WHERE Id_prod = :id_prod";
+        $stmt_check_product = $pdo->prepare($sql_check_product);
+        $stmt_check_product->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
+        $stmt_check_product->execute();
+        $product_exists = $stmt_check_product->fetchColumn() > 0;
+
+        if (!$product_exists) {
+            continue; // Saute ce produit si non trouvé
+        }
+
+        // Liaison des paramètres pour insertion
         $stmt->bindParam(':montant_trans', $montant_trans);
         $stmt->bindParam(':date_trans', $current_date);
         $stmt->bindParam(':qte_trans', $qte_trans);
         $stmt->bindParam(':payer_trans', $payer_trans);
-        $stmt->bindParam(':id_promo', $id_promo);
-        $stmt->bindParam(':id_grade', $id_grade);
-        $stmt->bindParam(':id_event', $id_event);
-        $stmt->bindParam(':id_prod', $product_id); // ID du produit
-        $stmt->bindParam(':id_user', $user_id);
-        $stmt->bindParam(':id_paie', $payment_method_id);
+        $stmt->bindParam(':id_promo', $id_promo, PDO::PARAM_INT);
+        
+        // Gestion explicite de id_grade (peut être NULL)
+        if ($id_grade === null) {
+            $stmt->bindValue(':id_grade', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':id_grade', $id_grade, PDO::PARAM_INT);
+        }
 
-        // Exécution de la requête pour chaque produit
+        $stmt->bindParam(':id_event', $id_event, PDO::PARAM_INT);
+        $stmt->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
+        $stmt->bindParam(':id_user', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':id_paie', $payment_method_id, PDO::PARAM_INT);
+
         $stmt->execute();
     }
 

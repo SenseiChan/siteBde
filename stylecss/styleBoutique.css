@@ -521,9 +521,23 @@ body.blur *:not(.grades):not(.no-blur) {
     opacity: 0.7;
 }
 
-/* Griser grade */
-
+/* Grisé si non disponible */
 .grade-card.disabled {
     opacity: 0.5;
     pointer-events: none;
+    background-color: #444;
+}
+
+/* Message erreur si deja un grade dans panier */
+
+.error-message {
+    background-color: #ffcccc;
+    color: #990000;
+    border: 1px solid #990000;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 20px auto;
+    max-width: 500px;
+    text-align: center;
+    font-weight: bold;
 }

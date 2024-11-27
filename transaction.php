@@ -96,7 +96,7 @@ foreach ($transactions as $transaction) {
                             <td><?= htmlspecialchars($transaction_group[0]['Qte_trans']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_user'] . ' ' . $transaction_group[0]['Prenom_user']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_paie']) ?></td>
-                            <td><?= htmlspecialchars($transaction_group[0]['Nom_prod']).  htmlspecialchars($transaction_group[0]['Nom_event']) ?></td> <!-- Affichage du produit et du grade -->
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_prod']). htmlspecialchars($transaction_group[0]['Nom_grade']). htmlspecialchars($transaction_group[0]['Nom_event']) ?></td> <!-- Affichage du produit et du grade -->
                             <td>
                                 <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
                                 <form method="POST" style="display: inline;">
@@ -111,10 +111,11 @@ foreach ($transactions as $transaction) {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7">Aucune transaction trouvée.</td> <!-- Mise à jour du colspan -->
+                        <td colspan="7">Aucune transaction trouvée.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
+
         </table>
     </main>
 

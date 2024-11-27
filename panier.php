@@ -53,28 +53,33 @@ foreach ($_SESSION['cart'] as $product) {
         <?php else: ?>
             <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
                 <div class="cart-item">
-                    <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
+                    <!-- Affichez l'image du produit -->
+                    <img src="<?= htmlspecialchars($product['image'], ENT_QUOTES) ?>" 
+                        alt="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>" 
+                        class="product-image">
+                        
                     <div class="cart-details">
-                        <h3><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h3>
+                        <h3><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h3>
                         <div class="quantity-controls">
                             <form method="post" class="quantity-form">
-                                <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
+                                <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
                                 <button type="submit" name="action" value="decrement" class="decrement-btn">-</button>
-                                <span class="quantity"><?= htmlspecialchars($product['quantity']) ?></span>
+                                <span class="quantity"><?= htmlspecialchars($product['quantity'], ENT_QUOTES) ?></span>
                                 <button type="submit" name="action" value="increment" class="increment-btn" 
                                     <?= $product['quantity'] >= $product['stock'] ? 'disabled' : '' ?>>+</button>
                             </form>
                         </div>
-                        <p class="price"><?= htmlspecialchars(number_format($product['price'] * $product['quantity'], 2)) ?> €</p>
-                        <form method="post" class="remove-form">
-                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
-                            <button type="submit" name="action" value="remove" class="remove-btn">
-                                <img src="image/bin.png" alt="Supprimer">
-                            </button>
-                        </form>
+                        <p class="price"><?= number_format($product['quantity'] * $product['price'], 2) ?> €</p>
                     </div>
+                    <form method="post" class="remove-form">
+                        <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
+                        <button type="submit" name="action" value="remove" class="remove-btn">
+                            <img src="image/bin.png" alt="Supprimer">
+                        </button>
+                    </form>
                 </div>
             <?php endforeach; ?>
+
         <?php endif; ?>
     </div>
     <div class="cart-total">
