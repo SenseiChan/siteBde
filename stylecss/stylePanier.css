@@ -1,0 +1,128 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #34373E;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #3E4148;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.product-image {
+    width: 80px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.cart-details {
+    flex: 1;
+}
+
+.cart-details h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.quantity-form button {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.quantity-form button:hover {
+    background-color: #9B55E3;
+}
+
+.quantity {
+    font-size: 1rem;
+    color: #FFFFFF;
+}
+
+.remove-form button {
+    background-color: transparent;
+    color: #FF6B6B;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.remove-form button:hover {
+    color: #FF4D4D;
+}
+
+.cart-total {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pay-btn {
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.pay-btn:hover {
+    background-color: #9B55E3;
+}
+
+/*-----------------*/
+/* BOUTON RETOUR */
+/*-----------------*/
+
+.return-btn {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.return-btn:hover {
+    background-color: #9B55E3;
+}
