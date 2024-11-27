@@ -45,6 +45,7 @@ function isActive($page) {
                 <a href="statistique.php">Statistique</a>
                 <a href="banque.php">Banque</a>
                 <a href="chat_admin.php">Chat Administrateur</a>
+                <a href="transaction.php">Transactions</a>
             </div>
         </div>
         <?php endif; ?>
