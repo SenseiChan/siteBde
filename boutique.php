@@ -55,28 +55,51 @@ function getDisabledClass($userGrade, $gradeId) {
         <h2>Grades</h2>
         <div class="grades-container">
             <!-- Grade Fer -->
-            <div class="grade-card grade-fer <?php echo getDisabledClass($userGrade, 1); ?>">
-                <img src="image/lingotDeFer.png" alt="lingot de fer" width=80px>
-                <h3>Fer</h3>
-                <p>Fais vivre le BDE</p>
-                <span class="price">5€</span>
-            </div>
+            <form method="post" action="add_to_cart.php" class="grade-card grade-fer">
+                <input type="hidden" name="product_id" value="grade_fer">
+                <input type="hidden" name="product_name" value="Fer">
+                <input type="hidden" name="product_price" value="5.00">
+                <input type="hidden" name="product_image" value="image/lingotDeFer.png">
+                <input type="hidden" name="product_stock" value="1">
+                <div onclick="this.parentElement.submit();">
+                    <img src="image/lingotDeFer.png" alt="Lingot de fer" width="80">
+                    <h3>Fer</h3>
+                    <p>Fais vivre le BDE</p>
+                    <span class="price">5€</span>
+                </div>
+            </form>
+
             <!-- Grade Diamant -->
-            <div class="grade-card grade-diamant <?php echo getDisabledClass($userGrade, 2); ?>">
-                <img src="image/mineraiDiamant.png" alt="minerai de diamant" width=90px>
-                <h3>Diamant</h3>
-                <p>Adhésion au BDE</p>
-                <p>Grade premium sur le serveur Minecraft</p>
-                <span class="price">13€</span>
-            </div>
+            <form method="post" action="add_to_cart.php" class="grade-card grade-diamant">
+                <input type="hidden" name="product_id" value="grade_diamant">
+                <input type="hidden" name="product_name" value="Diamant">
+                <input type="hidden" name="product_price" value="13.00">
+                <input type="hidden" name="product_image" value="image/mineraiDiamant.png">
+                <input type="hidden" name="product_stock" value="1">
+                <div onclick="this.parentElement.submit();">
+                    <img src="image/mineraiDiamant.png" alt="Minerai de diamant" width="90">
+                    <h3>Diamant</h3>
+                    <p>Adhésion au BDE</p>
+                    <p>Grade premium sur le serveur Minecraft</p>
+                    <span class="price">13€</span>
+                </div>
+            </form>
+
             <!-- Grade Or -->
-            <div class="grade-card grade-or <?php echo getDisabledClass($userGrade, 3); ?>">
-                <img src="image/lingotDOr.png" alt="lingot d'or" width=80px>
-                <h3>Or</h3>
-                <p>Adhésion au BDE</p>
-                <p>Grade premium sur le serveur Minecraft</p>
-                <span class="price">10€</span>
-            </div>
+            <form method="post" action="add_to_cart.php" class="grade-card grade-or">
+                <input type="hidden" name="product_id" value="grade_or">
+                <input type="hidden" name="product_name" value="Or">
+                <input type="hidden" name="product_price" value="10.00">
+                <input type="hidden" name="product_image" value="image/lingotDOr.png">
+                <input type="hidden" name="product_stock" value="1">
+                <div onclick="this.parentElement.submit();">
+                    <img src="image/lingotDOr.png" alt="Lingot d'or" width="80">
+                    <h3>Or</h3>
+                    <p>Adhésion au BDE + avantages</p>
+                    <p>Grade premium sur le serveur Minecraft</p>
+                    <span class="price">10€</span>
+                </div>
+            </form>
         </div>
     </section>
 
