@@ -31,6 +31,15 @@ foreach ($_SESSION['cart'] as $product_id => $product) {
     $quantity += $product['quantity'];
 }
 
+// Vérification si l'utilisateur existe
+$stmt_check_user = $pdo->prepare("SELECT COUNT(*) FROM Utilisateur WHERE Id_user = :id_user");
+$stmt_check_user->bindParam(':id_user', $user_id, PDO::PARAM_INT);
+$stmt_check_user->execute();
+
+if (!$stmt_check_user->fetchColumn()) {
+    die("Erreur : L'utilisateur avec l'ID $user_id n'existe pas dans la base de données.");
+}
+
 // Récupération du grade de l'utilisateur
 $sql_grade = "SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user";
 $stmt_grade = $pdo->prepare($sql_grade);
@@ -85,15 +94,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
 
     $current_date = date('Y-m-d H:i:s'); // Date actuelle
     
-    if ($payment_method_id == 1) {
-        $payer_trans = 1;
-    }else{
-        $payer_trans = 0;
-    }
-    // Indicateur de transaction réglée
+    // Indicateur de transaction réglée (payée immédiatement ou non)
+    $payer_trans = $payment_method_id === 1 ? 1 : 0;
 
     // Boucle pour insérer chaque produit comme une transaction
     foreach ($_SESSION['cart'] as $product_id => $product) {
+        // Vérification si le produit existe
+        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM Produit WHERE Id_prod = :product_id");
+        $stmt_check->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt_check->execute();
+
+        if (!$stmt_check->fetchColumn()) {
+            die("Erreur : Produit avec l'ID $product_id introuvable dans la base.");
+        }
+
         $montant_trans = $product['price'] * $product['quantity'];
         $qte_trans = $product['quantity'];
 
