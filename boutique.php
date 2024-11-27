@@ -123,6 +123,13 @@ function getDisabledClass($userGrade, $gradeId) {
         </div>
     </section>
 
+    <!-- Bouton "Ajouter un produit" pour les administrateurs -->
+    <?php if ($is_admin): ?>
+        <div class="admin-section">
+            <a href="add_produit.php" class="ajouter-produit-btn">+ Ajouter un produit</a>
+        </div>
+    <?php endif; ?>
+
     <?php
     // Section Produits Générale
     function renderProductSection($pdo, $type, $title) {
@@ -183,9 +190,6 @@ function getDisabledClass($userGrade, $gradeId) {
     renderProductSection($pdo, 'autres', 'Autres');
     ?>
 
-    <?php if ($is_admin): ?>
-        <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
-    <?php endif; ?>
 </main>
 </body>
 </html>

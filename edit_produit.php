@@ -41,16 +41,20 @@ if ($productId) {
 
 // Traitement du formulaire de modification
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $price = $_POST['price'] ?? '';
-    $stock = $_POST['stock'] ?? '';
-    $type = $_POST['type'] ?? '';
+    $name = $_POST['Nom_prod'] ?? '';
+    $price = $_POST['Prix_prod'] ?? '';
+    $stock = $_POST['Stock_prod'] ?? '';
+    $type = $_POST['Type_prod'] ?? '';
 
     if (!empty($name) && !empty($price) && !empty($stock) && !empty($type)) {
         // Vérifier si une nouvelle image a été téléchargée
-        if (!empty($_FILES['product_image']['name'])) {
-            $imagePath = 'uploads/' . basename($_FILES['product_image']['name']);
-            if (move_uploaded_file($_FILES['product_image']['tmp_name'], $imagePath)) {
+        if (!empty($_FILES['Photo_prod']['name'])) {
+            $targetDir = 'imagesAdmin/';
+            $fileName = basename($_FILES['Photo_prod']['name']);
+            $targetFile = $targetDir . $fileName;
+
+            // Déplacer le fichier uploadé vers le répertoire cible
+            if (move_uploaded_file($_FILES['Photo_prod']['tmp_name'], $targetFile)) {
                 // Requête avec mise à jour de l'image
                 $sql = "UPDATE produit 
                         SET Nom_prod = :name, 
@@ -64,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bindParam(':price', $price, PDO::PARAM_STR);
                 $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
                 $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-                $stmt->bindParam(':image', $imagePath, PDO::PARAM_STR);
+                $stmt->bindParam(':image', $targetFile, PDO::PARAM_STR);
                 $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
             } else {
                 $error = "Erreur lors de l'upload de l'image.";
@@ -87,17 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Exécution de la requête
         if ($stmt->execute()) {
-            $success = "Produit mis à jour avec succès.";
-            // Mettre à jour les données du produit
-            $product['Nom_prod'] = $name;
-            $product['Prix_prod'] = $price;
-            $product['Stock_prod'] = $stock;
-            $product['Type_prod'] = $type;
-            if (isset($imagePath)) {
-                $product['Photo_prod'] = $imagePath;
-            }
+            header("Location: boutique.php");
+            exit();
         } else {
-            $error = "Erreur lors de la mise à jour : " . implode(", ", $stmt->errorInfo());
+            $error = "Erreur lors de la mise à jour.";
         }
     } else {
         $error = "Veuillez remplir tous les champs.";
@@ -105,67 +102,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier le Produit</title>
+    <title>Modifier un Produit</title>
     <link rel="stylesheet" href="stylecss/styleEdit.css">
 </head>
 <body>
-    <main>
-        <h1>Modifier le Produit</h1>
-        <?php if ($error): ?>
-            <div class="error"><?= htmlspecialchars($error, ENT_QUOTES) ?></div>
-        <?php endif; ?>
-        <?php if ($success): ?>
-            <div class="success"><?= htmlspecialchars($success, ENT_QUOTES) ?></div>
-        <?php endif; ?>
-
-        <?php if ($product): ?>
-            <form method="post" enctype="multipart/form-data">
-                <div class="form-container">
+    <div class="edit-product-container">
+        <h1><?= htmlspecialchars($product['Nom_prod']) ?></h1>
+        <div class="header-icons">
+            <a href="delete_produit_confirmation.php?id=<?= htmlspecialchars($product['Id_prod']) ?>" class="delete-icon">
+                <img src="image/bin.png" alt="Supprimer">
+            </a>
+            <a href="boutique.php" class="close-btn">
+                <img src="image/icon_close.png" alt="Fermer">
+            </a>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="form-content">
+                <div class="image-container">
+                    <label for="Photo_prod" class="image-label">
+                        <img src="<?= htmlspecialchars($product['Photo_prod']) ?>" alt="Photo du produit" id="product-image">
+                    </label>
+                    <input type="file" name="Photo_prod" id="Photo_prod" accept=".jpg, .jpeg, .png" hidden>
+                </div>
+                <div class="form-details">
                     <div class="form-group">
-                        <label>Image :</label>
-                        <div class="image-container">
-                            <img src="<?= htmlspecialchars($product['Photo_prod']) ?>" alt="Produit">
-                            <input type="file" name="product_image" id="product_image">
-                            <label for="product_image" class="change-image">Cliquez pour changer l'image</label>
-                        </div>
+                        <label for="Nom_prod">Nom :</label>
+                        <input type="text" name="Nom_prod" id="Nom_prod" value="<?= htmlspecialchars($product['Nom_prod']) ?>" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="name">Nom :</label>
-                        <input type="text" id="name" name="name" value="<?= htmlspecialchars($product['Nom_prod'], ENT_QUOTES) ?>">
+                        <label for="Prix_prod">Prix (€) :</label>
+                        <input type="number" name="Prix_prod" id="Prix_prod" value="<?= htmlspecialchars($product['Prix_prod']) ?>" step="0.01" min="0" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="price">Prix (€) :</label>
-                        <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['Prix_prod'], ENT_QUOTES) ?>">
+                        <label for="Stock_prod">Stock :</label>
+                        <input type="number" name="Stock_prod" id="Stock_prod" value="<?= htmlspecialchars($product['Stock_prod']) ?>" min="0" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="stock">Stock :</label>
-                        <input type="number" id="stock" name="stock" value="<?= htmlspecialchars($product['Stock_prod'], ENT_QUOTES) ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="type">Type :</label>
-                        <select id="type" name="type">
+                        <label for="Type_prod">Type :</label>
+                        <select name="Type_prod" id="Type_prod" required>
                             <option value="Boisson" <?= $product['Type_prod'] === 'Boisson' ? 'selected' : '' ?>>Boisson</option>
                             <option value="Snack" <?= $product['Type_prod'] === 'Snack' ? 'selected' : '' ?>>Snack</option>
                             <option value="Autres" <?= $product['Type_prod'] === 'Autres' ? 'selected' : '' ?>>Autres</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="form-buttons">
-                    <button type="submit" class="btn btn-success">Mettre à jour</button>
-                    <a href="boutique.php" class="btn btn-danger">Annuler</a>
-                </div>
-            </form>
-        <?php endif; ?>
-    </main>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Sauvegarder</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('Photo_prod').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('product-image').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>
