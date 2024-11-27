@@ -27,6 +27,18 @@ if ($userId) {
     }
 }
 
+// Vérifier si un grade est déjà dans le panier
+function isGradeInCart() {
+    if (isset($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $id => $item) {
+            if (in_array($id, ['grade_fer', 'grade_diamant', 'grade_or'])) {
+                return true; // Un grade est déjà présent dans le panier
+            }
+        }
+    }
+    return false;
+}
+
 // Définir les classes CSS désactivées pour les grades
 function getDisabledClass($userGrade, $gradeId) {
     if ($userGrade == 2) { // L'utilisateur a le grade Diamant
@@ -51,11 +63,19 @@ function getDisabledClass($userGrade, $gradeId) {
 <body>
 <?php include 'header.php'; ?>
 <main>
+    <!-- Affichage d'un message d'erreur si un grade est déjà dans le panier -->
+    <?php if (isset($_SESSION['error_message'])): ?>
+        <div class="error-message">
+            <?= htmlspecialchars($_SESSION['error_message'], ENT_QUOTES) ?>
+        </div>
+        <?php unset($_SESSION['error_message']); ?>
+    <?php endif; ?>
+
     <section class="grades">
         <h2>Grades</h2>
         <div class="grades-container">
             <!-- Grade Fer -->
-            <form method="post" action="add_to_cart.php" class="grade-card grade-fer <?= getDisabledClass($userGrade, 1) ?>">
+            <form method="post" action="add_to_cart.php" class="grade-card grade-fer <?= getDisabledClass($userGrade, 1) ?> <?= isGradeInCart() ? 'disabled' : '' ?>">
                 <input type="hidden" name="product_id" value="grade_fer">
                 <input type="hidden" name="product_name" value="Fer">
                 <input type="hidden" name="product_price" value="5.00">
@@ -70,7 +90,7 @@ function getDisabledClass($userGrade, $gradeId) {
             </form>
 
             <!-- Grade Diamant -->
-            <form method="post" action="add_to_cart.php" class="grade-card grade-diamant <?= getDisabledClass($userGrade, 2) ?>">
+            <form method="post" action="add_to_cart.php" class="grade-card grade-diamant <?= getDisabledClass($userGrade, 2) ?> <?= isGradeInCart() ? 'disabled' : '' ?>">
                 <input type="hidden" name="product_id" value="grade_diamant">
                 <input type="hidden" name="product_name" value="Diamant">
                 <input type="hidden" name="product_price" value="13.00">
@@ -86,7 +106,7 @@ function getDisabledClass($userGrade, $gradeId) {
             </form>
 
             <!-- Grade Or -->
-            <form method="post" action="add_to_cart.php" class="grade-card grade-or <?= getDisabledClass($userGrade, 3) ?>">
+            <form method="post" action="add_to_cart.php" class="grade-card grade-or <?= getDisabledClass($userGrade, 3) ?> <?= isGradeInCart() ? 'disabled' : '' ?>">
                 <input type="hidden" name="product_id" value="grade_or">
                 <input type="hidden" name="product_name" value="Or">
                 <input type="hidden" name="product_price" value="10.00">
@@ -109,6 +129,7 @@ function getDisabledClass($userGrade, $gradeId) {
         echo "<div class='sub-section'>
             <h3>$title</h3>
             <div class='product-container'>";
+
         try {
             $stmt = $pdo->prepare("SELECT Id_prod, Nom_prod, Photo_prod, Prix_prod, Stock_prod FROM produit WHERE Type_prod = :type");
             $stmt->execute(['type' => $type]);
@@ -155,10 +176,5 @@ function getDisabledClass($userGrade, $gradeId) {
         <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
     <?php endif; ?>
 </main>
-<script>
-    function addToCart(productId) {
-        window.location.href = `panier.php?action=add&id=${productId}`;
-    }
-</script>
 </body>
 </html>

@@ -1,35 +1,40 @@
 <?php
 session_start();
 
+// Initialisation du panier s'il n'existe pas encore
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
+// Vérifier si des données POST ont été envoyées
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Vérifiez si toutes les informations nécessaires sont fournies
-    $requiredFields = ['product_id', 'product_name', 'product_price', 'product_image', 'product_stock'];
-    foreach ($requiredFields as $field) {
-        if (empty($_POST[$field])) {
-            die("Erreur : une information requise ($field) est manquante.");
-        }
-    }
-
     $productId = $_POST['product_id'];
     $productName = $_POST['product_name'];
     $productPrice = $_POST['product_price'];
     $productImage = $_POST['product_image'];
     $productStock = $_POST['product_stock'];
 
-    // Ajoutez correctement le produit au panier
-    if (isset($_SESSION['cart'][$productId])) {
-        // Si l'élément est déjà dans le panier, ne pas dépasser le stock maximal
-        if ($_SESSION['cart'][$productId]['quantity'] < $productStock) {
-            $_SESSION['cart'][$productId]['quantity']++;
+    // Vérification si le produit est un grade
+    $isGrade = in_array($productId, ['grade_fer', 'grade_diamant', 'grade_or']);
+
+    // Vérification si un grade est déjà dans le panier
+    if ($isGrade) {
+        foreach ($_SESSION['cart'] as $id => $item) {
+            if (in_array($id, ['grade_fer', 'grade_diamant', 'grade_or'])) {
+                // Si un autre grade est déjà dans le panier, redirigez avec un message d'erreur
+                $_SESSION['error_message'] = "Vous ne pouvez avoir qu'un seul grade dans votre panier.";
+                header('Location: boutique.php');
+                exit;
+            }
         }
+    }
+
+    // Ajouter l'article au panier
+    if (isset($_SESSION['cart'][$productId])) {
+        $_SESSION['cart'][$productId]['quantity']++;
     } else {
-        // Ajoutez le produit au panier
         $_SESSION['cart'][$productId] = [
-            'name' => htmlspecialchars($productName, ENT_QUOTES), // Évitez les problèmes de caractères spéciaux
+            'name' => $productName,
             'price' => $productPrice,
             'image' => $productImage,
             'stock' => $productStock,
@@ -37,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
 
-    // Redirige vers la page panier ou boutique
+    // Redirection après l'ajout
     header('Location: panier.php');
     exit;
 }
