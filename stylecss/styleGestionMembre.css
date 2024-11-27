@@ -317,7 +317,9 @@ header {
     background-color: #9B5FEF;
 }
 
-
+main a{
+    text-decoration: none;
+}
 
 
 
