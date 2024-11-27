@@ -109,7 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                                 <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
                                 <p class='stock'>En stock : {$row['Stock_prod']}</p>
                             </div>
-                        </div>";
+                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
+                        </div>
+                        ";
                     }
                 } catch (PDOException $e) {
                     echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
@@ -137,7 +139,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                                 <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
                                 <p class='stock'>En stock : {$row['Stock_prod']}</p>
                             </div>
-                        </div>";
+                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
+                        </div>
+                        ";
                     }
                 } catch (PDOException $e) {
                     echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
@@ -166,7 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
                                 <p class='price'>Prix : " . number_format($row['Prix_prod'], 2) . "€</p>
                                 <p class='stock'>En stock : {$row['Stock_prod']}</p>
                             </div>
-                        </div>";
+                            <button class='add-to-cart-btn' onclick='addToCart({$row['Id_prod']})'>Ajouter au panier</button>
+                        </div>
+                        ";
                     }
                 } catch (PDOException $e) {
                     echo "<p style='color:red;'>Erreur : " . $e->getMessage() . "</p>";
@@ -180,8 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_admin) {
     <?php endif; ?>
 </main>
 <script>
-    function openEditModal(productId) {
-        alert("Modifier le produit ID : " + productId);
+    function addToCart(productId) {
+        window.location.href = `panier.php?action=add&id=${productId}`;
     }
 </script>
 </body>
