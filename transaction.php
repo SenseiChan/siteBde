@@ -40,13 +40,20 @@ $sql = "SELECT
             t.Payer_trans, 
             u.Nom_user, 
             u.Prenom_user, 
-            p.Nom_paie
+            p.Nom_paie, 
+            pa.Nom_prod,
+            g.Nom_grade,
+            e.Nom_event
         FROM Transactions t
-        INNER JOIN Utilisateur u ON t.Id_user = u.Id_user
-        INNER JOIN Paiement p ON t.Id_paie = p.Id_paie
+        LEFT JOIN Utilisateur u ON t.Id_user = u.Id_user
+        LEFT JOIN Paiement p ON t.Id_paie = p.Id_paie
+        LEFT JOIN Produit pa ON t.Id_prod = pa.Id_prod
+        LEFT JOIN grade g ON t.Id_grade = g.Id_grade
+        LEFT JOIN evenement e ON t.Id_event = e.Id_event
         ORDER BY t.Date_trans DESC";
 
 $transactions = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Regrouper les transactions par ID
 $grouped_transactions = [];
@@ -76,6 +83,7 @@ foreach ($transactions as $transaction) {
                     <th>Quantité</th>
                     <th>Utilisateur</th>
                     <th>Moyen de Paiement</th>
+                    <th>Produit</th> 
                     <th>Payé</th>
                 </tr>
             </thead>
@@ -88,6 +96,7 @@ foreach ($transactions as $transaction) {
                             <td><?= htmlspecialchars($transaction_group[0]['Qte_trans']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_user'] . ' ' . $transaction_group[0]['Prenom_user']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_paie']) ?></td>
+                            <td><?= htmlspecialchars($transaction_group[0]['Nom_prod']). htmlspecialchars($transaction_group[0]['Nom_grade']). htmlspecialchars($transaction_group[0]['Nom_event']) ?></td> <!-- Affichage du produit et du grade -->
                             <td>
                                 <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
                                 <form method="POST" style="display: inline;">
@@ -102,7 +111,7 @@ foreach ($transactions as $transaction) {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6">Aucune transaction trouvée.</td>
+                        <td colspan="7">Aucune transaction trouvée.</td> <!-- Mise à jour du colspan -->
                     </tr>
                 <?php endif; ?>
             </tbody>
