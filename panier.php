@@ -49,7 +49,6 @@ foreach ($_SESSION['cart'] as $product) {
         <div class="cart-container">
         <?php if (empty($_SESSION['cart'])): ?>
             <p>Votre panier est vide.</p>
-            <a href="boutique.php" class="return-to-shop-btn">Retour à la boutique</a>
         <?php else: ?>
             <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
                 <div class="cart-item">

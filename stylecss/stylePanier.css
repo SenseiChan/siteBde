@@ -177,23 +177,6 @@ h1, h2 {
     margin-top: 20px;
 }
 
-.return-to-shop-btn {
-    background-color: #444;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.return-to-shop-btn:hover {
-    background-color: #555;
-}
-
 /* Gestion des limites de stock */
 .stock-limit-msg {
     font-size: 0.9rem;

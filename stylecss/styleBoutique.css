@@ -394,6 +394,7 @@ body.blur *:not(.grades):not(.no-blur) {
     padding: 10px;
     font-size: 14px;
     cursor: pointer;
+    text-decoration: none;
     margin-top: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     width: 100%; /* Prend toute la largeur pour un alignement propre */
