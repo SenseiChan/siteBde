@@ -186,6 +186,21 @@ function getDisabledClass($userGrade, $gradeId) {
     <?php if ($is_admin): ?>
         <button id="openModal" class="ajouter-produit-btn">Ajouter un produit</button>
     <?php endif; ?>
+
+    <?php if (isset($_SESSION['success_message'])): ?>
+        <div class="success-message">
+            <?= htmlspecialchars($_SESSION['success_message'], ENT_QUOTES) ?>
+        </div>
+        <?php unset($_SESSION['success_message']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error_message'])): ?>
+        <div class="error-message">
+            <?= htmlspecialchars($_SESSION['error_message'], ENT_QUOTES) ?>
+        </div>
+        <?php unset($_SESSION['error_message']); ?>
+    <?php endif; ?>
+
 </main>
 </body>
 </html>

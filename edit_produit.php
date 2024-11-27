@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="edit-product-container">
         <h1><?= htmlspecialchars($product['Nom_prod']) ?></h1>
         <div class="header-icons">
-            <a href="delete_product.php?id=<?= htmlspecialchars($product['Id_prod']) ?>" class="delete-icon">
+            <a href="delete_produit_confirmation.php?id=<?= htmlspecialchars($product['Id_prod']) ?>" class="delete-icon">
                 <img src="image/bin.png" alt="Supprimer">
             </a>
             <a href="boutique.php" class="close-btn">
