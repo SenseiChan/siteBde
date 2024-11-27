@@ -1,3 +1,4 @@
+/* Général */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #2C2E33;
@@ -12,9 +13,10 @@ main {
     padding: 20px;
     background-color: #34373E;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     margin-bottom: 20px;
 }
@@ -31,14 +33,21 @@ h1 {
     justify-content: space-between;
     background-color: #3E4148;
     border-radius: 10px;
-    padding: 10px 15px;
+    padding: 15px 20px;
     gap: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cart-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .product-image {
     width: 60px;
     height: auto;
     border-radius: 5px;
+    background-color: #444;
 }
 
 .cart-details {
@@ -52,7 +61,7 @@ h1 {
 
 .cart-details h3 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #AC6CFF;
     flex: 2;
 }
@@ -86,9 +95,16 @@ h1 {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.quantity-form button:hover {
+.quantity-form button:hover:not(:disabled) {
     background-color: #9B55E3;
     transform: scale(1.1);
+}
+
+.quantity-form button:disabled {
+    background-color: #666; /* Bouton désactivé */
+    color: #ccc;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .quantity {
@@ -116,6 +132,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s ease;
 }
 
 .remove-btn img {
@@ -125,12 +142,15 @@ h1 {
 
 .remove-btn:hover img {
     filter: brightness(0.8);
+    transform: scale(1.2);
 }
 
 /* Total */
 .cart-total {
     text-align: center;
     margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .pay-btn {
@@ -141,10 +161,12 @@ h1 {
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .pay-btn:hover {
     background-color: #9B55E3;
+    transform: scale(1.05);
 }
 
 /* Boutons "Payer" et "Retour à la boutique" */
@@ -172,22 +194,7 @@ h1 {
     background-color: #555;
 }
 
-.pay-btn {
-    background-color: #AC6CFF;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.pay-btn:hover {
-    background-color: #9B55E3;
-}
-
-/* limite de stock */
-
+/* Gestion des limites de stock */
 .stock-limit-msg {
     font-size: 0.9rem;
     color: #FF6B6B;
@@ -195,10 +202,41 @@ h1 {
     text-align: center;
 }
 
-.quantity-form button:disabled {
-    background-color: #666; /* Gris pour le bouton désactivé */
-    color: #ccc; /* Couleur du texte désactivée */
-    cursor: not-allowed; /* Curseur d'interdiction */
-    transform: none; /* Pas d'animation de transformation */
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .quantity-controls {
+        justify-content: center;
+    }
 }
 
+/* ----------- */
+
+.pay-button {
+    background-color: #AC6CFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pay-button:hover {
+    background-color: #9B55E3;
+}

@@ -27,6 +27,17 @@ if ($userId) {
     }
 }
 
+// Définir les classes CSS désactivées pour les grades
+function getDisabledClass($userGrade, $gradeId) {
+    if ($userGrade == 2) { // L'utilisateur a le grade Diamant
+        return 'disabled';
+    } elseif ($userGrade == 3 && in_array($gradeId, [1, 3])) { // Grade Or : bloquer Fer et Or
+        return 'disabled';
+    } elseif ($userGrade == 1 && $gradeId == 1) { // Grade Fer : bloquer Fer
+        return 'disabled';
+    }
+    return '';
+}
 ?>
 
 <!DOCTYPE html>
@@ -44,14 +55,14 @@ if ($userId) {
         <h2>Grades</h2>
         <div class="grades-container">
             <!-- Grade Fer -->
-            <div class="grade-card grade-fer <?php echo ($userGrade == 1) ? 'disabled' : ''; ?>">
+            <div class="grade-card grade-fer <?php echo getDisabledClass($userGrade, 1); ?>">
                 <img src="image/lingotDeFer.png" alt="lingot de fer" width=80px>
                 <h3>Fer</h3>
                 <p>Fais vivre le BDE</p>
                 <span class="price">5€</span>
             </div>
             <!-- Grade Diamant -->
-            <div class="grade-card grade-diamant <?php echo ($userGrade == 2) ? 'disabled' : ''; ?>">
+            <div class="grade-card grade-diamant <?php echo getDisabledClass($userGrade, 2); ?>">
                 <img src="image/mineraiDiamant.png" alt="minerai de diamant" width=90px>
                 <h3>Diamant</h3>
                 <p>Adhésion au BDE</p>
@@ -59,7 +70,7 @@ if ($userId) {
                 <span class="price">13€</span>
             </div>
             <!-- Grade Or -->
-            <div class="grade-card grade-or <?php echo ($userGrade == 3) ? 'disabled' : ''; ?>">
+            <div class="grade-card grade-or <?php echo getDisabledClass($userGrade, 3); ?>">
                 <img src="image/lingotDOr.png" alt="lingot d'or" width=80px>
                 <h3>Or</h3>
                 <p>Adhésion au BDE</p>

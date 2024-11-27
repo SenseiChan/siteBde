@@ -82,7 +82,9 @@ foreach ($_SESSION['cart'] as $product) {
         <div class="action-buttons">
             <a href="boutique.php" class="return-to-shop-btn">Retour à la boutique</a>
             <?php if (!empty($_SESSION['cart'])): ?>
-                <button class="pay-btn">Payer</button>
+                <form method="post" action="payement.php">
+                    <button type="submit" class="pay-button">Payer</button>
+                </form>
             <?php endif; ?>
         </div>
     </div>
