@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         <h3>Quantité totale: <?= $quantity ?> produit(s)</h3>
 
         <!-- Formulaire de sélection de paiement -->
-        <form method="POST" action="payement.php">
+        <form method="POST" action="payement.php" class="payment-form">
             <div class="payment-option">
                 <label>
                     <input type="radio" name="payment_method" value="carte" required>
@@ -171,8 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
                 </label>
             </div>
 
-            <!-- Bouton de soumission -->
-            <button type="submit" class="btn-pay">Valider le paiement</button>
+            <!-- Boutons de soumission et retour au panier -->
+            <div class="button-group">
+                <button type="submit" class="btn-pay">Valider le paiement</button>
+                <a href="panier.php" class="btn-cart">Retour au panier</a>
+            </div>
         </form>
     </main>
 
