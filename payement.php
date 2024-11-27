@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Si le panier est vide, rediriger vers la page d'accueil ou panier
+// Vérification si le panier est vide
 if (empty($_SESSION['cart'])) {
     header('Location: panier.php');
     exit();
@@ -22,11 +22,13 @@ try {
 
 // Initialisation des variables
 $total_amount = 0;
-$user_id = $_SESSION['user_id']; // Assurez-vous que l'utilisateur est connecté et que l'ID utilisateur est stocké
+$quantity = 0; // Initialisation pour la quantité totale
+$user_id = $_SESSION['user_id']; // ID de l'utilisateur connecté
 
-// Calcul du montant total et de la quantité
+// Calcul du montant total et de la quantité totale
 foreach ($_SESSION['cart'] as $product_id => $product) {
     $total_amount += $product['price'] * $product['quantity'];
+    $quantity += $product['quantity'];
 }
 
 // Récupération du grade de l'utilisateur
@@ -34,7 +36,7 @@ $sql_grade = "SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user";
 $stmt_grade = $pdo->prepare($sql_grade);
 $stmt_grade->bindParam(':id_user', $user_id, PDO::PARAM_INT);
 $stmt_grade->execute();
-$id_grade = $stmt_grade->fetchColumn(); // Récupère l'Id_grade (ou null si pas trouvé)
+$id_grade = $stmt_grade->fetchColumn(); // Récupère l'ID du grade ou null
 
 // Traitement du paiement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         default => throw new Exception("Moyen de paiement invalide.")
     };
 
-    // Préparer la requête d'insertion pour les transactions
+    // Préparation de l'insertion dans la table Transactions
     $sql = "INSERT INTO Transactions (
                 Montant_trans, 
                 Date_trans, 
@@ -79,16 +81,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
                 :id_user, 
                 :id_paie
             )";
-
     $stmt = $pdo->prepare($sql);
 
     $current_date = date('Y-m-d H:i:s'); // Date actuelle
-    $payer_trans = 1; // Transaction réglée
+    $payer_trans = 1; // Indicateur de transaction réglée
 
     // Boucle pour insérer chaque produit comme une transaction
     foreach ($_SESSION['cart'] as $product_id => $product) {
-        $montant_trans = $product['price'] * $product['quantity']; // Prix total pour ce produit
-        $qte_trans = $product['quantity']; // Quantité pour ce produit
+        $montant_trans = $product['price'] * $product['quantity'];
+        $qte_trans = $product['quantity'];
 
         // Liaison des variables aux colonnes
         $stmt->bindParam(':montant_trans', $montant_trans);
@@ -102,24 +103,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         $stmt->bindParam(':id_user', $user_id);
         $stmt->bindParam(':id_paie', $payment_method_id);
 
-        // Exécution de la requête
+        // Exécution de la requête pour chaque produit
         $stmt->execute();
     }
 
     // Suppression du panier après paiement
     unset($_SESSION['cart']);
 
-    // Redirection après paiement
+    // Redirection après le paiement
     header('Location: boutique.php');
     exit();
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
             <div class="payment-option">
                 <label>
                     <input type="radio" name="payment_method" value="cheque" required>
-                    Paiement par Cheque
+                    Paiement par Chèque
                 </label>
             </div>
 
