@@ -354,3 +354,33 @@ main {
   background-color: #FF6B6B;
   transform: none;
 }
+
+/* Bouton grisé quand inscrit */
+
+.add-to-cart-btn {
+  background-color: #AC6CFF;
+  color: #FFFFFF;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #9B5FEF;
+  transform: scale(1.05);
+}
+
+.add-to-cart-btn.disabled {
+  background-color: #FF6B6B;
+  color: #FFFFFF;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.add-to-cart-btn.disabled:hover {
+  transform: none;
+}
