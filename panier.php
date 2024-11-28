@@ -69,7 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($promo) {
             $currentDate = date('Y-m-d H:i:s');
             if ($currentDate >= $promo['Date_deb_promo'] && $currentDate <= $promo['Date_fin_promo']) {
-                $promoReduction = (int) $promo['Pourcentage_promo'];
+                $_SESSION['promoReduction'] = (int) $promo['Pourcentage_promo'];
+                $_SESSION['promo_id'] = $promo['Id_promo'] ?? null; // Si l'ID promo est disponible
             } else {
                 $error = "Le code promo est expiré ou non valide.";
             }
@@ -85,10 +86,12 @@ foreach ($_SESSION['cart'] as $product) {
     $total += $product['quantity'] * $product['price'];
 }
 
-// Appliquez la réduction si un code promo valide a été utilisé
+// Ajout : Appliquez la réduction si un code promo est valide
+$promoReduction = $_SESSION['promoReduction'] ?? 0;
 if ($promoReduction > 0) {
     $total = $total - ($total * ($promoReduction / 100));
 }
+
 ?>
 
 <!DOCTYPE html>

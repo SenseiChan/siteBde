@@ -31,6 +31,14 @@ foreach ($_SESSION['cart'] as $product_id => $product) {
     $quantity += $product['quantity'];
 }
 
+// Ajout : Application de la réduction si un code promo est valide
+$promoReduction = $_SESSION['promoReduction'] ?? 0; // Utilise la réduction stockée dans la session
+if ($promoReduction > 0) {
+    $total_amount = $total_amount - ($total_amount * ($promoReduction / 100));
+}
+
+
+
 // Récupération du grade de l'utilisateur si nécessaire
 $stmt_grade = $pdo->prepare("SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user");
 $stmt_grade->bindParam(':id_user', $user_id, PDO::PARAM_INT);
@@ -55,41 +63,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     $id_event = $_SESSION['event_id'] ?? null;
 
     // Mapper le moyen de paiement sur l'ID
-    $payment_method_id = match ($payment_method) {
-        'carte' => 1,
-        'espece' => 2,
-        'cheque' => 3,
-        'paypal' => 4,
-        'virement' => 5,
-        default => throw new Exception("Moyen de paiement invalide.")
-    };
+$payment_method_id = match ($payment_method) {
+    'carte' => 1,
+    'espece' => 2,
+    'cheque' => 3,
+    'paypal' => 4,
+    'virement' => 5,
+    default => throw new Exception("Moyen de paiement invalide.")
+};
 
     // Préparation de l'insertion dans la table Transactions
-    $sql = "INSERT INTO Transactions (
-                Montant_trans, 
-                Date_trans, 
-                Qte_trans, 
-                Payer_trans, 
-                Id_promo, 
-                Id_grade, 
-                Id_event, 
-                Id_prod, 
-                Id_user, 
-                Id_paie
-            )
-            VALUES (
-                :montant_trans, 
-                :date_trans, 
-                :qte_trans, 
-                :payer_trans, 
-                :id_promo, 
-                :id_grade, 
-                :id_event, 
-                :id_prod, 
-                :id_user, 
-                :id_paie
-            )";
-    $stmt = $pdo->prepare($sql);
+$sql = "INSERT INTO Transactions (
+    Montant_trans, 
+    Date_trans, 
+    Qte_trans, 
+    Payer_trans, 
+    Id_promo, 
+    Id_grade, 
+    Id_event, 
+    Id_prod, 
+    Id_user, 
+    Id_paie
+)
+VALUES (
+    :montant_trans, 
+    :date_trans, 
+    :qte_trans, 
+    :payer_trans, 
+    :id_promo, 
+    :id_grade, 
+    :id_event, 
+    :id_prod, 
+    :id_user, 
+    :id_paie
+)";
+
+$stmt = $pdo->prepare($sql);
+
+// Ajout : Inclure l'ID promo si applicable
+$id_promo = $_SESSION['promo_id'] ?? null; // Récupérer l'ID promo stocké dans la session
 
     $current_date = date('Y-m-d H:i:s');
     
@@ -107,12 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     ];
     
     foreach ($_SESSION['cart'] as $product_id => $product) {
+        $product_grade = NULL;
         $montant_trans = $product['price'] * $product['quantity'];
         $qte_trans = $product['quantity'];
         
         if ($product_id == 'grade_diamant') {
             $product_id = NULL;
-            $product_grade = 1;
+            $product_grade = 3;
 
             $stmt->bindParam(':montant_trans', $montant_trans);
             $stmt->bindParam(':date_trans', $current_date);
