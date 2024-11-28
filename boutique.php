@@ -114,7 +114,7 @@ function renderProductSection($pdo, $type, $title) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boutique ADIL</title>
+    <title>Boutique ADIIL</title>
     <link rel="stylesheet" href="stylecss/styleBoutique.css">
 </head>
 <body>
@@ -180,10 +180,11 @@ function renderProductSection($pdo, $type, $title) {
         </div>
     </section>
 
-    <!-- Bouton "Ajouter un produit" pour les administrateurs -->
+    <!-- Boutons pour les administrateurs -->
     <?php if ($is_admin): ?>
         <div class="admin-section">
             <a href="add_produit.php" class="ajouter-produit-btn">+ Ajouter un produit</a>
+            <a href="add_promo.php" class="ajouter-promo-btn">+ Ajouter une promotion</a>
         </div>
     <?php endif; ?>
 
@@ -193,5 +194,6 @@ function renderProductSection($pdo, $type, $title) {
     renderProductSection($pdo, 'autres', 'Autres');
     ?>
 </main>
+<?php include 'footer.php'; ?>
 </body>
 </html>

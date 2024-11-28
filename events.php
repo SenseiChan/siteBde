@@ -260,8 +260,12 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
               <!---------------------------------------------------------------------------------------------->
               <br>
-              <button class="show-participants-btn" data-event-id="<?= $event['Id_event'] ?>">Voir les participants</button>
-              <div id="participants-list-<?= $event['Id_event'] ?>" class="participants-list"></div>
+              <?php if ($isAdmin): ?>
+                <div class="participants-button-container">
+                    <a href="voir_participant.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="show-participants-btn">Voir les participants</a>
+                </div>
+
+              <?php endif; ?>
               <!---------------------------------------------------------------------------------------------->
 
             </div>
@@ -297,7 +301,20 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                       </div>
                   </div>
                   <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-                </div>
+
+                  <?php if (isUserRegistered($pdo, $userId, $event['Id_event'])): ?>
+                      <button class="register-btn disabled" disabled>Déjà inscrit</button>
+                  <?php else: ?>
+                      <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
+                  <?php endif; ?>
+
+                  <?php if ($isAdmin): ?>
+                      <div class="participants-button-container">
+                          <a href="voir_participant.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="show-participants-btn">Voir les participants</a>
+                      </div>
+                  <?php endif; ?>
+              </div>
+
               </div>
               <?php endforeach; ?>
             </div>
