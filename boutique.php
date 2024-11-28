@@ -180,10 +180,11 @@ function renderProductSection($pdo, $type, $title) {
         </div>
     </section>
 
-    <!-- Bouton "Ajouter un produit" pour les administrateurs -->
+    <!-- Boutons pour les administrateurs -->
     <?php if ($is_admin): ?>
         <div class="admin-section">
             <a href="add_produit.php" class="ajouter-produit-btn">+ Ajouter un produit</a>
+            <a href="add_promo.php" class="ajouter-promo-btn">+ Ajouter une promotion</a>
         </div>
     <?php endif; ?>
 
@@ -193,5 +194,6 @@ function renderProductSection($pdo, $type, $title) {
     renderProductSection($pdo, 'autres', 'Autres');
     ?>
 </main>
+<?php include 'footer.php'; ?>
 </body>
 </html>
