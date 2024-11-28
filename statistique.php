@@ -11,6 +11,18 @@ if ($mysqli->connect_error) {
     die("Échec de la connexion : " . $mysqli->connect_error);
 }
 
+
+// Vérifiez si $pdo n'est pas déjà défini
+if (!isset($pdo)) {
+    try {
+        $pdo = new PDO("mysql:host=localhost;dbname=sae;charset=utf8", "root", "");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die("Erreur de connexion : " . $e->getMessage());
+    }
+}
+
+
 // Récupérer les 10 derniers événements avec leurs informations
 $query_last_events = "SELECT E.Nom_event, E.Prix_event, COUNT(P.Id_user) AS nb_participants 
                       FROM Evenement E 
