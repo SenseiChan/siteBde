@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+if (isset($_SESSION['error_message'])): ?>
+    <div class="error-message">
+        <?= htmlspecialchars($_SESSION['error_message'], ENT_QUOTES) ?>
+    </div>
+    <?php unset($_SESSION['error_message']); ?>
+<?php endif;
+
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
@@ -34,21 +41,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $productId = $_POST['product_id'];
 
         if (isset($_SESSION['cart'][$productId])) {
-            if ($action === 'increment') {
-                // Incrémenter la quantité uniquement si elle est inférieure au stock
-                if ($_SESSION['cart'][$productId]['quantity'] < $_SESSION['cart'][$productId]['stock']) {
-                    $_SESSION['cart'][$productId]['quantity']++;
-                }
-            } elseif ($action === 'decrement') {
-                // Décrémenter la quantité
-                $_SESSION['cart'][$productId]['quantity']--;
+            // Vérifier si le produit est un événement
+            $isEvent = strpos($productId, 'event_') === 0;
 
-                // Si la quantité atteint 0, supprimer le produit du panier
-                if ($_SESSION['cart'][$productId]['quantity'] <= 0) {
-                    unset($_SESSION['cart'][$productId]);
+            if (!$isEvent) { // Ne pas permettre l'incrémentation pour les événements
+                if ($action === 'increment') {
+                    // Incrémenter la quantité uniquement si elle est inférieure au stock
+                    if ($_SESSION['cart'][$productId]['quantity'] < $_SESSION['cart'][$productId]['stock']) {
+                        $_SESSION['cart'][$productId]['quantity']++;
+                    }
+                } elseif ($action === 'decrement') {
+                    // Décrémenter la quantité
+                    $_SESSION['cart'][$productId]['quantity']--;
+
+                    // Si la quantité atteint 0, supprimer le produit du panier
+                    if ($_SESSION['cart'][$productId]['quantity'] <= 0) {
+                        unset($_SESSION['cart'][$productId]);
+                    }
                 }
-            } elseif ($action === 'remove') {
-                // Supprimer le produit du panier
+            }
+
+            if ($action === 'remove') {
+                // Supprimer le produit ou l'événement du panier
                 unset($_SESSION['cart'][$productId]);
             }
         }
@@ -111,30 +125,48 @@ if ($promoReduction > 0) {
             <p>Votre panier est vide.</p>
         <?php else: ?>
             <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
-                <div class="cart-item">
-                    <img src="<?= htmlspecialchars($product['image'], ENT_QUOTES) ?>" 
-                        alt="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>" 
-                        class="product-image">
-                    <div class="cart-details">
-                        <h3><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h3>
-                        <div class="quantity-controls">
-                            <form method="post" class="quantity-form">
-                                <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
-                                <button type="submit" name="action" value="decrement" class="decrement-btn">-</button>
-                                <span class="quantity"><?= htmlspecialchars($product['quantity'], ENT_QUOTES) ?></span>
-                                <button type="submit" name="action" value="increment" class="increment-btn" 
-                                    <?= $product['quantity'] >= $product['stock'] ? 'disabled' : '' ?>>+</button>
-                            </form>
+                <?php if (strpos($productId, 'event_') === 0): // Si c'est un événement ?>
+                    <div class="cart-item event-item">
+                        <img src="<?= htmlspecialchars($product['image'], ENT_QUOTES) ?>" 
+                            alt="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>" 
+                            class="product-image">
+                        <div class="cart-details">
+                            <h3>Événement : <?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h3>
+                            <p><strong>Prix :</strong> <?= htmlspecialchars(number_format($product['price'], 2)) ?> €</p>
                         </div>
-                        <p class="price"><?= number_format($product['quantity'] * $product['price'], 2) ?> €</p>
+                        <form method="post" class="remove-form">
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
+                            <button type="submit" name="action" value="remove" class="remove-btn">
+                                <img src="image/bin.png" alt="Supprimer">
+                            </button>
+                        </form>
                     </div>
-                    <form method="post" class="remove-form">
-                        <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
-                        <button type="submit" name="action" value="remove" class="remove-btn">
-                            <img src="image/bin.png" alt="Supprimer">
-                        </button>
-                    </form>
-                </div>
+                <?php else: // Si c'est un produit standard ?>
+                    <div class="cart-item">
+                        <img src="<?= htmlspecialchars($product['image'], ENT_QUOTES) ?>" 
+                            alt="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>" 
+                            class="product-image">
+                        <div class="cart-details">
+                            <h3><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h3>
+                            <div class="quantity-controls">
+                                <form method="post" class="quantity-form">
+                                    <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
+                                    <button type="submit" name="action" value="decrement" class="decrement-btn">-</button>
+                                    <span class="quantity"><?= htmlspecialchars($product['quantity'], ENT_QUOTES) ?></span>
+                                    <button type="submit" name="action" value="increment" class="increment-btn" 
+                                        <?= $product['quantity'] >= $product['stock'] ? 'disabled' : '' ?>>+</button>
+                                </form>
+                            </div>
+                            <p class="price"><?= number_format($product['quantity'] * $product['price'], 2) ?> €</p>
+                        </div>
+                        <form method="post" class="remove-form">
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId, ENT_QUOTES) ?>">
+                            <button type="submit" name="action" value="remove" class="remove-btn">
+                                <img src="image/bin.png" alt="Supprimer">
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php endif; ?>
         </div>
