@@ -14,35 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productImage = $_POST['product_image'];
     $productStock = $_POST['product_stock'];
 
-    // Vérification si le produit est un grade
-    $isGrade = in_array($productId, ['grade_fer', 'grade_diamant', 'grade_or']);
+    // Vérification si le produit est un événement
+    $isEvent = strpos($productId, 'event_') === 0;
 
-    // Vérification si un grade est déjà dans le panier
-    if ($isGrade) {
-        foreach ($_SESSION['cart'] as $id => $item) {
-            if (in_array($id, ['grade_fer', 'grade_diamant', 'grade_or'])) {
-                // Si un autre grade est déjà dans le panier, redirigez avec un message d'erreur
-                $_SESSION['error_message'] = "Vous ne pouvez avoir qu'un seul grade dans votre panier.";
-                header('Location: boutique.php');
-                exit;
-            }
-        }
+    // Empêcher d'ajouter deux fois le même événement
+    if ($isEvent && isset($_SESSION['cart'][$productId])) {
+        $_SESSION['error_message'] = "Cet événement est déjà dans votre panier.";
+        header('Location: panier.php');
+        exit;
     }
 
-    // Ajouter l'article au panier
-    if (isset($_SESSION['cart'][$productId])) {
-        $_SESSION['cart'][$productId]['quantity']++;
-    } else {
-        $_SESSION['cart'][$productId] = [
-            'name' => $productName,
-            'price' => $productPrice,
-            'image' => $productImage,
-            'stock' => $productStock,
-            'quantity' => 1,
-        ];
-    }
+    // Ajouter l'article ou l'événement au panier
+    $_SESSION['cart'][$productId] = [
+        'name' => $productName,
+        'price' => $productPrice,
+        'image' => $productImage,
+        'stock' => $productStock,
+        'quantity' => 1,
+    ];
 
-    // Redirection après l'ajout
+    // Redirection directe vers le panier
     header('Location: panier.php');
     exit;
 }

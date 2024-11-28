@@ -253,56 +253,56 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
 
       <!-- Événements à venir -->
       <?php foreach ($upcomingEventsGrouped as $month => $events): ?>
-        <div class="month-section">
-          <h3><?= htmlspecialchars($month) ?></h3>
-          <?php foreach ($events as $event): ?>
-          <div class="event-card">
-            <div class="edit-btn-container">
-              <?php if ($isAdmin): ?>
-                <a href="edit_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="edit-event-btn">
-                  <img src="image/icon_modify.png" alt="Modifier"> Modifier
-                </a>
-              <?php endif; ?>
-            </div>
-            <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
-            <div class="event-info">
-              <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
-              <div class="event-details-grid">
-                  <div class="event-date">
-                      <img src="image/Calendar.png" alt="Calendrier">
-                      <span><?= htmlspecialchars(formatFullDate($event['Date_deb_event'])) ?></span>
-                  </div>
-                  <div class="event-time">
-                      <img src="image/Clock.png" alt="Horloge">
-                      <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
-                  </div>
-                  <div class="event-location">
-                      <img src="image/Localisation.png" alt="Localisation">
-                      <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
-                  </div>
-              </div>
-              <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-              <?php if (isUserRegistered($pdo, $userId, $event['Id_event'])): ?>
-                <button class="register-btn disabled" disabled>Déjà inscrit</button>
-              <?php else: ?>
-                <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
-              <?php endif; ?>
+          <div class="month-section">
+              <h3><?= htmlspecialchars($month) ?></h3>
+              <?php foreach ($events as $event): ?>
+                  <?php $eventId = 'event_' . $event['Id_event']; ?>
+                  <div class="event-card">
+                      <div class="edit-btn-container">
+                          <?php if ($isAdmin): ?>
+                              <a href="edit_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="edit-event-btn">
+                                  <img src="image/icon_modify.png" alt="Modifier"> Modifier
+                              </a>
+                          <?php endif; ?>
+                      </div>
+                      <img src="<?= htmlspecialchars($event['Photo_event']) ?>" alt="Photo de l'événement">
+                      <div class="event-info">
+                          <h4><?= htmlspecialchars($event['Nom_event']) ?></h4>
+                          <div class="event-details-grid">
+                              <div class="event-date">
+                                  <img src="image/Calendar.png" alt="Calendrier">
+                                  <span><?= htmlspecialchars(formatFullDate($event['Date_deb_event'])) ?></span>
+                              </div>
+                              <div class="event-time">
+                                  <img src="image/Clock.png" alt="Horloge">
+                                  <span><?= htmlspecialchars(date('H:i', strtotime($event['Heure_deb_event']))) ?></span>
+                              </div>
+                              <div class="event-location">
+                                  <img src="image/Localisation.png" alt="Localisation">
+                                  <span><?= htmlspecialchars($event['NomNumero_rue'] . ', ' . $event['Ville']) ?></span>
+                              </div>
+                          </div>
+                          <p><?= htmlspecialchars($event['Desc_event']) ?></p>
+                          <p><strong>Prix :</strong> <?= htmlspecialchars(number_format($event['Prix_event'], 2)) ?> €</p>
 
-              <!---------------------------------------------------------------------------------------------->
-              <br>
-              <?php if ($isAdmin): ?>
-                <div class="participants-button-container">
-                    <a href="voir_participant.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="show-participants-btn">Voir les participants</a>
-                </div>
-
-              <?php endif; ?>
-              <!---------------------------------------------------------------------------------------------->
-
-            </div>
+                          <!-- Formulaire pour ajouter au panier -->
+                          <form method="post" action="add_to_cart.php">
+                              <input type="hidden" name="product_id" value="<?= htmlspecialchars($eventId) ?>">
+                              <input type="hidden" name="product_name" value="<?= htmlspecialchars($event['Nom_event']) ?>">
+                              <input type="hidden" name="product_price" value="<?= htmlspecialchars($event['Prix_event']) ?>">
+                              <input type="hidden" name="product_image" value="<?= htmlspecialchars($event['Photo_event']) ?>">
+                              <input type="hidden" name="product_stock" value="1">
+                              <button type="submit" class="add-to-cart-btn" 
+                                  <?= isset($_SESSION['cart'][$eventId]) ? 'disabled' : '' ?>>
+                                  <?= isset($_SESSION['cart'][$eventId]) ? 'Déjà ajouté' : 'Ajouter au panier' ?>
+                              </button>
+                          </form>
+                      </div>
+                  </div>
+              <?php endforeach; ?>
           </div>
-          <?php endforeach; ?>
-        </div>
       <?php endforeach; ?>
+
 
       <!-- Événements passés -->
       <?php if (!empty($pastEventsGrouped)): ?>

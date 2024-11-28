@@ -312,3 +312,45 @@ main {
   justify-content: space-between; /* Distribution verticale */
   height: 100%; /* Occupe toute la hauteur du conteneur */
 }
+
+/* --------------------------------------------- */
+/* Boutons "Ajouter au panier" et "Déjà ajouté" */
+/* --------------------------------------------- */
+
+.add-to-cart-btn {
+  background-color: #AC6CFF;
+  color: #FFFFFF;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-self: flex-start;
+  text-decoration: none;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #9B5FEF;
+  transform: scale(1.05);
+}
+
+.add-to-cart-btn:disabled {
+  background-color: #808080;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Bouton "Déjà ajouté" (style spécifique) */
+.add-to-cart-btn.disabled {
+  background-color: #FF6B6B;
+  color: #FFFFFF;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.add-to-cart-btn.disabled:hover {
+  background-color: #FF6B6B;
+  transform: none;
+}
