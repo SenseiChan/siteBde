@@ -129,3 +129,13 @@ a.cancel-btn {
 a.cancel-btn:hover {
     background-color: #FF4949;
 }
+
+/* Image par défaut */
+
+.image-container img {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-content">
                 <div class="image-container">
                     <label for="Photo_prod" class="image-label">
-                        <img src="imagesAdmin/default_product.png" alt="Image par défaut" id="product-image">
+                        <img src="image/default_product.png" alt="Image par défaut" id="product-image">
                     </label>
                     <input type="file" name="Photo_prod" id="Photo_prod" accept=".jpg, .jpeg, .png" hidden>
                 </div>
