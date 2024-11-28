@@ -24,7 +24,7 @@ try {
 }
 
 // Ajouter une nouvelle promotion
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom_promo'])) {
     $nom_promo = trim($_POST['nom_promo']);
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
@@ -52,28 +52,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Récupérer les promotions existantes
+// Supprimer une promotion
+if (isset($_POST['delete_promo_id'])) {
+    $promo_id = intval($_POST['delete_promo_id']);
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM promotion WHERE Id_promo = :id");
+        $stmt->execute(['id' => $promo_id]);
+        $success_message = "La promotion a été supprimée avec succès.";
+    } catch (PDOException $e) {
+        $error_message = "Erreur lors de la suppression de la promotion : " . $e->getMessage();
+    }
+}
+
+// Récupérer les promotions et séparer en deux catégories
 $promotions_en_cours = [];
-$autres_promotions = [];
+$promotions_autres = [];
+
 try {
-    $stmt = $pdo->prepare("
-        SELECT * FROM promotion
-        ORDER BY Date_fin_promo DESC
-    ");
+    $stmt = $pdo->prepare("SELECT * FROM promotion ORDER BY Date_fin_promo DESC");
     $stmt->execute();
     $promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $currentDate = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
-    // Séparer les promotions en deux catégories
     foreach ($promotions as $promo) {
         $startDate = new DateTime($promo['Date_deb_promo'], new DateTimeZone('Europe/Paris'));
         $endDate = new DateTime($promo['Date_fin_promo'], new DateTimeZone('Europe/Paris'));
 
         if ($currentDate >= $startDate && $currentDate <= $endDate) {
-            $promotions_en_cours[] = $promo;
+            $promotions_en_cours[] = $promo; // En cours
         } else {
-            $autres_promotions[] = $promo;
+            $promotions_autres[] = $promo; // Expirées ou en attente
         }
     }
 } catch (PDOException $e) {
@@ -131,23 +141,36 @@ try {
                         <th>Date début</th>
                         <th>Date fin</th>
                         <th>Pourcentage</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($promotions_en_cours as $promo): ?>
+                    <?php if (empty($promotions_en_cours)): ?>
                         <tr>
-                            <td><?= htmlspecialchars($promo['Nom_promo']) ?></td>
-                            <td><?= (new DateTime($promo['Date_deb_promo']))->format('d M Y à H:i') ?></td>
-                            <td><?= (new DateTime($promo['Date_fin_promo']))->format('d M Y à H:i') ?></td>
-                            <td><?= htmlspecialchars($promo['Pourcentage_promo']) ?>%</td>
+                            <td colspan="5">Aucune promotion en cours.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($promotions_en_cours as $promo): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($promo['Nom_promo']) ?></td>
+                                <td><?= (new DateTime($promo['Date_deb_promo']))->format('d M Y à H:i') ?></td>
+                                <td><?= (new DateTime($promo['Date_fin_promo']))->format('d M Y à H:i') ?></td>
+                                <td><?= htmlspecialchars($promo['Pourcentage_promo']) ?>%</td>
+                                <td>
+                                    <form method="post" class="delete-form">
+                                        <input type="hidden" name="delete_promo_id" value="<?= htmlspecialchars($promo['Id_promo']) ?>">
+                                        <button type="submit" class="delete-btn">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- Autres promotions -->
-        <h2>Autres promotions</h2>
+        <!-- Promotions en attente ou expirées -->
+        <h2>Promotions en attente ou expirées</h2>
         <div class="promo-table">
             <table>
                 <thead>
@@ -157,24 +180,37 @@ try {
                         <th>Date fin</th>
                         <th>Pourcentage</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($autres_promotions as $promo): ?>
-                        <?php
-                        $currentDate = new DateTime('now', new DateTimeZone('Europe/Paris'));
-                        $startDate = new DateTime($promo['Date_deb_promo'], new DateTimeZone('Europe/Paris'));
-                        $endDate = new DateTime($promo['Date_fin_promo'], new DateTimeZone('Europe/Paris'));
-                        $status = ($currentDate < $startDate) ? 'En attente' : 'Expiré';
-                        ?>
+                    <?php if (empty($promotions_autres)): ?>
                         <tr>
-                            <td><?= htmlspecialchars($promo['Nom_promo']) ?></td>
-                            <td><?= $startDate->format('d M Y à H:i') ?></td>
-                            <td><?= $endDate->format('d M Y à H:i') ?></td>
-                            <td><?= htmlspecialchars($promo['Pourcentage_promo']) ?>%</td>
-                            <td><?= $status ?></td>
+                            <td colspan="6">Aucune promotion en attente ou expirée.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($promotions_autres as $promo): ?>
+                            <?php
+                            $currentDate = new DateTime('now', new DateTimeZone('Europe/Paris'));
+                            $startDate = new DateTime($promo['Date_deb_promo'], new DateTimeZone('Europe/Paris'));
+                            $endDate = new DateTime($promo['Date_fin_promo'], new DateTimeZone('Europe/Paris'));
+                            $status = ($currentDate < $startDate) ? 'En attente' : 'Expirée';
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($promo['Nom_promo']) ?></td>
+                                <td><?= $startDate->format('d M Y à H:i') ?></td>
+                                <td><?= $endDate->format('d M Y à H:i') ?></td>
+                                <td><?= htmlspecialchars($promo['Pourcentage_promo']) ?>%</td>
+                                <td><?= $status ?></td>
+                                <td>
+                                    <form method="post" class="delete-form">
+                                        <input type="hidden" name="delete_promo_id" value="<?= htmlspecialchars($promo['Id_promo']) ?>">
+                                        <button type="submit" class="delete-btn">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

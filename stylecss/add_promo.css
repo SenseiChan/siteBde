@@ -169,3 +169,21 @@ tr:hover {
 .promo-table tbody tr:hover {
     background-color: #555;
 }
+
+/* Supprimer une promo */
+
+.delete-btn {
+    padding: 5px 10px;
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.delete-btn:hover {
+    background-color: #E34A4A;
+}
