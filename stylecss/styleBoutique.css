@@ -394,6 +394,7 @@ body.blur *:not(.grades):not(.no-blur) {
     padding: 10px;
     font-size: 14px;
     cursor: pointer;
+    text-decoration: none;
     margin-top: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     width: 100%; /* Prend toute la largeur pour un alignement propre */
@@ -565,4 +566,25 @@ body.blur *:not(.grades):not(.no-blur) {
 
 .edit-icon img:hover {
     transform: scale(1.2);
+}
+
+/* Bouton Ajouter une promotion */
+.ajouter-promo-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #FFD700; /* Couleur différente pour distinguer */
+    color: black;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 15px; /* Ajoute un espacement entre les boutons */
+}
+
+.ajouter-promo-btn:hover {
+    background-color: #FFC107;
+    transform: scale(1.05);
 }

@@ -177,23 +177,6 @@ h1, h2 {
     margin-top: 20px;
 }
 
-.return-to-shop-btn {
-    background-color: #444;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.return-to-shop-btn:hover {
-    background-color: #555;
-}
-
 /* Gestion des limites de stock */
 .stock-limit-msg {
     font-size: 0.9rem;
@@ -239,4 +222,74 @@ h1, h2 {
 
 .pay-button:hover {
     background-color: #9B55E3;
+}
+
+/* Style pour la section Code promo */
+.promo-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #3E4148;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.promo-form label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.promo-form input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.promo-form input[type="text"]:focus {
+    border-color: #AC6CFF;
+    box-shadow: 0 0 5px rgba(172, 108, 255, 0.5);
+    outline: none;
+}
+
+.promo-form button {
+    padding: 10px 20px;
+    background-color: #AC6CFF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.promo-form button:hover {
+    background-color: #9B55E3;
+    transform: scale(1.05);
+}
+
+/* Style pour le message d'erreur ou de succès */
+.error-message {
+    color: #FF6B6B;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.success-message {
+    color: #4CAF50;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
 }

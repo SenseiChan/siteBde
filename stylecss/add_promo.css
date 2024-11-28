@@ -1,0 +1,189 @@
+/* Général */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 20px;
+}
+
+main {
+    max-width: 800px;
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    background-color: #34373E;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FFFFFF;
+}
+
+.success-message, .error-message {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.success-message {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+}
+
+.error-message {
+    background-color: #FF6B6B;
+    color: #FFFFFF;
+}
+
+.promo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+label {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="number"], input[type="datetime-local"] {
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #2C2E33;
+    color: #FFFFFF;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #AC6CFF;
+    box-shadow: 0 0 5px rgba(172, 108, 255, 0.5);
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #AC6CFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #9B55E3;
+}
+
+/* Table des promotions */
+.promo-table {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #444;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #3E4148;
+}
+
+tr:nth-child(odd) {
+    background-color: #2C2E33;
+}
+
+th {
+    color: #AC6CFF;
+    font-weight: bold;
+}
+
+td {
+    color: #FFFFFF;
+}
+
+tr:hover {
+    background-color: #555;
+}
+
+/* Rajoute un scroll */
+
+.promo-table {
+    max-height: 400px; /* Limite la hauteur à 400px */
+    overflow-y: auto; /* Ajoute un scroll vertical si nécessaire */
+    margin-bottom: 20px;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+.promo-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.promo-table th, .promo-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+.promo-table th {
+    background-color: #444;
+    color: #AC6CFF;
+}
+
+.promo-table tbody tr:nth-child(odd) {
+    background-color: #2C2E33;
+}
+
+.promo-table tbody tr:nth-child(even) {
+    background-color: #3E4148;
+}
+
+.promo-table tbody tr:hover {
+    background-color: #555;
+}
+
+/* Supprimer une promo */
+
+.delete-btn {
+    padding: 5px 10px;
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.delete-btn:hover {
+    background-color: #E34A4A;
+}

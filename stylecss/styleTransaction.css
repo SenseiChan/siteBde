@@ -1,94 +1,96 @@
 /* Général */
 main h1 {
-    color: #FFD700;
+    color: #4DB6AC; /* Bleu-vert lumineux */
     margin-bottom: 20px;
+    text-align: center;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
 }
 
+/* Conteneur du tableau (ajout pour gérer le scroll) */
+.table-wrapper {
+    max-height: 522px; /* Hauteur maximale du tableau (ajustez la valeur en fonction de vos besoins) */
+    overflow-y: auto;  /* Ajoute une barre de défilement verticale si nécessaire */
+    margin-top: 20px;  /* Pour un peu d'espace au-dessus du tableau */
+    border: 1px solid #333; /* Optionnel : une bordure pour mieux délimiter la zone */
+}
+
+/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #3A3F44;
+    background-color: #1F1F1F; /* Gris très foncé */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-table th, table td {
-    border: 1px solid #444;
-    padding: 10px;
-    text-align: center;
-}
-
+/* Fixer l'en-tête du tableau */
 table th {
-    background-color: #9B5FEF;
-    color: #000;
+    background-color: #263238; /* Bleu-vert foncé */
+    color: #ECEFF1; /* Blanc cassé */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 1; /* S'assurer que l'en-tête reste au-dessus du contenu */
+    border-bottom: 2px solid #333; /* Légère bordure pour mieux délimiter l'en-tête */
+}
+
+/* Style des cellules du tableau */
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    border-bottom: 1px solid #333; /* Gris foncé */
 }
 
 table td {
-    color: #FFF;
+    color: #B0BEC5; /* Gris clair */
+    background-color: #1C1C1C; /* Gris très foncé */
 }
 
-table tr:nth-child(even) {
-    background-color: #2E3136;
+table tr:nth-child(even) td {
+    background-color: #212121; /* Gris légèrement plus clair */
 }
 
-table tr:hover {
-    background-color: #444;
-}
-
-/* Style pour "Oui" */
-.oui {
-    color: #28a745;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
+table tr:hover td {
+    background-color: #37474F; /* Gris-bleu foncé */
     cursor: pointer;
+}
+
+/* Boutons de paiement */
+.oui {
+    background-color: #4CAF50; /* Vert */
+    color: white;
+    font-weight: bold;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .oui:hover {
-    background-color: #28a745;
-    color: #FFF;
+    background-color: #45A049;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Style pour "Non" */
 .non {
-    color: #dc3545;
+    background-color: #F44336; /* Rouge */
+    color: white;
     font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 3px;
     cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .non:hover {
-    background-color: #dc3545;
-    color: #FFF;
-}
-
-/* Autres styles généraux */
-table th, table td {
-    border: 1px solid #444;
-    padding: 10px;
-    text-align: center;
-}
-
-/* Style spécifique pour la colonne des produits */
-table td:nth-child(4) {
-    word-wrap: break-word; /* Permet de couper les mots longs si nécessaire */
-    max-width: 200px; /* Limite la largeur de la colonne */
-}
-
-/* Style pour les boutons et formulaires */
-form {
-    display: inline-block;
-    text-align: center;
-}
-
-button {
-    background-color: transparent;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    font-size: inherit;
-}
-
-button:hover {
-    background-color: transparent;
+    background-color: #E53935;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

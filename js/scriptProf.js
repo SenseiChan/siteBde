@@ -195,3 +195,99 @@ document.addEventListener('DOMContentLoaded', () => {
         badgeModal.classList.add('hidden');
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleRoleButton = document.querySelector('#toggle-role-btn');
+
+    if (toggleRoleButton) {
+        toggleRoleButton.addEventListener('click', () => {
+            const userId = toggleRoleButton.dataset.userId;
+            console.log("ok")
+
+            // Send an AJAX request to toggle the user's role
+            fetch('toggle_role.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the button text
+                        toggleRoleButton.textContent = data.newRole === 2 
+                            ? 'Rétrograder en Membre' 
+                            : 'Promouvoir en Admin';
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Une erreur est survenue.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        });
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addEventButton = document.querySelector('.add-event-btn');
+    const modal = document.querySelector('.modal-add-event');
+    const closeModal = document.querySelector('.close-modal-event');
+    const form = document.getElementById('add-event-form');
+
+    // Ouvrir la modalité
+    addEventButton.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    // Fermer la modalité
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Soumettre le formulaire
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('add_calandar.php', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('Événement ajouté avec succès');
+                    modal.classList.add('hidden');
+                    location.reload(); // Recharge la page pour afficher l'événement dans le calendrier
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch((error) => console.error('Erreur:', error));
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const profilePicInput = document.getElementById('profile-pic-input');
+    const profilePicForm = document.getElementById('profile-pic-form');
+    const profilePicPreview = document.getElementById('profile-pic-preview');
+
+    profilePicInput.addEventListener('change', () => {
+        if (profilePicInput.files && profilePicInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                profilePicPreview.src = e.target.result; // Prévisualiser la nouvelle image
+            };
+            reader.readAsDataURL(profilePicInput.files[0]);
+
+            // Envoyer automatiquement le formulaire
+            profilePicForm.submit();
+        }
+    });
+});

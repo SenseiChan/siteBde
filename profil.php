@@ -40,6 +40,7 @@ $userQuery = $pdo->prepare("
         u.Tel_user, 
         u.Email_user, 
         u.Photo_user, 
+        u.Id_role,
         g.Nom_grade,
         a.NomNumero_rue, 
         a.Ville, 
@@ -63,28 +64,45 @@ $currentMonth = isset($_GET['month']) ? intval($_GET['month']) : date('m');
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
 
 function getUserEvents($pdo, $userId, $month, $year) {
-    $query = $pdo->prepare("
-        SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
+    // Récupérer les événements auxquels l'utilisateur participe
+    $eventQuery = $pdo->prepare("
+        SELECT e.Nom_event AS name, e.Desc_event AS description, e.Date_deb_event AS date, e.Heure_deb_event AS time
         FROM evenement e
         JOIN participer p ON e.Id_event = p.Id_event
         WHERE p.Id_user = :userId
         AND MONTH(e.Date_deb_event) = :month
         AND YEAR(e.Date_deb_event) = :year
     ");
-    $query->execute([
+    $eventQuery->execute([
         'userId' => $userId,
         'month' => $month,
         'year' => $year
     ]);
+    $events = $eventQuery->fetchAll(PDO::FETCH_ASSOC);
 
-    return $query->fetchAll(PDO::FETCH_ASSOC);
+    // Récupérer les événements créés par l'utilisateur dans son agenda
+    $calendarQuery = $pdo->prepare("
+        SELECT c.Nom_calend AS name, c.Desc_calend AS description, DATE(c.DateHeure_calend) AS date, TIME(c.DateHeure_calend) AS time
+        FROM calendrier c
+        WHERE c.Id_user = :userId
+        AND MONTH(c.DateHeure_calend) = :month
+        AND YEAR(c.DateHeure_calend) = :year
+    ");
+    $calendarQuery->execute([
+        'userId' => $userId,
+        'month' => $month,
+        'year' => $year
+    ]);
+    $calendarEvents = $calendarQuery->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fusionner les événements des deux tables
+    return array_merge($events, $calendarEvents);
 }
-
 $userEvents = getUserEvents($pdo, $userId, $currentMonth, $currentYear);
 
 $eventsByDay = [];
 foreach ($userEvents as $event) {
-    $day = (int) date('j', strtotime($event['Date_deb_event']));
+    $day = (int) date('j', strtotime($event['date']));
     $eventsByDay[$day][] = $event;
 }
 
@@ -131,6 +149,47 @@ $userBadgesQuery = $pdo->prepare("
 $userBadgesQuery->execute(['userId' => $userId]);
 $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
+    $file = $_FILES['profile-pic'];
+
+    // Vérifier que c'est une image
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($file['type'], $allowedTypes)) {
+        echo "Type de fichier non valide.";
+        exit;
+    }
+
+    // Déplacer le fichier
+    $uploadDir = 'imagesAdmin/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    $fileName = $userId . '_' . time() . '_' . basename($file['name']);
+    $filePath = $uploadDir . $fileName;
+
+    if (move_uploaded_file($file['tmp_name'], $filePath)) {
+        // Mettre à jour la BDD
+        $updateQuery = $pdo->prepare("
+            UPDATE utilisateur 
+            SET Photo_user = :photo 
+            WHERE Id_user = :id
+        ");
+        $updateQuery->execute([
+            ':photo' => $filePath,
+            ':id' => $userId
+        ]);
+
+        // Actualiser la session si besoin
+        $_SESSION['Photo_user'] = $filePath;
+
+        // Rediriger pour éviter le rechargement du formulaire
+        header("Location: profil.php");
+        exit;
+    } else {
+        echo "Erreur lors du téléchargement de l'image.";
+    }
+}
+
 ?>
 
 
@@ -144,62 +203,33 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
   <link rel="stylesheet" href="stylecss/styleProf.css"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
-  <header class="blur-target">
-    <div class="header-container">
-        <!-- Logo -->
-        <div class="logo">
-            <img src="image/logoAdiil.png" alt="Logo BDE">
-        </div>
-
-        <!-- Menu Admin -->
-        <?php if ($is_admin): ?>
-        <div class="dropdown">
-            <button class="dropdown-toggle">Admin</button>
-            <div class="dropdown-menu">
-            <a href="espace_partage.php">Espace partagé</a>
-            <a href="gestionMembre.php">Gestion membre</a>
-            <a href="statistique.php">Statistique</a>
-            <a href="banque.php">Banque</a>
-            <a href="chat_admin.php">Chat Administrateur</a>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- Navigation -->
-        <nav>
-            <ul class="nav-links">
-                <li><a href="accueil.php">Accueil</a></li>
-                <li><a href="events.php">Événements</a></li>
-                <li><a href="boutique.php">Boutique</a></li>
-                <li><a href="bde.php">BDE</a></li>
-                <li><a href="faq.php">FAQ</a></li>
-            </ul>
-        </nav>
-
-        <!-- Boutons / Profil -->
-        <div class="header-buttons">
-            <?php
-            if ($userId!=null):
-            ?>
-                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Profil" class="profile-icon">
-                <form action="logout.php" method="post" class="logout-form">
-                    <button type="submit" class="logout-button">Se déconnecter</button>
-                </form>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
-            <?php endif; ?>
-        </div>
-      </div>
-  </header>
-
+  <?php
+  $originalUserId = $userId; // Sauvegarder l'ID initial
+  include 'header.php';
+  $userId = $originalUserId; // Restaurer après inclusion
+  ?>
   <main class="blur-target">
     <br><br><br>
         <div class="profile-header">
             <div class="profile-title">
                 <h1><?= htmlspecialchars($user['Prenom_user'] . ' ' . $user['Nom_user']) ?></h1>
-                <p><?= htmlspecialchars($user['Nom_grade'] ?? 'Membre') ?></p>
+                <p><?= $user['Id_role'] == 2 ? 'Admin' : 'Membre' ?></p>
+                <?php
+
+                if ($is_admin && $userId !== $_SESSION['user_id']): ?>
+                    <button id="toggle-role-btn" data-user-id="<?= htmlspecialchars($userId) ?>" 
+                            class="toggle-role-btn">
+                        <?= $user['Id_role'] == 2 ? 'Rétrograder en Membre' : 'Promouvoir en Admin' ?>
+                    </button>
+                <?php endif; ?>
             </div>
             <div class="profile-picture">
-                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Photo de profil">
+                <form id="profile-pic-form" enctype="multipart/form-data" method="post">
+                    <label for="profile-pic-input">
+                        <img src="<?= htmlspecialchars($user['Photo_user']) ?>" alt="Profil" class="profile-icon" id="profile-pic-preview">
+                    </label>
+                    <input type="file" id="profile-pic-input" name="profile-pic" accept="image/*" style="display: none;">
+                </form>
             </div>
         </div>
 
@@ -212,24 +242,27 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
                   <button onclick="changeMonth(-1)">&#8592;</button>
                   <h3><?= date('F Y', mktime(0, 0, 0, $currentMonth, 1, $currentYear)) ?></h3>
                   <button onclick="changeMonth(1)">&#8594;</button>
+                  <button class="add-event-btn">+ Ajouter</button>
               </div>
               <div class="calendar-grid">
-                  <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
-                      <div class="calendar-day">
-                          <span class="day-number"><?= $day ?></span>
-                          <?php if (isset($eventsByDay[$day])): ?>
-                              <div class="events">
-                                  <?php foreach ($eventsByDay[$day] as $event): ?>
-                                      <div class="event">
-                                          <strong><?= htmlspecialchars($event['Nom_event']) ?></strong>
-                                          <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-                                      </div>
-                                  <?php endforeach; ?>
-                              </div>
-                          <?php endif; ?>
-                      </div>
-                  <?php endfor; ?>
+                    <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
+                        <div class="calendar-day">
+                            <span class="day-number"><?= $day ?></span>
+                            <?php if (isset($eventsByDay[$day])): ?>
+                                <div class="events">
+                                    <?php foreach ($eventsByDay[$day] as $event): ?>
+                                        <div class="event">
+                                            <strong><?= htmlspecialchars($event['name']) ?></strong>
+                                            <p><?= htmlspecialchars($event['description']) ?></p>
+                                            <small><?= htmlspecialchars($event['time']) ?></small>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endfor; ?>
                 </div>
+
               </div>
             <!-- Informations -->
             <div class="right">
@@ -341,6 +374,27 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             </div>
         </div>
         <button class="close-badge-modal">X</button>
+    </div>
+        <div class="modal-add-event hidden">
+        <h2>Ajouter un événement</h2>
+        <form id="add-event-form">
+            <label for="event-name">Nom de l'événement</label>
+            <input type="text" id="event-name" name="event-name" required>
+
+            <label for="event-date">Date</label>
+            <input type="date" id="event-date" name="event-date" required>
+
+            <label for="event-time">Heure</label>
+            <input type="time" id="event-time" name="event-time" required>
+
+            <label for="event-desc">Description</label>
+            <textarea id="event-desc" name="event-desc" rows="4" required></textarea>
+
+            <div class="modal-footer">
+                <button type="submit" class="save-event-btn">Enregistrer</button>
+                <button type="button" class="close-modal-event">Fermer</button>
+            </div>
+        </form>
     </div>
     <script src="js/scriptProf.js"></script>
 </body>
