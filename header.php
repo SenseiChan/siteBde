@@ -8,6 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
+<<<<<<< HEAD
 // Récupération des informations utilisateur
 $photoquery = $pdo->prepare("
     SELECT  
@@ -21,6 +22,8 @@ $userphoto = $photoquery->fetch(PDO::FETCH_ASSOC);
 // Chemin par défaut pour l'image de profil
 $profileImage = $userphoto['Photo_user'];
 
+=======
+>>>>>>> f4e73d54c42e79226a572e209450bfde044fb78a
 // Fonction pour vérifier si une page est active
 function isActive($page) {
     return basename($_SERVER['PHP_SELF']) === $page ? 'active' : '';

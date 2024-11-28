@@ -63,6 +63,19 @@ if ($userId) {
     }
 }
 
+// Limiter les événements passés aux 3 plus récents
+if (!empty($pastEvents)) {
+  usort($pastEvents, function ($a, $b) {
+      return strtotime($b['Date_deb_event']) - strtotime($a['Date_deb_event']);
+  });
+
+  // Garder uniquement les 3 derniers événements passés
+  $pastEvents = array_slice($pastEvents, 0, 3);
+
+  // Regrouper à nouveau les 3 derniers événements par mois
+  $pastEventsGrouped = groupEventsByMonth($pastEvents);
+}
+
 // Fonction pour vérifier si un utilisateur est inscrit à un événement
 function isUserRegistered($pdo, $userId, $eventId) {
     $query = "SELECT COUNT(*) FROM Participer WHERE Id_user = :userId AND Id_event = :eventId";
@@ -107,6 +120,23 @@ foreach ($events as $event) {
         $pastEvents[] = $event;
     }
 }
+
+// Limiter les événements passés aux 3 plus récents
+if (!empty($pastEvents)) {
+    usort($pastEvents, function ($a, $b) {
+        return strtotime($b['Date_deb_event']) - strtotime($a['Date_deb_event']);
+    });
+
+    // Garder uniquement les 3 derniers événements passés
+    $pastEvents = array_slice($pastEvents, 0, 3);
+
+    // Regrouper à nouveau les 3 derniers événements par mois
+    $pastEventsGrouped = groupEventsByMonth($pastEvents);
+}
+
+// Regrouper les événements à venir par mois
+$upcomingEventsGrouped = groupEventsByMonth($upcomingEvents);
+
 
 // Fonction pour formater les mois en français (pour les sections)
 function formatMonthYear($date) {
@@ -301,18 +331,6 @@ $pastEventsGrouped = groupEventsByMonth($pastEvents);
                       </div>
                   </div>
                   <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-
-                  <?php if (isUserRegistered($pdo, $userId, $event['Id_event'])): ?>
-                      <button class="register-btn disabled" disabled>Déjà inscrit</button>
-                  <?php else: ?>
-                      <a href="inscription_event.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="register-btn">S'inscrire</a>
-                  <?php endif; ?>
-
-                  <?php if ($isAdmin): ?>
-                      <div class="participants-button-container">
-                          <a href="voir_participant.php?id=<?= htmlspecialchars($event['Id_event']) ?>" class="show-participants-btn">Voir les participants</a>
-                      </div>
-                  <?php endif; ?>
               </div>
 
               </div>
