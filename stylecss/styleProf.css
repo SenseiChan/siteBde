@@ -280,6 +280,10 @@ header {
     transition: background-color 0.3s ease; /* Optionnel : transition fluide pour les survols */
 }
 
+.calendar-header button{
+    padding: 5px;
+}
+
 .right button{
     padding-top: 10px;
     padding-bottom: 10px;
@@ -526,4 +530,67 @@ header {
 
 .toggle-role-btn:hover {
     background-color: #808080;
+}
+
+
+
+.modal-add-event {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2F1C48;
+    border: 2px solid #AC6CFF;
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    color: white;
+}
+
+.modal-add-event.hidden {
+    display: none;
+}
+
+.modal-add-event h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.modal-add-event label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.modal-add-event input,
+.modal-add-event textarea {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #AC6CFF;
+    border-radius: 5px;
+    background-color: #1F0E34;
+    color: white;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.save-event-btn,
+.close-modal-event {
+    background-color: #AC6CFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.save-event-btn:hover,
+.close-modal-event:hover {
+    background-color: #9B5FEF;
 }

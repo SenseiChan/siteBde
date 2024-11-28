@@ -230,3 +230,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addEventButton = document.querySelector('.add-event-btn');
+    const modal = document.querySelector('.modal-add-event');
+    const closeModal = document.querySelector('.close-modal-event');
+    const form = document.getElementById('add-event-form');
+
+    // Ouvrir la modalité
+    addEventButton.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    // Fermer la modalité
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Soumettre le formulaire
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('add_calandar.php', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('Événement ajouté avec succès');
+                    modal.classList.add('hidden');
+                    location.reload(); // Recharge la page pour afficher l'événement dans le calendrier
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch((error) => console.error('Erreur:', error));
+    });
+});

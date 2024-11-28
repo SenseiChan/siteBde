@@ -64,30 +64,48 @@ $currentMonth = isset($_GET['month']) ? intval($_GET['month']) : date('m');
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
 
 function getUserEvents($pdo, $userId, $month, $year) {
-    $query = $pdo->prepare("
-        SELECT e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event
+    // Récupérer les événements auxquels l'utilisateur participe
+    $eventQuery = $pdo->prepare("
+        SELECT e.Nom_event AS name, e.Desc_event AS description, e.Date_deb_event AS date, e.Heure_deb_event AS time
         FROM evenement e
         JOIN participer p ON e.Id_event = p.Id_event
         WHERE p.Id_user = :userId
         AND MONTH(e.Date_deb_event) = :month
         AND YEAR(e.Date_deb_event) = :year
     ");
-    $query->execute([
+    $eventQuery->execute([
         'userId' => $userId,
         'month' => $month,
         'year' => $year
     ]);
+    $events = $eventQuery->fetchAll(PDO::FETCH_ASSOC);
 
-    return $query->fetchAll(PDO::FETCH_ASSOC);
+    // Récupérer les événements créés par l'utilisateur dans son agenda
+    $calendarQuery = $pdo->prepare("
+        SELECT c.Nom_calend AS name, c.Desc_calend AS description, DATE(c.DateHeure_calend) AS date, TIME(c.DateHeure_calend) AS time
+        FROM calendrier c
+        WHERE c.Id_user = :userId
+        AND MONTH(c.DateHeure_calend) = :month
+        AND YEAR(c.DateHeure_calend) = :year
+    ");
+    $calendarQuery->execute([
+        'userId' => $userId,
+        'month' => $month,
+        'year' => $year
+    ]);
+    $calendarEvents = $calendarQuery->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fusionner les événements des deux tables
+    return array_merge($events, $calendarEvents);
 }
-
 $userEvents = getUserEvents($pdo, $userId, $currentMonth, $currentYear);
 
 $eventsByDay = [];
 foreach ($userEvents as $event) {
-    $day = (int) date('j', strtotime($event['Date_deb_event']));
+    $day = (int) date('j', strtotime($event['date']));
     $eventsByDay[$day][] = $event;
 }
+
 
 $transactionQuery = $pdo->prepare("
     SELECT 
@@ -175,24 +193,27 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
                   <button onclick="changeMonth(-1)">&#8592;</button>
                   <h3><?= date('F Y', mktime(0, 0, 0, $currentMonth, 1, $currentYear)) ?></h3>
                   <button onclick="changeMonth(1)">&#8594;</button>
+                  <button class="add-event-btn">+ Ajouter</button>
               </div>
               <div class="calendar-grid">
-                  <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
-                      <div class="calendar-day">
-                          <span class="day-number"><?= $day ?></span>
-                          <?php if (isset($eventsByDay[$day])): ?>
-                              <div class="events">
-                                  <?php foreach ($eventsByDay[$day] as $event): ?>
-                                      <div class="event">
-                                          <strong><?= htmlspecialchars($event['Nom_event']) ?></strong>
-                                          <p><?= htmlspecialchars($event['Desc_event']) ?></p>
-                                      </div>
-                                  <?php endforeach; ?>
-                              </div>
-                          <?php endif; ?>
-                      </div>
-                  <?php endfor; ?>
+                    <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
+                        <div class="calendar-day">
+                            <span class="day-number"><?= $day ?></span>
+                            <?php if (isset($eventsByDay[$day])): ?>
+                                <div class="events">
+                                    <?php foreach ($eventsByDay[$day] as $event): ?>
+                                        <div class="event">
+                                            <strong><?= htmlspecialchars($event['name']) ?></strong>
+                                            <p><?= htmlspecialchars($event['description']) ?></p>
+                                            <small><?= htmlspecialchars($event['time']) ?></small>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endfor; ?>
                 </div>
+
               </div>
             <!-- Informations -->
             <div class="right">
@@ -304,6 +325,27 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
             </div>
         </div>
         <button class="close-badge-modal">X</button>
+    </div>
+        <div class="modal-add-event hidden">
+        <h2>Ajouter un événement</h2>
+        <form id="add-event-form">
+            <label for="event-name">Nom de l'événement</label>
+            <input type="text" id="event-name" name="event-name" required>
+
+            <label for="event-date">Date</label>
+            <input type="date" id="event-date" name="event-date" required>
+
+            <label for="event-time">Heure</label>
+            <input type="time" id="event-time" name="event-time" required>
+
+            <label for="event-desc">Description</label>
+            <textarea id="event-desc" name="event-desc" rows="4" required></textarea>
+
+            <div class="modal-footer">
+                <button type="submit" class="save-event-btn">Enregistrer</button>
+                <button type="button" class="close-modal-event">Fermer</button>
+            </div>
+        </form>
     </div>
     <script src="js/scriptProf.js"></script>
 </body>
