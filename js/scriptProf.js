@@ -271,3 +271,23 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch((error) => console.error('Erreur:', error));
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const profilePicInput = document.getElementById('profile-pic-input');
+    const profilePicForm = document.getElementById('profile-pic-form');
+    const profilePicPreview = document.getElementById('profile-pic-preview');
+
+    profilePicInput.addEventListener('change', () => {
+        if (profilePicInput.files && profilePicInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                profilePicPreview.src = e.target.result; // Prévisualiser la nouvelle image
+            };
+            reader.readAsDataURL(profilePicInput.files[0]);
+
+            // Envoyer automatiquement le formulaire
+            profilePicForm.submit();
+        }
+    });
+});

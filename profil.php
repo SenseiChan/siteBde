@@ -106,7 +106,6 @@ foreach ($userEvents as $event) {
     $eventsByDay[$day][] = $event;
 }
 
-
 $transactionQuery = $pdo->prepare("
     SELECT 
         t.Montant_trans, 
@@ -150,6 +149,47 @@ $userBadgesQuery = $pdo->prepare("
 $userBadgesQuery->execute(['userId' => $userId]);
 $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
+    $file = $_FILES['profile-pic'];
+
+    // Vérifier que c'est une image
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($file['type'], $allowedTypes)) {
+        echo "Type de fichier non valide.";
+        exit;
+    }
+
+    // Déplacer le fichier
+    $uploadDir = 'imagesAdmin/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    $fileName = $userId . '_' . time() . '_' . basename($file['name']);
+    $filePath = $uploadDir . $fileName;
+
+    if (move_uploaded_file($file['tmp_name'], $filePath)) {
+        // Mettre à jour la BDD
+        $updateQuery = $pdo->prepare("
+            UPDATE utilisateur 
+            SET Photo_user = :photo 
+            WHERE Id_user = :id
+        ");
+        $updateQuery->execute([
+            ':photo' => $filePath,
+            ':id' => $userId
+        ]);
+
+        // Actualiser la session si besoin
+        $_SESSION['Photo_user'] = $filePath;
+
+        // Rediriger pour éviter le rechargement du formulaire
+        header("Location: profil.php");
+        exit;
+    } else {
+        echo "Erreur lors du téléchargement de l'image.";
+    }
+}
+
 ?>
 
 
@@ -163,7 +203,11 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
   <link rel="stylesheet" href="stylecss/styleProf.css"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
-  <?php include 'header.php'; ?>
+  <?php
+  $originalUserId = $userId; // Sauvegarder l'ID initial
+  include 'header.php';
+  $userId = $originalUserId; // Restaurer après inclusion
+  ?>
   <main class="blur-target">
     <br><br><br>
         <div class="profile-header">
@@ -171,7 +215,7 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
                 <h1><?= htmlspecialchars($user['Prenom_user'] . ' ' . $user['Nom_user']) ?></h1>
                 <p><?= $user['Id_role'] == 2 ? 'Admin' : 'Membre' ?></p>
                 <?php
-                // Check if the logged-in user is an admin and viewing another user's profile
+
                 if ($is_admin && $userId !== $_SESSION['user_id']): ?>
                     <button id="toggle-role-btn" data-user-id="<?= htmlspecialchars($userId) ?>" 
                             class="toggle-role-btn">
@@ -180,7 +224,12 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
                 <?php endif; ?>
             </div>
             <div class="profile-picture">
-                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Photo de profil">
+                <form id="profile-pic-form" enctype="multipart/form-data" method="post">
+                    <label for="profile-pic-input">
+                        <img src="<?= htmlspecialchars($user['Photo_user']) ?>" alt="Profil" class="profile-icon" id="profile-pic-preview">
+                    </label>
+                    <input type="file" id="profile-pic-input" name="profile-pic" accept="image/*" style="display: none;">
+                </form>
             </div>
         </div>
 

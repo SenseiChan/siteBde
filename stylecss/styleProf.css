@@ -594,3 +594,13 @@ header {
 .close-modal-event:hover {
     background-color: #9B5FEF;
 }
+
+
+.profile-picture img {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-picture img:hover {
+    transform: scale(1.1);
+}
