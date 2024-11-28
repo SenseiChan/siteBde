@@ -114,7 +114,7 @@ function renderProductSection($pdo, $type, $title) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boutique ADIL</title>
+    <title>Boutique ADIIL</title>
     <link rel="stylesheet" href="stylecss/styleBoutique.css">
 </head>
 <body>

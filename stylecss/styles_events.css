@@ -187,29 +187,6 @@ main {
 }
 
 /* --------------------------------------------- */
-/* Bouton Voir les Participant */
-/* --------------------------------------------- */
-
-.show-participants-btn{
-  background-color: #AC6CFF;
-  color: #FFFFFF;
-  padding: 8px 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  align-self: flex-start;
-  text-decoration: none;
-}
-
-.show-participants-btn:hover {
-  background-color: #9B5FEF;
-  text-decoration: none;
-}
-
-
-/* --------------------------------------------- */
 /* Boutons administrateurs */
 /* --------------------------------------------- */
 
@@ -285,51 +262,6 @@ main {
   transform: translateY(0);
 }
 
-/* --------------------------------------------- */
-/* Footer */
-/* --------------------------------------------- */
-
-.site-footer {
-  background-color: #2D2D2D;
-  color: #FFFFFF;
-  text-align: center;
-  padding: 20px 15px;
-  border-top: 1px solid #444444;
-}
-
-.footer-content p {
-  font-size: 14px;
-  margin: 10px 0;
-  color: #CCCCCC;
-}
-
-.footer-content a {
-  color: #FFFFFF;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.footer-content a:hover {
-  text-decoration: underline;
-}
-
-.footer-icons {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.footer-icons a img {
-  width: 40px;
-  height: auto;
-  transition: transform 0.3s ease;
-}
-
-.footer-icons a img:hover {
-  transform: scale(1.2);
-}
-
 /* Styles pour la popup de succès */
 #success-popup {
   position: fixed;
@@ -351,4 +283,32 @@ main {
   display: none;
 }
 
+/* Positionnement du bouton "Voir les participants" */
+.participants-button-container {
+  display: flex;
+  margin-top: auto; /* Pousse le bouton en bas du conteneur */
+}
 
+.show-participants-btn {
+  background-color: #AC6CFF;
+  color: #FFFFFF;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.show-participants-btn:hover {
+  background-color: #9B5FEF;
+  transform: scale(1.05); /* Léger agrandissement au survol */
+}
+
+/* Conteneur des informations des événements */
+.event-info {
+  display: flex;
+  flex-direction: column; /* Organisation verticale */
+  justify-content: space-between; /* Distribution verticale */
+  height: 100%; /* Occupe toute la hauteur du conteneur */
+}
