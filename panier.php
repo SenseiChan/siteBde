@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+    header("Location: connexion.html");
+    exit;
+}
+
 // Initialisation du panier s'il n'existe pas encore
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
