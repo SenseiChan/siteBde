@@ -195,3 +195,38 @@ document.addEventListener('DOMContentLoaded', () => {
         badgeModal.classList.add('hidden');
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleRoleButton = document.querySelector('#toggle-role-btn');
+
+    if (toggleRoleButton) {
+        toggleRoleButton.addEventListener('click', () => {
+            const userId = toggleRoleButton.dataset.userId;
+            console.log("ok")
+
+            // Send an AJAX request to toggle the user's role
+            fetch('toggle_role.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the button text
+                        toggleRoleButton.textContent = data.newRole === 2 
+                            ? 'Rétrograder en Membre' 
+                            : 'Promouvoir en Admin';
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Une erreur est survenue.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        });
+    }
+});

@@ -40,6 +40,7 @@ $userQuery = $pdo->prepare("
         u.Tel_user, 
         u.Email_user, 
         u.Photo_user, 
+        u.Id_role,
         g.Nom_grade,
         a.NomNumero_rue, 
         a.Ville, 
@@ -144,59 +145,21 @@ $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
   <link rel="stylesheet" href="stylecss/styleProf.css"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
-  <header class="blur-target">
-    <div class="header-container">
-        <!-- Logo -->
-        <div class="logo">
-            <img src="image/logoAdiil.png" alt="Logo BDE">
-        </div>
-
-        <!-- Menu Admin -->
-        <?php if ($is_admin): ?>
-        <div class="dropdown">
-            <button class="dropdown-toggle">Admin</button>
-            <div class="dropdown-menu">
-            <a href="espace_partage.php">Espace partagé</a>
-            <a href="gestionMembre.php">Gestion membre</a>
-            <a href="statistique.php">Statistique</a>
-            <a href="banque.php">Banque</a>
-            <a href="chat_admin.php">Chat Administrateur</a>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- Navigation -->
-        <nav>
-            <ul class="nav-links">
-                <li><a href="accueil.php">Accueil</a></li>
-                <li><a href="events.php">Événements</a></li>
-                <li><a href="boutique.php">Boutique</a></li>
-                <li><a href="bde.php">BDE</a></li>
-                <li><a href="faq.php">FAQ</a></li>
-            </ul>
-        </nav>
-
-        <!-- Boutons / Profil -->
-        <div class="header-buttons">
-            <?php
-            if ($userId!=null):
-            ?>
-                <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Profil" class="profile-icon">
-                <form action="logout.php" method="post" class="logout-form">
-                    <button type="submit" class="logout-button">Se déconnecter</button>
-                </form>
-                <img src="image/logoPanier.png" alt="Panier" class="cartIcon">
-            <?php endif; ?>
-        </div>
-      </div>
-  </header>
-
+  <?php include 'header.php'; ?>
   <main class="blur-target">
     <br><br><br>
         <div class="profile-header">
             <div class="profile-title">
                 <h1><?= htmlspecialchars($user['Prenom_user'] . ' ' . $user['Nom_user']) ?></h1>
-                <p><?= htmlspecialchars($user['Nom_grade'] ?? 'Membre') ?></p>
+                <p><?= $user['Id_role'] == 2 ? 'Admin' : 'Membre' ?></p>
+                <?php
+                // Check if the logged-in user is an admin and viewing another user's profile
+                if ($is_admin && $userId !== $_SESSION['user_id']): ?>
+                    <button id="toggle-role-btn" data-user-id="<?= htmlspecialchars($userId) ?>" 
+                            class="toggle-role-btn">
+                        <?= $user['Id_role'] == 2 ? 'Rétrograder en Membre' : 'Promouvoir en Admin' ?>
+                    </button>
+                <?php endif; ?>
             </div>
             <div class="profile-picture">
                 <img src="<?= htmlspecialchars($user['Photo_user'] ?? 'image/default-profile.png') ?>" alt="Photo de profil">
