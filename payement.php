@@ -37,155 +37,110 @@ if ($promoReduction > 0) {
     $total_amount = $total_amount - ($total_amount * ($promoReduction / 100));
 }
 
-
-
-// Récupération du grade de l'utilisateur si nécessaire
-$stmt_grade = $pdo->prepare("SELECT Id_grade FROM Utilisateur WHERE Id_user = :id_user");
-$stmt_grade->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-$stmt_grade->execute();
-$id_grade = $stmt_grade->fetchColumn();
-
-// Vérification si l'utilisateur existe
-$stmt_check_user = $pdo->prepare("SELECT COUNT(*) FROM Utilisateur WHERE Id_user = :id_user");
-$stmt_check_user->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-$stmt_check_user->execute();
-
-if (!$stmt_check_user->fetchColumn()) {
-    die("Erreur : L'utilisateur avec l'ID $user_id n'existe pas dans la base de données.");
-}
-
 // Traitement du paiement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     $payment_method = $_POST['payment_method'];
 
-    // Gestion des IDs (Promo, Event)
-    $id_promo = $_SESSION['promo_id'] ?? null;
-    $id_event = $_SESSION['event_id'] ?? null;
-
     // Mapper le moyen de paiement sur l'ID
-$payment_method_id = match ($payment_method) {
-    'carte' => 1,
-    'espece' => 2,
-    'cheque' => 3,
-    'paypal' => 4,
-    'virement' => 5,
-    default => throw new Exception("Moyen de paiement invalide.")
-};
+    $payment_method_id = match ($payment_method) {
+        'carte' => 1,
+        'espece' => 2,
+        'cheque' => 3,
+        'paypal' => 4,
+        'virement' => 5,
+        default => throw new Exception("Moyen de paiement invalide.")
+    };
 
     // Préparation de l'insertion dans la table Transactions
-$sql = "INSERT INTO Transactions (
-    Montant_trans, 
-    Date_trans, 
-    Qte_trans, 
-    Payer_trans, 
-    Id_promo, 
-    Id_grade, 
-    Id_event, 
-    Id_prod, 
-    Id_user, 
-    Id_paie
-)
-VALUES (
-    :montant_trans, 
-    :date_trans, 
-    :qte_trans, 
-    :payer_trans, 
-    :id_promo, 
-    :id_grade, 
-    :id_event, 
-    :id_prod, 
-    :id_user, 
-    :id_paie
-)";
+    $sql = "INSERT INTO Transactions (
+        Montant_trans, 
+        Date_trans, 
+        Qte_trans, 
+        Payer_trans, 
+        Id_promo, 
+        Id_grade, 
+        Id_event, 
+        Id_prod, 
+        Id_user, 
+        Id_paie
+    ) VALUES (
+        :montant_trans, 
+        :date_trans, 
+        :qte_trans, 
+        :payer_trans, 
+        :id_promo, 
+        :id_grade, 
+        :id_event, 
+        :id_prod, 
+        :id_user, 
+        :id_paie
+    )";
 
-$stmt = $pdo->prepare($sql);
-
-// Ajout : Inclure l'ID promo si applicable
-$id_promo = $_SESSION['promo_id'] ?? null; // Récupérer l'ID promo stocké dans la session
+    $stmt = $pdo->prepare($sql);
 
     $current_date = date('Y-m-d H:i:s');
-    
-    if ($payment_method_id == 1) {
-        $payer_trans = 1;
-    }else{
-        $payer_trans = 0;
-    }
+    $payer_trans = $payment_method_id == 1 ? 1 : 0;
 
-
-    $grade_mapping = [
-        'grade_diamant' => 3,
-        'grade_or' => 2,
-        'grade_fer' => 1,
-    ];
-    
     foreach ($_SESSION['cart'] as $product_id => $product) {
-        $product_grade = NULL;
+        $product_grade = null;
         $montant_trans = $product['price'] * $product['quantity'];
         $qte_trans = $product['quantity'];
-        
-        if ($product_id == 'grade_diamant') {
-            $product_id = NULL;
-            $product_grade = 3;
+        $id_event = null;
 
-            $stmt->bindParam(':montant_trans', $montant_trans);
-            $stmt->bindParam(':date_trans', $current_date);
-            $stmt->bindParam(':qte_trans', $qte_trans);
-            $stmt->bindParam(':payer_trans', $payer_trans);
-            $stmt->bindParam(':id_promo', $id_promo, PDO::PARAM_INT);
-            $stmt->bindValue(':id_grade', $product_grade, PDO::PARAM_INT);
-            $stmt->bindParam(':id_event', $id_event, PDO::PARAM_INT);
-            $stmt->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_paie', $payment_method_id, PDO::PARAM_INT);
-        } else if ($product_id == 'grade_or') {
-            $product_id = NULL;
-            $product_grade = 2;
+        // Vérifier si le produit est un grade
+        if (in_array($product_id, ['grade_diamant', 'grade_or', 'grade_fer'])) {
+            $product_grade = match ($product_id) {
+                'grade_diamant' => 3,
+                'grade_or' => 2,
+                'grade_fer' => 1,
+                default => null
+            };
+            $product_id = null; // Pas d'ID produit pour un grade
+        }
 
-            $stmt->bindParam(':montant_trans', $montant_trans);
-            $stmt->bindParam(':date_trans', $current_date);
-            $stmt->bindParam(':qte_trans', $qte_trans);
-            $stmt->bindParam(':payer_trans', $payer_trans);
-            $stmt->bindParam(':id_promo', $id_promo, PDO::PARAM_INT);
-            $stmt->bindValue(':id_grade', $product_grade, PDO::PARAM_INT);
-            $stmt->bindParam(':id_event', $id_event, PDO::PARAM_INT);
-            $stmt->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_paie', $payment_method_id, PDO::PARAM_INT);
-        } else if ($product_id == 'grade_diamant') {
-            $product_id = NULL;
-            $product_grade = 1;
+        // Vérifier si le produit est un événement
+        if (strpos($product_id, 'event_') === 0) {
+            $id_event = str_replace('event_', '', $product_id);
+            $product_id = null; // Pas d'ID produit pour un événement
+        }
 
-            $stmt->bindParam(':montant_trans', $montant_trans);
-            $stmt->bindParam(':date_trans', $current_date);
-            $stmt->bindParam(':qte_trans', $qte_trans);
-            $stmt->bindParam(':payer_trans', $payer_trans);
-            $stmt->bindParam(':id_promo', $id_promo, PDO::PARAM_INT);
-            $stmt->bindValue(':id_grade', $product_grade, PDO::PARAM_INT);
-            $stmt->bindParam(':id_event', $id_event, PDO::PARAM_INT);
-            $stmt->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id_paie', $payment_method_id, PDO::PARAM_INT);
-        } else {
-        $stmt->bindParam(':montant_trans', $montant_trans);
-        $stmt->bindParam(':date_trans', $current_date);
-        $stmt->bindParam(':qte_trans', $qte_trans);
-        $stmt->bindParam(':payer_trans', $payer_trans);
-        $stmt->bindParam(':id_promo', $id_promo, PDO::PARAM_INT);
-        $stmt->bindValue(':id_grade', $product_grade, $product_grade === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-        $stmt->bindParam(':id_event', $id_event, PDO::PARAM_INT);
-        $stmt->bindParam(':id_prod', $product_id, PDO::PARAM_INT);
-        $stmt->bindParam(':id_user', $user_id, PDO::PARAM_INT);
-        $stmt->bindParam(':id_paie', $payment_method_id, PDO::PARAM_INT);
-    
-        
+        // Exécuter la transaction
+        $stmt->execute([
+            ':montant_trans' => $montant_trans,
+            ':date_trans' => $current_date,
+            ':qte_trans' => $qte_trans,
+            ':payer_trans' => $payer_trans,
+            ':id_promo' => $_SESSION['promo_id'] ?? null,
+            ':id_grade' => $product_grade,
+            ':id_event' => $id_event,
+            ':id_prod' => $product_id,
+            ':id_user' => $user_id,
+            ':id_paie' => $payment_method_id,
+        ]);
+
+        // Ajouter l'utilisateur à la table de participation pour un événement
+        if ($id_event !== null) {
+            $check_participation = $pdo->prepare("
+                SELECT COUNT(*) 
+                FROM Participer 
+                WHERE Id_user = :id_user AND Id_event = :id_event
+            ");
+            $check_participation->execute([
+                ':id_user' => $user_id,
+                ':id_event' => $id_event,
+            ]);
+
+            // Insérer uniquement si l'utilisateur n'est pas encore inscrit
+            if ($check_participation->fetchColumn() == 0) {
+                $participationSql = "INSERT INTO Participer (Id_user, Id_event) VALUES (:id_user, :id_event)";
+                $participationStmt = $pdo->prepare($participationSql);
+                $participationStmt->execute([
+                    ':id_user' => $user_id,
+                    ':id_event' => $id_event,
+                ]);
+            }
+        }
     }
-    $stmt->execute();
-    }
-    
-    
-    
-    
-    
 
     // Suppression du panier après paiement
     unset($_SESSION['cart']);
