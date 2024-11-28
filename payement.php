@@ -145,6 +145,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     // Suppression du panier après paiement
     unset($_SESSION['cart']);
 
+    // Ajout : Suppression de la réduction et de l'ID promo
+unset($_SESSION['promoReduction']);
+unset($_SESSION['promo_id']);
+
     // Redirection après le paiement
     header('Location: boutique.php');
     exit();
