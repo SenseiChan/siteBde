@@ -96,8 +96,19 @@ foreach ($transactions as $transaction) {
                             <td><?= htmlspecialchars($transaction_group[0]['Qte_trans']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_user'] . ' ' . $transaction_group[0]['Prenom_user']) ?></td>
                             <td><?= htmlspecialchars($transaction_group[0]['Nom_paie']) ?></td>
-                            <td><?= htmlspecialchars($transaction_group[0]['Nom_prod']). htmlspecialchars($transaction_group[0]['Nom_grade']). htmlspecialchars($transaction_group[0]['Nom_event']) ?></td> <!-- Affichage du produit et du grade -->
                             <td>
+                                <?php 
+                                if (!empty($transaction_group[0]['Nom_prod'])) {
+                                    echo htmlspecialchars($transaction_group[0]['Nom_prod']);
+                                } elseif (!empty($transaction_group[0]['Nom_grade'])) {
+                                    echo htmlspecialchars($transaction_group[0]['Nom_grade']);
+                                } elseif (!empty($transaction_group[0]['Nom_event'])) {
+                                    echo htmlspecialchars($transaction_group[0]['Nom_event']);
+                                } else {
+                                    echo 'Aucune information'; // Valeur par défaut si rien n'est défini
+                                }
+                                ?>
+                            </td>                            <td>
                                 <!-- Cliquez sur 'Oui' ou 'Non' pour changer l'état -->
                                 <form method="POST" style="display: inline;">
                                     <input type="hidden" name="transaction_id" value="<?= htmlspecialchars($transaction_id) ?>">

@@ -162,3 +162,54 @@ input:focus {
 .submit-btn:hover {
     background-color: #8A4BFF; /* Changement de couleur au survol */
 }
+
+.signup-btn{
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #AC6CFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    width: 75%; 
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.signup-btn:hover{
+    background-color: #8A4BFF;
+}
+
+select {
+    width: 100%; /* Occupe toute la largeur disponible */
+    max-width: 300px; /* Limite maximale de largeur */
+    padding: 10px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9; /* Couleur de fond */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  /* Ajouter un effet au survol */
+select:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Ajouter un effet au focus */
+  select:focus {
+    border-color: #007BFF; /* Couleur de mise en évidence */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Style des options dans le menu déroulant */
+  option {
+    padding: 10px;
+    font-size: 14px;
+  }
