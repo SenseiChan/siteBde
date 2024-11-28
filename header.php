@@ -8,11 +8,6 @@ if (session_status() === PHP_SESSION_NONE) {
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-// Chemin par défaut pour l'image de profil
-$profileImage = isset($_SESSION['Photo_user']) && !empty($_SESSION['Photo_user']) 
-    ? htmlspecialchars($_SESSION['Photo_user']) 
-    : 'image/default.png';
-
 // Fonction pour vérifier si une page est active
 function isActive($page) {
     return basename($_SERVER['PHP_SELF']) === $page ? 'active' : '';
