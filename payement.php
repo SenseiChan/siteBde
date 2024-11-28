@@ -17,7 +17,7 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    die('Erreur de connexion : ' . $e->getMessage());
 }
 
 // Initialisation des variables
@@ -140,14 +140,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
                 ]);
             }
         }
+
+        // Décrémenter le stock du produit si ce n'est pas un grade ou un événement
+        if ($product_id !== null) {
+            $updateStockSql = "UPDATE Produit SET Stock_prod = Stock_prod - :quantity WHERE Id_prod = :product_id";
+            $updateStockStmt = $pdo->prepare($updateStockSql);
+            $updateStockStmt->execute([
+                ':quantity' => $product['quantity'],
+                ':product_id' => $product_id,
+            ]);
+        }
     }
 
     // Suppression du panier après paiement
     unset($_SESSION['cart']);
 
-    // Ajout : Suppression de la réduction et de l'ID promo
-unset($_SESSION['promoReduction']);
-unset($_SESSION['promo_id']);
+    // Suppression de la réduction et de l'ID promo
+    unset($_SESSION['promoReduction']);
+    unset($_SESSION['promo_id']);
 
     // Redirection après le paiement
     header('Location: boutique.php');
