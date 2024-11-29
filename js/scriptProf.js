@@ -237,14 +237,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.querySelector('.modal-add-event');
     const closeModal = document.querySelector('.close-modal-event');
     const form = document.getElementById('add-event-form');
+    const blurElements = document.querySelectorAll('.blur-target'); // Elements to blur
 
     // Ouvrir la modalité
     addEventButton.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.add('blur'));
         modal.classList.remove('hidden');
     });
 
     // Fermer la modalité
     closeModal.addEventListener('click', () => {
+        blurElements.forEach(element => element.classList.remove('blur'));
         modal.classList.add('hidden');
     });
 
