@@ -125,8 +125,9 @@ $transactionQuery = $pdo->prepare("
 $transactionQuery->execute(['id' => $userId]);
 $transactions = $transactionQuery->fetchAll(PDO::FETCH_ASSOC);
 
+// Préparer les données des badges
 $badgesQuery = $pdo->prepare("
-    SELECT b.Nom_badge, b.Desc_badge, b.Photo_badge
+    SELECT b.Id_badge, b.Nom_badge, b.Desc_badge, b.Photo_badge
     FROM decrocher d
     JOIN badge b ON d.Id_badge = b.Id_badge
     WHERE d.Id_user = :id AND d.Afficher_badge = 1
@@ -135,8 +136,11 @@ $badgesQuery = $pdo->prepare("
 $badgesQuery->execute(['id' => $userId]);
 $badges = $badgesQuery->fetchAll(PDO::FETCH_ASSOC);
 
+// Extraire uniquement les IDs des badges affichés
+$badgeIds = array_column($badges, 'Id_badge');
+
 $allBadgesQuery = $pdo->query("
-    SELECT Id_badge, Nom_badge, Photo_badge
+    SELECT Id_badge, Nom_badge, Desc_badge, Photo_badge
     FROM badge
 ");
 $allBadges = $allBadgesQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -148,6 +152,7 @@ $userBadgesQuery = $pdo->prepare("
 ");
 $userBadgesQuery->execute(['userId' => $userId]);
 $userBadges = $userBadgesQuery->fetchAll(PDO::FETCH_COLUMN, 0);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
     $file = $_FILES['profile-pic'];
@@ -346,8 +351,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
                 <h3>Année :</h3>
                 <div class="badges">
                     <?php foreach (array_slice($allBadges, 0, 3) as $badge): ?>
-                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                        <?php 
+                            $isOwned = in_array($badge['Id_badge'], $userBadges); // Badge possédé
+                            $hasTick = in_array($badge['Id_badge'], $badgeIds); // Badge avec tick
+                            $class = $isOwned ? '' : 'blur'; // Classe "blur" si non possédé
+                        ?>
+                        <div class="badge <?= $class ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                            <?php if ($hasTick): ?>
+                                <div class="tick-mark"></div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -356,8 +369,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
                 <h3>Taux de participations :</h3>
                 <div class="badges">
                     <?php foreach (array_slice($allBadges, 3, 5) as $badge): ?>
-                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                        <?php 
+                            $isOwned = in_array($badge['Id_badge'], $userBadges); // Badge possédé
+                            $hasTick = in_array($badge['Id_badge'], $badgeIds); // Badge avec tick
+                            $class = $isOwned ? '' : 'blur'; // Classe "blur" si non possédé
+                        ?>
+                        <div class="badge <?= $class ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                            <?php if ($hasTick): ?>
+                                <div class="tick-mark"></div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -366,8 +387,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
                 <h3>Grades :</h3>
                 <div class="badges">
                     <?php foreach (array_slice($allBadges, 8, 3) as $badge): ?>
-                        <div class="badge <?php echo in_array($badge['Id_badge'], $userBadges) ? '' : 'blur'; ?>">
+                        <?php 
+                            $isOwned = in_array($badge['Id_badge'], $userBadges); // Badge possédé
+                            $hasTick = in_array($badge['Id_badge'], $badgeIds); // Badge avec tick
+                            $class = $isOwned ? '' : 'blur'; // Classe "blur" si non possédé
+                        ?>
+                        <div class="badge <?= $class ?>">
                             <img src="<?= htmlspecialchars($badge['Photo_badge']) ?>" alt="<?= htmlspecialchars($badge['Nom_badge']) ?>">
+                            <?php if ($hasTick): ?>
+                                <div class="tick-mark"></div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
