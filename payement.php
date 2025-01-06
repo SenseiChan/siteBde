@@ -90,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         // Vérifier si le produit est un grade
         if (in_array($product_id, ['grade_diamant', 'grade_or', 'grade_fer'])) {
             $product_grade = match ($product_id) {
-                'grade_diamant' => 2,
-                'grade_or' => 3,
+                'grade_diamant' => 3,
+                'grade_or' => 2,
                 'grade_fer' => 1,
                 default => null
             };

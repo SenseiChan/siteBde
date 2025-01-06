@@ -41,9 +41,9 @@ function isGradeInCart() {
 
 // Définir les classes CSS désactivées pour les grades
 function getDisabledClass($userGrade, $gradeId) {
-    if ($userGrade == 2) { // L'utilisateur a le grade Diamant
+    if ($userGrade == 3) { // L'utilisateur a le grade Diamant
         return 'disabled'; // Tous les grades sont bloqués
-    } elseif ($userGrade == 3 && in_array($gradeId, [1, 3])) { // L'utilisateur a le grade Or
+    } elseif ($userGrade == 2 && in_array($gradeId, [1, 3])) { // L'utilisateur a le grade Or
         return 'disabled'; // Fer et Or sont bloqués
     } elseif ($userGrade == 1 && $gradeId == 1) { // L'utilisateur a le grade Fer
         return 'disabled'; // Fer est bloqué
