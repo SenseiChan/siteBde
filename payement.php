@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
     };
 
     // Préparation de l'insertion dans la table Transactions
-    $sql = "INSERT INTO Transactions (
+    $sql = "INSERT INTO transactions (
         Montant_trans, 
         Date_trans, 
         Qte_trans, 
