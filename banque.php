@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Déplacement du fichier
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
         try {
-            $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
+            $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $query = "INSERT INTO Fichier (Date_fichier, Url_fichier, Id_user, Id_type_fichier)

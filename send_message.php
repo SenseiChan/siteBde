@@ -12,17 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Database connection
     $host = 'localhost';
-    $dbname = 'sae';
-    $username = 'root';
-    $password = '';
+    $dbname = 'inf2pj_03';
+    $username = 'inf2pj03';
+    $password = 'eMaht4aepa';
 
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Insert message into chat table
         $stmt = $pdo->prepare("INSERT INTO chat (Id_user, Desc_mess) VALUES (:userId, :message)");
         $stmt->execute([
             ':userId' => $userId,

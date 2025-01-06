@@ -6,18 +6,16 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Use the user_id parameter if provided, otherwise fallback to session user ID
 $userId =$_SESSION['user_id'];
 
 $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 $transactionsPerPage = 10;
 $searchQuery = isset($_GET['query']) ? trim($_GET['query']) : '';
 
-// Database connection
 $host = 'localhost';
-$dbname = 'sae';
-$username = 'root';
-$password = '';
+$dbname = 'inf2pj_03';
+$username = 'inf2pj03';
+$password = 'eMaht4aepa';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

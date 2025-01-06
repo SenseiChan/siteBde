@@ -21,9 +21,9 @@ if ($is_admin && isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 // Connexion à la base de données
 $host = 'localhost';
-$dbname = 'sae';
-$username = 'root';
-$password = '';
+$dbname = 'inf2pj_03';
+$username = 'inf2pj03';
+$password = 'eMaht4aepa';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

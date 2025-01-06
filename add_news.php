@@ -4,9 +4,9 @@ session_start();
 
 // Configuration de la base de données
 $host = 'localhost';
-$dbname = 'sae';
-$username = 'root';
-$password = '';
+$dbname = 'inf2pj_03';
+$username = 'inf2pj03';
+$password = 'eMaht4aepa';
 
 try {
     // Connexion à la base de données

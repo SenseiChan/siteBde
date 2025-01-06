@@ -9,9 +9,9 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
 // Connexion à la base de données
-$dsn = 'mysql:host=localhost;dbname=sae;charset=utf8';
-$username = 'root';
-$password = '';
+$dsn = 'mysql:host=localhost;dbname=inf2pj_03;charset=utf8';
+$username = 'inf2pj03';
+$password = 'eMaht4aepa';
 
 try {
     $pdo = new PDO($dsn, $username, $password, [

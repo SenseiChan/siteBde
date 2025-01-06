@@ -1,19 +1,15 @@
 <?php
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté']);
     exit();
 }
 
-// Retrieve the user ID from the session
 $userId = $_SESSION['user_id'];
 
-// Get the JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Validate the input
 if (!isset($input['tel'], $input['email'], $input['numNomRue'], $input['ville'], $input['codePostal'])) {
     echo json_encode(['success' => false, 'message' => 'Données invalides']);
     exit();
@@ -25,17 +21,15 @@ $numNomRue = htmlspecialchars($input['numNomRue']);
 $ville = htmlspecialchars($input['ville']);
 $codePostal = htmlspecialchars($input['codePostal']);
 
-// Connect to the database
 $host = 'localhost';
-$dbname = 'sae';
-$username = 'root';
-$password = '';
+$dbname = 'inf2pj_03';
+$username = 'inf2pj03';
+$password = 'eMaht4aepa';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Update the user's information
     $stmt = $pdo->prepare("
         UPDATE utilisateur u
         JOIN adresse a ON u.Id_adr = a.Id_adr
