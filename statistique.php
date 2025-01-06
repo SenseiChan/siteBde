@@ -78,7 +78,7 @@ if ($result->num_rows > 0) {
 // Requête SQL pour récupérer les utilisateurs, leur année de promotion et leur rôle
 $sql_roles = "SELECT U.Annee_promo, R.Nom_role, COUNT(U.Id_user) AS nb_utilisateurs
               FROM utilisateur U
-              JOIN Role R ON U.Id_role = R.Id_role
+              JOIN role R ON U.Id_role = R.Id_role
               GROUP BY U.Annee_promo, R.Nom_role
               ORDER BY U.Annee_promo DESC";
 
