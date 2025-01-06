@@ -16,7 +16,7 @@ try {
 }
 
 // Récupérer les informations de l'événement
-$stmtEvent = $pdo->prepare("SELECT Nom_event FROM Evenement WHERE Id_event = :eventId");
+$stmtEvent = $pdo->prepare("SELECT Nom_event FROM evenement WHERE Id_event = :eventId");
 $stmtEvent->execute(['eventId' => $eventId]);
 $event = $stmtEvent->fetch(PDO::FETCH_ASSOC);
 
@@ -27,8 +27,8 @@ if (!$event) {
 // Récupérer la liste des participants
 $stmt = $pdo->prepare("
     SELECT u.Prenom_user, u.Nom_user, u.Email_user 
-    FROM Participer p
-    JOIN Utilisateur u ON p.Id_user = u.Id_user
+    FROM participer p
+    JOIN utilisateur u ON p.Id_user = u.Id_user
     WHERE p.Id_event = :eventId
 ");
 $stmt->execute(['eventId' => $eventId]);

@@ -21,7 +21,7 @@ try {
 try {
     $eventQuery = $pdo->prepare("
         SELECT Nom_event, Date_deb_event 
-        FROM Evenement 
+        FROM evenement 
         WHERE Id_event = :eventId
     ");
     $eventQuery->execute(['eventId' => $eventId]);
@@ -38,7 +38,7 @@ try {
 try {
     $participantsQuery = $pdo->prepare("
         SELECT u.Nom_user, u.Prenom_user, u.Email_user
-        FROM Utilisateur u
+        FROM utilisateur u
         JOIN Participer p ON u.Id_user = p.Id_user
         WHERE p.Id_event = :eventId
     ");

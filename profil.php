@@ -341,7 +341,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile-pic'])) {
             <input type="text" id="transaction-search" placeholder="Rechercher par nom..." />
         </div>
         <div class="history-content">
-            <!-- Transactions will be dynamically loaded here -->
         </div>
     </div>
     <div class="badge-modal hidden">

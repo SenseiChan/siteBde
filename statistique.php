@@ -25,8 +25,8 @@ if (!isset($pdo)) {
 
 // Récupérer les 10 derniers événements avec leurs informations
 $query_last_events = "SELECT E.Nom_event, E.Prix_event, COUNT(P.Id_user) AS nb_participants 
-                      FROM Evenement E 
-                      LEFT JOIN Participer P ON E.Id_event = P.Id_event
+                      FROM evenement E 
+                      LEFT JOIN participer P ON E.Id_event = P.Id_event
                       GROUP BY E.Id_event
                       ORDER BY E.Date_deb_event DESC 
                       LIMIT 10";
@@ -52,7 +52,7 @@ if ($result_last_events->num_rows > 0) {
 $type_prod = isset($_GET['type_prod']) ? $_GET['type_prod'] : '';
 
 // Requête SQL pour récupérer les statistiques par type de produit
-$sql = "SELECT Type_prod, Nom_prod, Stock_prod, Prix_prod FROM Produit";
+$sql = "SELECT Type_prod, Nom_prod, Stock_prod, Prix_prod FROM produit";
 
 // Si un type est sélectionné, filtrer par ce type
 if (!empty($type_prod)) {
@@ -77,7 +77,7 @@ if ($result->num_rows > 0) {
 
 // Requête SQL pour récupérer les utilisateurs, leur année de promotion et leur rôle
 $sql_roles = "SELECT U.Annee_promo, R.Nom_role, COUNT(U.Id_user) AS nb_utilisateurs
-              FROM Utilisateur U
+              FROM utilisateur U
               JOIN Role R ON U.Id_role = R.Id_role
               GROUP BY U.Annee_promo, R.Nom_role
               ORDER BY U.Annee_promo DESC";
@@ -99,8 +99,8 @@ $query_events_gain = "
     SELECT 
     COUNT(DISTINCT E.Id_event) AS total_events,
     SUM(E.Prix_event * IFNULL(P.nb_participants, 0)) AS total_gain
-    FROM Evenement E
-    LEFT JOIN (SELECT Id_event, COUNT(Id_user) AS nb_participants FROM Participer GROUP BY Id_event) P ON E.Id_event = P.Id_event
+    FROM evenement E
+    LEFT JOIN (SELECT Id_event, COUNT(Id_user) AS nb_participants FROM participer GROUP BY Id_event) P ON E.Id_event = P.Id_event
 ";
 
 

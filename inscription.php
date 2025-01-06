@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         mysqli_begin_transaction($conn);
 
         try {
-            $sql_adr = "INSERT INTO Adresse (NomNumero_rue, Code_postal, Ville) 
+            $sql_adr = "INSERT INTO adresse (NomNumero_rue, Code_postal, Ville) 
                         VALUES ('$rue', '$codePostal', '$ville')";
             
             if (!mysqli_query($conn, $sql_adr)) {

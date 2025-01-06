@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         if ($id_event !== null) {
             $check_participation = $pdo->prepare("
                 SELECT COUNT(*) 
-                FROM Participer 
+                FROM participer 
                 WHERE Id_user = :id_user AND Id_event = :id_event
             ");
             $check_participation->execute([
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
 
             // Insérer uniquement si l'utilisateur n'est pas encore inscrit
             if ($check_participation->fetchColumn() == 0) {
-                $participationSql = "INSERT INTO Participer (Id_user, Id_event) VALUES (:id_user, :id_event)";
+                $participationSql = "INSERT INTO participer (Id_user, Id_event) VALUES (:id_user, :id_event)";
                 $participationStmt = $pdo->prepare($participationSql);
                 $participationStmt->execute([
                     ':id_user' => $user_id,
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
 
         // Décrémenter le stock du produit si ce n'est pas un grade ou un événement
         if ($product_id !== null) {
-            $updateStockSql = "UPDATE Produit SET Stock_prod = Stock_prod - :quantity WHERE Id_prod = :product_id";
+            $updateStockSql = "UPDATE produit SET Stock_prod = Stock_prod - :quantity WHERE Id_prod = :product_id";
             $updateStockStmt = $pdo->prepare($updateStockSql);
             $updateStockStmt->execute([
                 ':quantity' => $product['quantity'],

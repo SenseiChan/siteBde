@@ -44,10 +44,10 @@ $sql = "SELECT
             pa.Nom_prod,
             g.Nom_grade,
             e.Nom_event
-        FROM Transactions t
-        LEFT JOIN Utilisateur u ON t.Id_user = u.Id_user
-        LEFT JOIN Paiement p ON t.Id_paie = p.Id_paie
-        LEFT JOIN Produit pa ON t.Id_prod = pa.Id_prod
+        FROM transactions t
+        LEFT JOIN utilisateur u ON t.Id_user = u.Id_user
+        LEFT JOIN paiement p ON t.Id_paie = p.Id_paie
+        LEFT JOIN produit pa ON t.Id_prod = pa.Id_prod
         LEFT JOIN grade g ON t.Id_grade = g.Id_grade
         LEFT JOIN evenement e ON t.Id_event = e.Id_event
         ORDER BY t.Date_trans DESC";

@@ -36,9 +36,9 @@ $query = "
         a.NomNumero_rue, 
         a.Ville 
     FROM 
-        Evenement e
+        evenement e
     JOIN 
-        Adresse a ON e.Id_adr = a.Id_adr
+        adresse a ON e.Id_adr = a.Id_adr
     WHERE 
         e.Id_event = :eventId
 ";
@@ -54,7 +54,7 @@ if (!$event) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insérer une ligne d'inscription dans une table `Inscriptions` (ou similaire)
     $insertQuery = "
-        INSERT INTO Inscription (Id_user, Id_event, Date_inscription)
+        INSERT INTO inscription (Id_user, Id_event, Date_inscription)
         VALUES (:userId, :eventId, NOW())
     ";
     $insertStmt = $pdo->prepare($insertQuery);
