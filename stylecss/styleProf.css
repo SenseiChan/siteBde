@@ -604,3 +604,28 @@ header {
 .profile-picture img:hover {
     transform: scale(1.1);
 }
+
+
+
+/* Badge container */
+.badge {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+/* Tick mark styling */
+.tick-mark {
+    position: absolute;
+    bottom: -3px; /* Positionnement en bas */
+    right: -3px; /* Positionnement à droite */
+    width: 30px;
+    height: 30px;
+    background: url('../image/tick-noir.png') no-repeat center center; /* Chemin vers l'icône du tick */
+    background-size: contain; /* Adapter la taille à l'image */
+}
+
+/* Exemple pour rendre l'image floue */
+.badge.blur img {
+    filter: blur(3px);
+}
