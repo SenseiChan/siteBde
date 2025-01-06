@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Erreur lors de l'insertion dans Adresse : " . mysqli_error($conn));
             }
             $id_adr = mysqli_insert_id($conn);
-            $sql_user = "INSERT INTO Utilisateur 
+            $sql_user = "INSERT INTO utilisateur 
                         (Nom_user, Prenom_user, Mdp_user, Date_crea_user, Dern_connexion, Tel_user, Email_user, Photo_user, Id_role, Id_adr, Annee_promo) 
                         VALUES ('$nom', '$prenom', '$mdp_hache', NOW(), NOW(), '$telephone', '$email', 'image/default.png', 1, $id_adr, '$promo')";
             
