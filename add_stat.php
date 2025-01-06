@@ -58,7 +58,6 @@ try {
         $stmt->bindParam(':type_id', $typeId);
         $stmt->execute();
 
-        // Réponse JSON
         // Réponse JSON pour succès
         echo json_encode([
             'success' => true,

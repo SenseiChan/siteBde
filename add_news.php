@@ -38,7 +38,7 @@ try {
 
         // Insertion dans la base de données
         $stmt = $pdo->prepare("
-            INSERT INTO Contenu (Date_contenu, Desc_contenu, Titre_contenu, Id_user, Id_type_contenu) 
+            INSERT INTO contenu (Date_contenu, Desc_contenu, Titre_contenu, Id_user, Id_type_contenu) 
             VALUES (:date, :desc, :titre, :user_id, :type_id)
         ");
         $stmt->bindParam(':date', $date);

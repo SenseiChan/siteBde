@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
     // Vérification si l'utilisateur est déjà inscrit
     $checkQuery = "
         SELECT * 
-        FROM Participer 
+        FROM participer 
         WHERE Id_user = :userId AND Id_event = :eventId
     ";
     $checkStmt = $pdo->prepare($checkQuery);
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
     } else {
         // Insérer dans la table Participer
         $insertQuery = "
-            INSERT INTO Participer (Id_user, Id_event)
+            INSERT INTO participer (Id_user, Id_event)
             VALUES (:userId, :eventId)
         ";
         $insertStmt = $pdo->prepare($insertQuery);

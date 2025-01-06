@@ -16,7 +16,7 @@ if (!$userId) {
     exit();
 }
 
-$roleQuery = $pdo->prepare('SELECT Id_role FROM Utilisateur WHERE Id_user = :userId');
+$roleQuery = $pdo->prepare('SELECT Id_role FROM utilisateur WHERE Id_user = :userId');
 $roleQuery->execute(['userId' => $userId]);
 $userRole = $roleQuery->fetch(PDO::FETCH_ASSOC);
 
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Si l'adresse n'existe pas, la créer
     if (!$addressData) {
         $insertAddressQuery = "
-            INSERT INTO Adresse (NomNumero_rue, Code_postal, Ville)
+            INSERT INTO adresse (NomNumero_rue, Code_postal, Ville)
             VALUES (:address, :postalCode, :city)
         ";
         $insertStmt = $pdo->prepare($insertAddressQuery);
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insérer l'événement
     $insertEventQuery = "
-        INSERT INTO Evenement (Nom_event, Desc_event, Date_deb_event, Heure_deb_event, Prix_event, Photo_event, Id_adr)
+        INSERT INTO evenement (Nom_event, Desc_event, Date_deb_event, Heure_deb_event, Prix_event, Photo_event, Id_adr)
         VALUES (:name, :description, :date, :time, :price, :image, :addressId)
     ";
     $insertStmt = $pdo->prepare($insertEventQuery);

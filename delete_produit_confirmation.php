@@ -4,7 +4,7 @@ session_start();
 // Vérifier si l'utilisateur est administrateur
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 if (!$is_admin) {
-    header("Location: accueil.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -55,7 +55,6 @@ if ($productId) {
         <p>Êtes-vous sûr de vouloir supprimer le produit suivant ?</p>
 
         <div class="product-info">
-            <!-- Image avec taille fixe -->
             <div class="image-wrapper">
                 <img src="<?= htmlspecialchars($product['Photo_prod'], ENT_QUOTES) ?>" alt="Image du produit">
             </div>

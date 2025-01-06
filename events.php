@@ -26,8 +26,8 @@ $isAdmin = false;
 
 function getParticipants($pdo, $eventId) {
   $query = "SELECT u.Nom_user, u.Prenom_user, u.Email_user
-            FROM Utilisateur u
-            JOIN Participer p ON u.Id_user = p.Id_user
+            FROM utilisateur u
+            JOIN participer p ON u.Id_user = p.Id_user
             WHERE p.Id_event = :eventId";
 
   $stmt = $pdo->prepare($query);
@@ -48,13 +48,13 @@ if (isset($_GET['eventId'])) {
   $participants = getParticipants($pdo, $eventId);
   error_log("Participants récupérés: " . print_r($participants, true));
   echo json_encode($participants);
-  exit; // Fin de l'exécution du script
+  exit;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
 if ($userId) {
-    $roleQuery = $pdo->prepare('SELECT Id_role FROM Utilisateur WHERE Id_user = :userId');
+    $roleQuery = $pdo->prepare('SELECT Id_role FROM utilisateur WHERE Id_user = :userId');
     $roleQuery->execute(['userId' => $userId]);
     $userRole = $roleQuery->fetch(PDO::FETCH_ASSOC);
 
@@ -78,7 +78,7 @@ if (!empty($pastEvents)) {
 
 // Fonction pour vérifier si un utilisateur est inscrit à un événement
 function isUserRegistered($pdo, $userId, $eventId) {
-    $query = "SELECT COUNT(*) FROM Participer WHERE Id_user = :userId AND Id_event = :eventId";
+    $query = "SELECT COUNT(*) FROM participer WHERE Id_user = :userId AND Id_event = :eventId";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         'userId' => $userId,
@@ -100,9 +100,9 @@ $query = "
         a.NomNumero_rue, 
         a.Ville 
     FROM 
-        Evenement e
+        evenement e
     JOIN 
-        Adresse a ON e.Id_adr = a.Id_adr
+        adresse a ON e.Id_adr = a.Id_adr
     ORDER BY 
         e.Date_deb_event ASC
 ";

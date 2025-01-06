@@ -1,6 +1,4 @@
 <?php
-// Connexion à la base de données
-
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,8 +16,8 @@ if (!$eventId) {
 $query = "
     SELECT e.Id_event, e.Nom_event, e.Desc_event, e.Date_deb_event, e.Heure_deb_event, e.Prix_event, e.Photo_event,
            a.NomNumero_rue, a.Code_postal, a.Ville, a.Id_adr
-    FROM Evenement e
-    LEFT JOIN Adresse a ON e.Id_adr = a.Id_adr
+    FROM evenement e
+    LEFT JOIN adresse a ON e.Id_adr = a.Id_adr
     WHERE e.Id_event = :id
 ";
 $stmt = $pdo->prepare($query);
@@ -69,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier si l'adresse existe déjà
     $checkAddressQuery = "
         SELECT Id_adr
-        FROM Adresse
+        FROM adresse
         WHERE NomNumero_rue = :address AND Code_postal = :postalCode AND Ville = :city
     ";
     $checkStmt = $pdo->prepare($checkAddressQuery);
@@ -83,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Si l'adresse n'existe pas, la créer
     if (!$addressData) {
         $insertAddressQuery = "
-            INSERT INTO Adresse (NomNumero_rue, Code_postal, Ville)
+            INSERT INTO adresse (NomNumero_rue, Code_postal, Ville)
             VALUES (:address, :postalCode, :city)
         ";
         $insertStmt = $pdo->prepare($insertAddressQuery);
@@ -99,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Mise à jour des données de l'événement
     $updateQuery = "
-        UPDATE Evenement
+        UPDATE evenement
         SET Nom_event = :name, Desc_event = :description, Date_deb_event = :date, Heure_deb_event = :time,
             Prix_event = :price, Photo_event = :image, Id_adr = :addressId
         WHERE Id_event = :id

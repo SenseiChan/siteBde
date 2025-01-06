@@ -1,6 +1,4 @@
 <?php
-// Connexion à la base de données
-
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,8 +16,8 @@ if (!$eventId) {
 // Vérifier si l'événement existe
 $query = "
     SELECT e.Nom_event, e.Date_deb_event, a.NomNumero_rue, a.Code_postal, a.Ville 
-    FROM Evenement e
-    LEFT JOIN Adresse a ON e.Id_adr = a.Id_adr
+    FROM evenement e
+    LEFT JOIN adresse a ON e.Id_adr = a.Id_adr
     WHERE e.Id_event = :id
 ";
 $stmt = $pdo->prepare($query);
@@ -33,8 +31,8 @@ if (!$event) {
 // Récupérer les participants
 $participantsQuery = "
     SELECT u.Id_user, u.Nom_user, u.Prenom_user 
-    FROM Participer p
-    JOIN Utilisateur u ON p.Id_user = u.Id_user
+    FROM participer p
+    JOIN utilisateur u ON p.Id_user = u.Id_user
     WHERE p.Id_event = :eventId
 ";
 $participantsStmt = $pdo->prepare($participantsQuery);
@@ -48,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $input['user_id'] ?? null;
 
     if ($action === 'remove_user' && $userId) {
-        $deleteQuery = "DELETE FROM Participer WHERE Id_user = :userId AND Id_event = :eventId";
+        $deleteQuery = "DELETE FROM participer WHERE Id_user = :userId AND Id_event = :eventId";
         $deleteStmt = $pdo->prepare($deleteQuery);
         $deleteStmt->execute(['userId' => $userId, 'eventId' => $eventId]);
 
@@ -66,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $remainingParticipants = $participantsStmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($remainingParticipants)) {
-            $deleteEventQuery = "DELETE FROM Evenement WHERE Id_event = :eventId";
+            $deleteEventQuery = "DELETE FROM evenement WHERE Id_event = :eventId";
             $deleteEventStmt = $pdo->prepare($deleteEventQuery);
             $deleteEventStmt->execute(['eventId' => $eventId]);
 

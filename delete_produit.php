@@ -4,7 +4,7 @@ session_start();
 // Vérifier si l'utilisateur est administrateur
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 if (!$is_admin) {
-    header("Location: accueil.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -33,7 +33,7 @@ if ($productId) {
         if ($product) {
             // Supprimer l'image associée si elle existe
             if (!empty($product['Photo_prod']) && file_exists($product['Photo_prod'])) {
-                unlink($product['Photo_prod']); // Supprime le fichier image
+                unlink($product['Photo_prod']);
             }
 
             // Supprimer le produit de la base de données

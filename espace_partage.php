@@ -3,7 +3,7 @@ session_start();
 
 // Vérification si l'utilisateur est admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    header('Location: accueil.php');
+    header('Location: index.php');
     exit();
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $query = "INSERT INTO Fichier (Date_fichier, Url_fichier, Id_user, Id_type_fichier)
+            $query = "INSERT INTO fichier (Date_fichier, Url_fichier, Id_user, Id_type_fichier)
                       VALUES (:date_fichier, :url_fichier, :id_user, :type_fichier)";
             $stmt = $pdo->prepare($query);
             $stmt->execute([
@@ -60,12 +60,12 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
     $type = intval($_GET['type']);
 
     try {
-        $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
+        $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $query = "
             SELECT * 
-            FROM Fichier 
+            FROM fichier 
             WHERE YEAR(Date_fichier) = :year AND Id_type_fichier = :type
             ORDER BY Date_fichier DESC";
         $stmt = $pdo->prepare($query);
@@ -81,14 +81,14 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
 
 // Fonction pour récupérer les années disponibles
 function getYears($pdo, $type) {
-    $query = "SELECT DISTINCT YEAR(Date_fichier) AS year FROM Fichier WHERE Id_type_fichier = :type ORDER BY year DESC";
+    $query = "SELECT DISTINCT YEAR(Date_fichier) AS year FROM fichier WHERE Id_type_fichier = :type ORDER BY year DESC";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['type' => $type]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=sae;charset=utf8', 'root', '');
+    $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Récupération des années

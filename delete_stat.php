@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             if ($stmt->rowCount() > 0) {
-                echo json_encode(['success' => true]); // Suppression réussie
+                echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'ID introuvable dans la base de données']);
             }

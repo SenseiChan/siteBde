@@ -7,10 +7,9 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 // Redirige si l'utilisateur n'est pas admin
 if (!$is_admin) {
     header("Location: accueil.php");
-    exit(); // Assurez-vous de terminer le script après la redirection
+    exit();
 }
 
-// Database connection
 $host = 'localhost';
 $dbname = 'inf2pj_03';
 $username = 'inf2pj03';

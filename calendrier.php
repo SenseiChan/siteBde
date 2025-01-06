@@ -38,8 +38,8 @@ $endDate = date('Y-m-t', strtotime($startDate));
 // Récupérer les événements pour le mois sélectionné
 $query = $pdo->prepare("
     SELECT e.Nom_event, e.Date_deb_event, e.Heure_deb_event, a.NomNumero_rue, a.Ville
-    FROM Evenement e
-    JOIN Adresse a ON e.Id_adr = a.Id_adr
+    FROM evenement e
+    JOIN adresse a ON e.Id_adr = a.Id_adr
     WHERE e.Date_deb_event BETWEEN :startDate AND :endDate
     ORDER BY e.Date_deb_event
 ");

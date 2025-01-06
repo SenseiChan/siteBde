@@ -35,7 +35,6 @@ try {
             $updateStmt = $pdo->prepare("UPDATE utilisateur SET Dern_connexion = NOW() WHERE Id_user = :id");
             $updateStmt->execute(['id' => $user['Id_user']]);
 
-            // Rediriger vers la page d'accueil
             header("Location: profil.php");
             exit();
         } else {
