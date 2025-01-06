@@ -62,7 +62,7 @@ function isActive($page) {
         <!-- Navigation -->
         <nav>
             <ul class="nav-links">
-                <li><a href="accueil.php" class="<?= isActive('accueil.php') ?>">Accueil</a></li>
+                <li><a href="index.php" class="<?= isActive('index.php') ?>">Accueil</a></li>
                 <li><a href="events.php" class="<?= isActive('events.php') ?>">Événements</a></li>
                 <li><a href="boutique.php" class="<?= isActive('boutique.php') ?>">Boutique</a></li>
                 <li><a href="bde.php" class="<?= isActive('bde.php') ?>">BDE</a></li>
