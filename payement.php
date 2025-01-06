@@ -90,12 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_method'])) {
         // Vérifier si le produit est un grade
         if (in_array($product_id, ['grade_diamant', 'grade_or', 'grade_fer'])) {
             $product_grade = match ($product_id) {
-                'grade_diamant' => 3,
-                'grade_or' => 2,
+                'grade_diamant' => 2,
+                'grade_or' => 3,
                 'grade_fer' => 1,
                 default => null
             };
             $product_id = null; // Pas d'ID produit pour un grade
+
+            // Mise à jour du grade de l'utilisateur dans la table utilisateur
+            $updateGradeSql = "UPDATE utilisateur SET Id_grade = :id_grade WHERE Id_user = :id_user";
+            $updateGradeStmt = $pdo->prepare($updateGradeSql);
+            $updateGradeStmt->execute([
+                ':id_grade' => $product_grade,
+                ':id_user' => $user_id,
+            ]);
         }
 
         // Vérifier si le produit est un événement
