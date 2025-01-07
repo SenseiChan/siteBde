@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $imagePath = $targetFile;
             } else {
                 echo "Erreur lors du téléchargement de l'image.";
-                echo $_FILES['Photo_event']['tmp_name'] . $targetFile;
+                echo $_FILES['Photo_event']['tmp_name'] . " /// " . $targetFile;
             }
         } else {
             echo "Format d'image non valide. Seuls les formats JPG et PNG sont autorisés.";
