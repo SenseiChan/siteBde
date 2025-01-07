@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier si l'adresse existe déjà
     $checkAddressQuery = "
         SELECT Id_adr
-        FROM adresse
+        FROM Adresse
         WHERE NomNumero_rue = :address AND Code_postal = :postalCode AND Ville = :city
     ";
     $checkStmt = $pdo->prepare($checkAddressQuery);
