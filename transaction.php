@@ -2,7 +2,7 @@
 session_start();
 $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 if (!$is_admin) {
-    header("Location: accueil.php");
+    header("Location: index.php");
     exit();
 }
 

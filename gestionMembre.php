@@ -9,7 +9,7 @@ $is_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 
 // Redirige si l'utilisateur n'est pas admin
 if (!$is_admin) {
-    header("Location: accueil.php");
+    header("Location: index.php");
     exit(); // Assurez-vous de terminer le script après la redirection
 }
 

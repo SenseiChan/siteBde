@@ -3,7 +3,7 @@ session_start();
 
 // Vérifier si l'utilisateur est administrateur
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    header("Location: accueil.php");
+    header("Location: index.php");
     exit();
 }
 
