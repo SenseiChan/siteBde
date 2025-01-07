@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_payment'])) {
     $payer_status = isset($_POST['payer']) ? 1 : 0;  // Si la case est cochée, on met à 1 ("Payé"), sinon à 0 ("Non payé")
     
     // Mise à jour de la base de données
-    $sql = "UPDATE Transactions SET Payer_trans = :payer_status WHERE Id_trans = :transaction_id";
+    $sql = "UPDATE transactions SET Payer_trans = :payer_status WHERE Id_trans = :transaction_id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':payer_status', $payer_status, PDO::PARAM_INT);
     $stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
