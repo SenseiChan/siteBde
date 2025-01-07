@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Variable pour stocker les erreurs
-$errors = [];
-
 // Vérification si l'utilisateur est admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     header('Location: index.php');
@@ -20,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $allowedExtensions = ['docx', 'pdf'];
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     if (!in_array($extension, $allowedExtensions)) {
-        $errors[] = 'Format de fichier non valide.';
+        echo json_encode(['success' => false, 'message' => 'Format de fichier non valide.']);
+        exit();
     }
 
     // Génération du nom du fichier
@@ -29,13 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileName = "Compte-Rendu-{$typeName}-{$formattedDate}.{$extension}";
     $filePath = "docsAdmin/" . $fileName;
 
-    // Déplacement du fichier
-    if (empty($errors) && !move_uploaded_file($file['tmp_name'], $filePath)) {
-        $errors[] = 'Erreur lors du téléchargement.';
-    }
 
-    // Si pas d'erreur, on enregistre dans la base de données
-    if (empty($errors)) {
+    // Déplacement du fichier
+    if (move_uploaded_file($file['tmp_name'], $filePath)) {
         try {
             $pdo = new PDO('mysql:host=localhost;dbname=inf2pj_03;charset=utf8', 'inf2pj03', 'eMaht4aepa');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -50,10 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 'type_fichier' => $typeFichier,
             ]);
 
-            $errors[] = 'Fichier ajouté avec succès !'; // Message de succès
+            echo json_encode(['success' => true, 'message' => 'Fichier ajouté avec succès !']);
         } catch (PDOException $e) {
-            $errors[] = 'Erreur lors de l’ajout en base de données.';
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de l’ajout en base de données.']);
         }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Erreur lors du téléchargement.']);
     }
     exit();
 }
@@ -78,7 +74,7 @@ if (isset($_GET['year']) && isset($_GET['type'])) {
 
         echo json_encode(['success' => true, 'files' => $files]);
     } catch (PDOException $e) {
-        $errors[] = 'Erreur lors de la récupération des fichiers.';
+        echo json_encode(['success' => false, 'message' => 'Erreur lors de la récupération des fichiers.']);
     }
     exit();
 }
@@ -99,9 +95,10 @@ try {
     $yearsReunion = getYears($pdo, 2);
     $yearsEvenement = getYears($pdo, 3);
 } catch (PDOException $e) {
-    $errors[] = 'Erreur de connexion : ' . $e->getMessage();
+    die('Erreur de connexion : ' . $e->getMessage());
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -150,19 +147,6 @@ try {
             </div>
         </main>
 
-        <!-- Section d'affichage des erreurs ou messages -->
-        <div id="notification-container">
-            <?php if (!empty($errors)): ?>
-                <div class="notification">
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= htmlspecialchars($error) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-        </div>
-
         <!-- Modale pour afficher les fichiers -->
         <div id="file-modal" class="modal hidden">
             <div class="modal-content">
@@ -189,6 +173,7 @@ try {
                 </form>
             </div>
         </div>
+        <div id="notification-container"></div>
         <?php include 'footer.php'; ?>
     </div>
 
