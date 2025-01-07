@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $formattedDate = date('d-F-Y', strtotime($dateFichier));
     $typeName = $typeFichier == 2 ? 'Reunion' : 'Evenement';
     $fileName = "Compte-Rendu-{$typeName}-{$formattedDate}.{$extension}";
-    $filePath = "docsAdmin/" . $fileName;
+    $filePath = "public_html/docsAdmin/" . $fileName;
 
 
     // Déplacement du fichier
