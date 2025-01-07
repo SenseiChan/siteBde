@@ -54,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $targetDir = "imagesAdmin/";
             $targetFile = $targetDir . uniqid() . '.' . $fileExtension;
 
+            if ($_FILES['Photo_event']['error'] !== UPLOAD_ERR_OK) {
+                echo "Erreur lors du téléchargement : " . $_FILES['Photo_event']['error'];
+            }
+
             if (move_uploaded_file($_FILES['Photo_event']['tmp_name'], $targetFile)) {
                 $imagePath = $targetFile;
             } else {
